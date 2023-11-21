@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+const registerRouter = require('./routes/register');
 var usersRouter = require('./routes/users');
 const connectDB = require('./config/DBConnection')
 const mongoose = require('mongoose')
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/register', registerRouter);
 app.use('/users', usersRouter);
 
 connectDB()

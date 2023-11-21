@@ -1,0 +1,25 @@
+extends layout
+
+block content
+ .container
+   h1 Register
+   p Please fill in this form to create an account.
+   p.lead
+     form(role='form', action='/login', method='post')
+        .form-group
+         label(for='username') Email
+         input.form-control(type='text', id='email', name='email address', placeholder='Enter an email address')
+         
+         label(for='username') Username
+         input.form-control(type='text', id='user', name='username', placeholder='Enter a username')
+         
+         label(for='password') Password
+         input.form-control(type='password', id='password', name='password', placeholder='Enter a password')
+
+         label(for='password') Repeat Password
+         input.form-control(type='password', id='password', name='password', placeholder='Enter a password')
+       button.btn.btn-primary(type='submit') Submit
+
+    p.signin
+    | Already have an account? 
+    a(href='/') Sign in.
