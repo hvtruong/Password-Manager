@@ -4,11 +4,11 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-const registerRouter = require('./routes/register');
+var loginRouter = require('./routes/login');
+var registerRouter = require('./routes/register');
 var usersRouter = require('./routes/users');
-const connectDB = require('./config/DBConnection')
-const mongoose = require('mongoose')
+
+const bodyParser= require('body-parser');
 var app = express();
 
 // view engine setup
@@ -17,15 +17,14 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
+app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', loginRouter);
 app.use('/register', registerRouter);
 app.use('/users', usersRouter);
-
-connectDB()
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,13 +41,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
-mongoose.connection.once('open', () => {
-  console.log("Connected to MongoDB")
-})
-
-mongoose.connection.on('error', err => {
-  console.log(err)
-})
 
 module.exports = app;

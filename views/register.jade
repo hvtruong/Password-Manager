@@ -5,19 +5,19 @@ block content
    h1 Register
    p Please fill in this form to create an account.
    p.lead
-     form(role='form', action='/login', method='post')
-        .form-group
-         label(for='username') Email
-         input.form-control(type='text', id='email', name='email address', placeholder='Enter an email address')
-         
+     form(role='form', action='/register/authentication', method='post')
+       .form-group
+         label(for='email') Email
+         input.form-control(type='text', id='emailAddress', name='emailAddress', placeholder='Enter an email address')
+       .form-group
          label(for='username') Username
-         input.form-control(type='text', id='user', name='username', placeholder='Enter a username')
-         
+         input.form-control(type='text', id='username', name='username', placeholder='Enter a username')
+       .form-group
          label(for='password') Password
          input.form-control(type='password', id='password', name='password', placeholder='Enter a password')
-
-         label(for='password') Repeat Password
-         input.form-control(type='password', id='password', name='password', placeholder='Enter a password')
+       .form-group
+         label(for='repeatedPassword') Password
+         input.form-control(type='password', id='repeatedPassword', name='repeatedPassword', placeholder='Enter your password again')
        button.btn.btn-primary(type='submit') Submit
 
     p.signin
