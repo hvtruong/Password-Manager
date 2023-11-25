@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
   res.render('register', { title: 'Register' });
 });
 
-router.post('/authentication', async function(req, res, next) {
+router.post('/authenticate', async function(req, res, next) {
     const data = {
       emailAddress:req.body.emailAddress,
       username:req.body.username,
@@ -24,7 +24,8 @@ router.post('/authentication', async function(req, res, next) {
             res.send("User details already exists");
         }
         else {
-            res.send("Data inserted");
+            /* GET Authentication page. */
+            res.render('authenticate', { title: 'Authentication' });
             userModel.insertMany([data]);
         }
     }
