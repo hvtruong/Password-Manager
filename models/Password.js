@@ -12,4 +12,4 @@ const passwordSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Passwords', passwordSchema)
+module.exports = new mongoose.model('Passwords', passwordSchema)
