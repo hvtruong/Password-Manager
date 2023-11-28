@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
   res.render('register', { title: 'Register' });
 });
 
-router.post('/authenticate', async function(req, res, next) {
+router.post('/', async function(req, res, next) {
     const data = {
       emailAddress:req.body.emailAddress,
       username:req.body.username,
@@ -21,16 +21,16 @@ router.post('/authenticate', async function(req, res, next) {
     const checking = await userModel.findOne({username: req.body.username})
     try{
         if (checking != null) {
-            res.send("User details already exists");
+            res.render('error', { title: 'Authentication', message: 'User details already exists' });
         }
         else {
             /* GET Authentication page. */
-            res.render('authenticate', { title: 'Authentication' });
+            res.render('authentication', { title: 'Authentication' });
             userModel.insertMany([data]);
         }
     }
     catch{
-        res.send("wrong inputs");
+        res.render('error', { title: 'Authentication', message: 'Wrong inputs' });
     }
   });
   
