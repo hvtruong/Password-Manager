@@ -5,6 +5,8 @@ block content
    h1 Register
    p Please fill in this form to create an account.
    p.lead
+     for error in errors
+        h3= error.text
      form(role='form', action='/register', method='post')
        .form-group
          label(for='email') Email
