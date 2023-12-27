@@ -38,14 +38,8 @@ const HTML_TEMPLATE = (text) => {
         <body>
           <div class="container">
             <div class="email">
-              <div class="email-header">
-                <h1>EMAIL HEADER</h1>
-              </div>
               <div class="email-body">
                 <p>${text}</p>
-              </div>
-              <div class="email-footer">
-                <p>EMAIL FOOTER</p>
               </div>
             </div>
           </div>
@@ -54,4 +48,4 @@ const HTML_TEMPLATE = (text) => {
     `;
   }
   
-  export default HTML_TEMPLATE;
+  module.exports = HTML_TEMPLATE;

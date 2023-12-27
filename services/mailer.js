@@ -1,13 +1,14 @@
+require('dotenv').config()
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
     port: 3001,
-    secure: false,
+    secure: true,
     auth: {
-      user: "MAILID@gmail.com",
-      pass: "YOUR PASSWORD",
+      user: process.env.AUTHENTICATION_ACCOUNT,
+      pass: process.env.AUTHENTICATION_PW,
     },
 });
 
@@ -21,4 +22,4 @@ const SENDMAIL = async (mailDetails, callback) => {
     } 
 };
 
-export default SENDMAIL;
+module.exports = SENDMAIL;

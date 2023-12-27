@@ -5,21 +5,24 @@ block content
    h1 Register
    p Please fill in this form to create an account.
    p.lead
-     for error in errors
-        h3= error.text
      form(role='form', action='/register', method='post')
        .form-group
          label(for='email') Email
+         br
          input.form-control(type='text', id='emailAddress', name='emailAddress', placeholder='Enter an email address')
        .form-group
          label(for='username') Username
+         br
          input.form-control(type='text', id='username', name='username', placeholder='Enter a username')
        .form-group
          label(for='password') Password
+         br
          input.form-control(type='password', id='password', name='password', placeholder='Enter a password')
        .form-group
          label(for='repeatedPassword') Password
+         br
          input.form-control(type='password', id='repeatedPassword', name='repeatedPassword', placeholder='Enter your password again')
+       br
        button.btn.btn-primary(type='submit') Submit
 
     p.signin

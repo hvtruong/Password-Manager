@@ -3,7 +3,7 @@ const router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Sign in' });
+  res.render('index', { title: 'Sign in', errors:[] });
 });
 
 router.post('/login', async function(req, res, next) {
