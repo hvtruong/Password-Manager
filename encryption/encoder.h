@@ -6,12 +6,16 @@
 using namespace std;
 
 class Encoder {
+    public:
+        Encoder(string key);
     private:
+        string key;
+
         // Main function to encrypt password with user-defiend key
-        string encrypt(string password, string key);
+        string encrypt(string password);
 
         // Mask the original password with user-defined key
-        string generateMaskedPassword(string password, string key);
+        string generateMaskedPassword(string password);
 
         // Encrypt the masked password
         string convertPassword(string maskedPassword);

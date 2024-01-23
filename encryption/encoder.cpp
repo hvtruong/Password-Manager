@@ -5,18 +5,20 @@
 
 using namespace std;
 
-Encoder::Encoder() = default;
+Encoder::Encoder(string userKey) {
+    this->key = userKey;
+}
 
 // Main function to encrypt password with user-defiend key
-string Encoder::encrypt(string password, string key) {
-    string maskedPassword = generateMaskedPassword(password, key);
+string Encoder::encrypt(string password) {
+    string maskedPassword = generateMaskedPassword(password);
     string encryptedPassword = convertPassword(maskedPassword);
 
     return encryptedPassword;
 }
 
 // Mask the original password with user-defined key
-string Encoder::generateMaskedPassword(string password, string key) {
+string Encoder::generateMaskedPassword(string password) {
     string maskedPassword;
     int passwordLen = password.length(), keyLen = key.length();
 

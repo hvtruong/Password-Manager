@@ -6,9 +6,13 @@
 using namespace std;
 
 class Decoder {
+    public:
+        Decoder(string key);
     private:
+        string key;
+
         // Main function to decrypt password with user-defiend key
-        string decrypt(string encodedPassword, string key);
+        string decrypt(string encodedPassword);
 
         // Retrieve the result password of one-to-one function
         string retrieveEncodedPassword(string encodedPassword);
