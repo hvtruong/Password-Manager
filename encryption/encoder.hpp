@@ -1,4 +1,4 @@
-#include <string>
+#include <constant.hpp>
 
 #ifndef ENCODER
 #define ENCODER
@@ -8,11 +8,13 @@ using namespace std;
 class Encoder {
     public:
         Encoder(string key);
-    private:
-        string key;
+        Encoder() = default;
 
         // Main function to encrypt password with user-defiend key
         string encrypt(string password);
+        
+    private:
+        string key;
 
         // Mask the original password with user-defined key
         string generateMaskedPassword(string password);

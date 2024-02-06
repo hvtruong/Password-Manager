@@ -1,10 +1,8 @@
 #include <math.h>
-#include <iostream>
 #include <sstream>
-#include <vector>
 
-#include "decoder.h"
-#include "constant.h"
+#include "decoder.hpp"
+#include "constant.hpp"
 
 using namespace std;
 
@@ -21,7 +19,7 @@ string Decoder::decrypt(string maskedPassword) {
 }
 
 // Function to retrieve the password blocks by splitting character
-vector<string> split (string str, char delim) {
+vector<string> split(string str, char delim) {
     vector<string> result;
     stringstream ss (str);
     string item;
@@ -42,7 +40,7 @@ string Decoder::invertPassword(string maskedPassword) {
 
     for (auto passwordBlock : unmaskedPasswordBlocks) {
         char maskedCharacter = passwordBlock[0];
-        int decryptionKey = (int)(passwordBlock[1] - '0');
+        int decryptionKey = stoi(passwordBlock.substr(1));
         
         int invertedInteger = maskedCharacter - min_ascii_value + decryptionKey * max_ascii_value;
         char invertedCharacter = mathInverseFunction(invertedInteger);
@@ -55,9 +53,9 @@ string Decoder::invertPassword(string maskedPassword) {
 
 // One-to-one mathematical function mapping one character to another
 // Ex: f(x) = x^3 + 5;
-int Decoder::mathInverseFunction(char character) {
-    int decimalValue = (int)character;
-    return (int)cbrt(character - 5);
+char Decoder::mathInverseFunction(int invertedInteger) {
+    int decimalValue = (int)invertedInteger;
+    return (char)cbrt(invertedInteger - 5);
 }
 
 string Decoder::unmaskPassword(string maskedPassword) {

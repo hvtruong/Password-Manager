@@ -1,7 +1,6 @@
 #include <math.h>
 
-#include "encoder.h"
-#include "constant.h"
+#include "encoder.hpp"
 
 using namespace std;
 
@@ -37,13 +36,13 @@ string Encoder::convertPassword(string maskedPassword) {
     string convertedString;
     int passwordLen = maskedPassword.length();
 
-    for (int i = 0; i < passwordLen - 1; i++) {
+    for (int i = 0; i < passwordLen; i++) {
         char maskedCharacter = maskedPassword[i];
         int convertedInteger = mathConverseFunction(maskedCharacter);
         char convertedCharacter = convertedInteger % max_ascii_value + min_ascii_value;
         
         // Integer value for decryption process
-        string decryptionKey = to_string(convertedCharacter / max_ascii_value);
+        string decryptionKey = to_string(convertedInteger / max_ascii_value);
 
         convertedString += convertedCharacter + decryptionKey + " ";
     }
