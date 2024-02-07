@@ -8,34 +8,13 @@ project(${PROJECT_NAME})
 
 set(CMAKE_CXX_FLAGS "-g -Wall")
 
-# force static runtime libraries for msvc builds
-if(MSVC)
-  set(variables 
-    CMAKE_CXX_FLAGS_DEBUG
-    CMAKE_CXX_FLAGS_RELEASE
-	CMAKE_CXX_FLAGS_RELWITHDEBINFO
-	CMAKE_CXX_FLAGS_MINSIZEREL
-  )
-  foreach(variable ${variables})
-	if(${variable} MATCHES "/MD")
-	  string(REGEX REPLACE "/MD" "/MT" ${variable} "${${variable}}")
-	endif()
-  endforeach()
-endif()
-
-################################
 # Normal Libraries & Executables
-################################
-add_library(encoder encryption/encoder.cpp)
-add_library(decoder encryption/decoder.cpp)
-add_library(passwordManager encryption/passwordManager.cpp)
+add_library(passwordManager encryption/encoder.cpp encryption/decoder.cpp encryption/passwordManager.cpp)
 add_executable(test tests/encryption_test/test.cpp)
 
 target_link_libraries(test encoder decoder passwordManager)
 
-################################
 # Testing
-################################
 if (test)
   if (APPLE)
     add_definitions(-DGTEST_USE_OWN_TR1_TUPLE)
