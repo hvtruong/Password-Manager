@@ -1,8 +1,11 @@
-add_executable(
-        mytest
-        test/mytest.cpp
+add_subdirectory(gtest)
+
+enable_testing()
+
+add_executable(runAllTests mytests.cpp)
+
+target_link_libraries(runAllTests
+  gmock gtest gtest_main
 )
-target_link_libraries(
-        mytest
-        gtest_main
-)
+
+add_test(NAME AllTests COMMAND runAllTests)
