@@ -24,17 +24,6 @@ block content
                 td Mark
                 td
                     input(type='button', value='Edit', onclick="openForm()")
-                    #myForm.form-popup
-                        form.form-container(action='/action_page.php')
-                            h1 Login
-                            label(for='email')
-                                b Email
-                            input(type='text', placeholder='Enter Email', name='email', required='')
-                            label(for='psw')
-                                b Password
-                            input(type='password', placeholder='Enter Password', name='psw', required='')
-                            button.btn(type='submit') Login
-                            button.btn.cancel(type='button', onclick='closeForm()') Close
                     input(type='button', value='Copy')
             tr
                 th(scope='row') 2
@@ -42,6 +31,20 @@ block content
                 td
                     input(type='button', value='Edit')
                     input(type='button', value='Copy')
+    
+    #myForm.form-popup
+        form.form-container(action='/action_page.php')
+            h1 Login
+            button.btn.cancel() Delete password
+            button.btn.updatePassword(onclick="openUpdatePassword()") Update password
+            #update-popup
+                button.btn() Generate random password
+                label
+                    b New password
+                input(type='text', placeholder='Enter Password', name='password', required='')
+                button.btn(type='submit') Update
+            button.btn.cancel(type='button', onclick='closeUpdatePassword(); closeForm()') Close
+    
     script.
         $('tbody tr').hover(function(){
         $(this).find('td:last').show();
@@ -53,4 +56,11 @@ block content
         };
         function closeForm() {
         document.getElementById("myForm").style.display = "none";
+        closeUpdatepassword();
+        };
+        function openUpdatePassword() {
+        document.getElementById("update-popup").style.display = "block";
+        };
+        function closeUpdatePassword() {
+        document.getElementById("update-popup").style.display = "none";
         };
