@@ -1,0 +1,22 @@
+extends layout
+block stylesheets
+    link(rel='stylesheet', href='/stylesheets/dashboard.css')
+    link(rel='stylesheet', href='/stylesheets/forms/forms.css')
+
+block content
+    .container
+        label(for='username') Secret key
+        .form-group
+            input.form-control(type='text', id='secretKey', name='secretKey', placeholder='Please enter your secret key')
+            button.btn.lock-btn Lock key
+    
+        .json-table-container
+            button.btn.add-btn(onclick="openNewForm()") +
+        
+        include forms/updateForm.jade
+        include forms/newPasswordForm.jade
+        
+        script(src='scripts/dashboardView.js')
+        script.
+            let jsonData = `#{json}`;
+            generatePasswordsTable(jsonData);

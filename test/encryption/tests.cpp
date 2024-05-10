@@ -74,6 +74,23 @@ TEST(encryption, decrypt)
     }
 }
 
+TEST(files, export) {
+
+    vector<string> randomPasswords;
+    string randomKey = passwordManager.generateNewPassword();
+    passwordManager = PasswordManager(randomKey);
+
+    for(int i = 0; i < numberOfGenerations; i++) {
+        string randomPassword = passwordManager.generateNewPassword();
+        passwordManager.insertSite(randomPassword);
+        passwordManager.insertPassword(randomPassword);
+
+        ASSERT_TRUE(randomPassword != passwordManager.retrievePasswords().back());
+    }
+
+    passwordManager.exportToJson(".");
+}
+
 int main(int argc, char* argv[]) {
 
     ::testing::InitGoogleTest(&argc, argv);

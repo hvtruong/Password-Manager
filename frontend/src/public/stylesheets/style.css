@@ -1,0 +1,105 @@
+* {
+  box-sizing: border-box
+}
+
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: linear-gradient(to left, #0b87a7, #000000);
+  color: white;
+}
+
+a {
+  color: #00B7FF;
+  text-decoration: none;
+}
+
+label {
+  margin: 0.5%;
+  color: white;
+}
+
+h1, p {
+  color: white !important;
+}
+
+h2, b {
+  color: black !important;
+}
+
+.p-blue { 
+  color:#4285F4; 
+}
+.a-red { 
+  color:#DB4437; 
+}
+.s-yellow { 
+  color:#F4B400; 
+}
+.s-blue {
+  color:#4285F4; 
+}
+.w-green { 
+  color:#0F9D58; 
+}
+.d-green { 
+  display:inline-block;transform:rotate(10deg); 
+}
+.r-blue{ 
+  display:inline-block;transform:rotate(10deg); 
+}
+
+.container {
+  margin: auto;
+  margin-top: 10%;
+  text-align: center;
+  justify-content: center;
+}
+
+.option {
+  display: inline-block;
+  width: 20%;
+  margin: 10%;
+  border: 1px solid black;
+  padding: 5% 5%;
+  box-shadow: 5px 5px 5px black;
+  vertical-align: middle;
+  color: white;
+  font: 1.25em sans-serif;
+  background-color: transparent;
+}
+
+.option:hover {
+  opacity: 0.7;
+  color: white;
+  text-decoration: none;
+}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+  text-align: center;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+button {
+  width: 10%;
+  background-color: #00B7FF;
+  color: white;
+  padding: 1%;
+  margin: auto;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity: 1;
+}

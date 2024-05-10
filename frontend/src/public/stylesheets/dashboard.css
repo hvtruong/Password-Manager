@@ -1,0 +1,62 @@
+.table-container {
+  width: max-content;
+  height: max-content;
+  display: flex;
+}
+  
+#json-table th {
+  border:1px solid black !important;
+  background: #3498db;
+  padding: 10px 15px;
+  text-align: center;
+}
+  
+#json-table tr td {
+  padding: 10px 15px;
+  border:1px solid black !important;
+  text-align: center;
+}
+  
+#json-table tbody td {
+    background: #eeeeee;
+}
+
+#secretKey {
+  width: 85%;
+}
+
+.lock-btn {
+  width: 25%;
+  height: 50%;
+  margin-top: 5px;
+}
+
+.add-btn {
+  width: auto;
+  height: 50%;
+  padding: 15px;
+}
+
+table {
+  margin: auto;
+  text-align: center;
+  color: black;
+}
+
+th[scope=row] {
+  text-align: center;
+}
+
+.table-bordered-custom{
+  size: auto;
+  border:0px;
+  border-top:initial;
+  background-color: white;
+}
+.table-bordered-custom thead th {
+  border-top:1px solid black !important;
+  text-align: center;
+}
+.table-bordered-custom tbody td:last-child {
+  border:0 !important;
+}
