@@ -63,42 +63,57 @@ CMAKE_BINARY_DIR = /home/hvtruong/Projects/test/Password-Manager/backend/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/encryption.dir/all
+all: C++/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall:
+preinstall: C++/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/encryption.dir/clean
+clean: C++/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/encryption.dir
+# Directory level rules for directory C++
+
+# Recursive "all" directory target.
+C++/all: C++/CMakeFiles/encryption.dir/all
+.PHONY : C++/all
+
+# Recursive "preinstall" directory target.
+C++/preinstall:
+.PHONY : C++/preinstall
+
+# Recursive "clean" directory target.
+C++/clean: C++/CMakeFiles/encryption.dir/clean
+.PHONY : C++/clean
+
+#=============================================================================
+# Target rules for target C++/CMakeFiles/encryption.dir
 
 # All Build rule for target.
-CMakeFiles/encryption.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hvtruong/Projects/test/Password-Manager/backend/build/CMakeFiles --progress-num=1,2,3,4 "Built target encryption"
-.PHONY : CMakeFiles/encryption.dir/all
+C++/CMakeFiles/encryption.dir/all:
+	$(MAKE) $(MAKESILENT) -f C++/CMakeFiles/encryption.dir/build.make C++/CMakeFiles/encryption.dir/depend
+	$(MAKE) $(MAKESILENT) -f C++/CMakeFiles/encryption.dir/build.make C++/CMakeFiles/encryption.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hvtruong/Projects/test/Password-Manager/backend/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target encryption"
+.PHONY : C++/CMakeFiles/encryption.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/encryption.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hvtruong/Projects/test/Password-Manager/backend/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/encryption.dir/all
+C++/CMakeFiles/encryption.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hvtruong/Projects/test/Password-Manager/backend/build/CMakeFiles 5
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 C++/CMakeFiles/encryption.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hvtruong/Projects/test/Password-Manager/backend/build/CMakeFiles 0
-.PHONY : CMakeFiles/encryption.dir/rule
+.PHONY : C++/CMakeFiles/encryption.dir/rule
 
 # Convenience name for target.
-encryption: CMakeFiles/encryption.dir/rule
+encryption: C++/CMakeFiles/encryption.dir/rule
 .PHONY : encryption
 
 # clean rule for target.
-CMakeFiles/encryption.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/clean
-.PHONY : CMakeFiles/encryption.dir/clean
+C++/CMakeFiles/encryption.dir/clean:
+	$(MAKE) $(MAKESILENT) -f C++/CMakeFiles/encryption.dir/build.make C++/CMakeFiles/encryption.dir/clean
+.PHONY : C++/CMakeFiles/encryption.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

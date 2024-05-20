@@ -104,7 +104,7 @@ CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 CMAKE_INSTALL_PREFIX:PATH=/usr/local
 
 //No help, variable specified on the command line.
-CMAKE_JS_INC:UNINITIALIZED=/home/hvtruong/.cmake-js/node-x64/v20.9.0/include/node;/home/hvtruong/Projects/test/Password-Manager/backend/node_modules/nan
+CMAKE_JS_INC:UNINITIALIZED=/home/hvtruong/.cmake-js/node-x64/v20.13.1/include/node;/home/hvtruong/Projects/test/Password-Manager/backend/node_modules/nan
 
 //No help, variable specified on the command line.
 CMAKE_JS_LIB:UNINITIALIZED=
@@ -234,7 +234,7 @@ NODE_ARCH:UNINITIALIZED=x64
 NODE_RUNTIME:UNINITIALIZED=node
 
 //No help, variable specified on the command line.
-NODE_RUNTIMEVERSION:UNINITIALIZED=20.9.0
+NODE_RUNTIMEVERSION:UNINITIALIZED=20.13.1
 
 //Value Computed by CMake
 encryption_BINARY_DIR:STATIC=/home/hvtruong/Projects/test/Password-Manager/backend/build
@@ -350,7 +350,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=1
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

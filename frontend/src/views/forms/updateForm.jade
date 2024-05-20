@@ -1,12 +1,15 @@
-#updatePasswordForm.form-popup
-    form.form-container(action='/update', method='post')
-        h2 Update Password
-        button.btn.cancel() Delete password
-        button.btn.updatePassword(onclick="openUpdatePassword()") Update password
-        #update-popup
-            button.btn() Generate random password
-            label
-                b New password
-            input(type='text', placeholder='Enter Password', name='password', required='')
-            button.btn(type='submit') Update
-        button.btn.cancel(type='button', onclick='closeUpdatePassword(); closeForm("updatePasswordForm")') Close
+#updatePasswordForm.form-popup(action='/update', method='post')
+    h3 Update Password
+    button.button.form-button.cancel() Delete password
+    button.button.form-button.updatePassword(onclick="openUpdatePassword()") Update password
+    #update-popup
+        .text-field-container
+            form.text-field
+                input(type='text', required="")
+                label New password
+            form.text-field
+                input(type='text', required="")
+                label Retype new password
+        button.button.form-button() Generate random password
+        button.button.form-button(type='submit') Update
+    button.button.form-button.cancel(type='button', onclick='closeUpdatePassword(); closeForm("updatePasswordForm")') Close

@@ -5,18 +5,26 @@ block stylesheets
 
 block content
     .container
-        label(for='username') Secret key
-        .form-group
-            input.form-control(type='text', id='secretKey', name='secretKey', placeholder='Please enter your secret key')
-            button.btn.lock-btn Lock key
-    
+        #secret-field-container
+            #secrect-text-field.text-field-container
+                .text-field
+                    input#secretKey(type='text', required='')
+                    label Secret key
+
+        .custom-uploader
+            input(type="file") Upload File
+
         .json-table-container
-            button.btn.add-btn(onclick="openNewForm()") +
+            button#add-button.button(onClick='openNewForm()') Download a copy
+            button#add-button.button(onClick='openNewForm()') Add new password
         
         include forms/updateForm.jade
         include forms/newPasswordForm.jade
         
         script(src='scripts/dashboardView.js')
         script.
+            document.getElementById('secretKey').addEventListener("blur", saveValue);
+            restoreStateOnReload();
+
             let jsonData = `#{json}`;
             generatePasswordsTable(jsonData);

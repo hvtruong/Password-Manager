@@ -126,80 +126,8 @@ encryption: cmake_check_build_system
 
 # fast build rule for target.
 encryption/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/build
+	$(MAKE) $(MAKESILENT) -f C++/CMakeFiles/encryption.dir/build.make C++/CMakeFiles/encryption.dir/build
 .PHONY : encryption/fast
-
-encryption/decoder.o: encryption/decoder.cpp.o
-.PHONY : encryption/decoder.o
-
-# target to build an object file
-encryption/decoder.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/decoder.cpp.o
-.PHONY : encryption/decoder.cpp.o
-
-encryption/decoder.i: encryption/decoder.cpp.i
-.PHONY : encryption/decoder.i
-
-# target to preprocess a source file
-encryption/decoder.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/decoder.cpp.i
-.PHONY : encryption/decoder.cpp.i
-
-encryption/decoder.s: encryption/decoder.cpp.s
-.PHONY : encryption/decoder.s
-
-# target to generate assembly for a file
-encryption/decoder.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/decoder.cpp.s
-.PHONY : encryption/decoder.cpp.s
-
-encryption/encoder.o: encryption/encoder.cpp.o
-.PHONY : encryption/encoder.o
-
-# target to build an object file
-encryption/encoder.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/encoder.cpp.o
-.PHONY : encryption/encoder.cpp.o
-
-encryption/encoder.i: encryption/encoder.cpp.i
-.PHONY : encryption/encoder.i
-
-# target to preprocess a source file
-encryption/encoder.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/encoder.cpp.i
-.PHONY : encryption/encoder.cpp.i
-
-encryption/encoder.s: encryption/encoder.cpp.s
-.PHONY : encryption/encoder.s
-
-# target to generate assembly for a file
-encryption/encoder.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/encoder.cpp.s
-.PHONY : encryption/encoder.cpp.s
-
-encryption/passwordManager.o: encryption/passwordManager.cpp.o
-.PHONY : encryption/passwordManager.o
-
-# target to build an object file
-encryption/passwordManager.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/passwordManager.cpp.o
-.PHONY : encryption/passwordManager.cpp.o
-
-encryption/passwordManager.i: encryption/passwordManager.cpp.i
-.PHONY : encryption/passwordManager.i
-
-# target to preprocess a source file
-encryption/passwordManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/passwordManager.cpp.i
-.PHONY : encryption/passwordManager.cpp.i
-
-encryption/passwordManager.s: encryption/passwordManager.cpp.s
-.PHONY : encryption/passwordManager.s
-
-# target to generate assembly for a file
-encryption/passwordManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/encryption.dir/build.make CMakeFiles/encryption.dir/encryption/passwordManager.cpp.s
-.PHONY : encryption/passwordManager.cpp.s
 
 # Help Target
 help:
@@ -210,15 +138,6 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... encryption"
-	@echo "... encryption/decoder.o"
-	@echo "... encryption/decoder.i"
-	@echo "... encryption/decoder.s"
-	@echo "... encryption/encoder.o"
-	@echo "... encryption/encoder.i"
-	@echo "... encryption/encoder.s"
-	@echo "... encryption/passwordManager.o"
-	@echo "... encryption/passwordManager.i"
-	@echo "... encryption/passwordManager.s"
 .PHONY : help
 
 

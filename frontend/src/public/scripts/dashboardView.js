@@ -1,5 +1,10 @@
 function generatePasswordsTable(jsonData) {
-  jsonData = jsonData.replaceAll("&quot;", '"');
+  if(jsonData == 'null') {
+    return;
+  }
+
+  jsonData = jsonData.replaceAll('&quot;', '"');
+  jsonData = jsonData.replaceAll('\\', '\\\\');
   jsonData = JSON.parse(jsonData);
   
   let col = [];
@@ -12,17 +17,17 @@ function generatePasswordsTable(jsonData) {
     }
   }
 
-  const table = document.createElement("table");
+  const table = document.createElement('table');
   const thead = table.createTHead();
   const tbody = table.createTBody();
 
-  table.setAttribute("id", "json-table");
+  table.setAttribute('id', 'json-table');
 
   let tr = thead.insertRow(-1);
-  let headers = ["Website", "Encrypted password", "Options"];
+  let headers = ['Website', 'Encrypted password', 'Options'];
 
   for (let i = 0; i < headers.length; i++) {
-    let th = document.createElement("th");
+    let th = document.createElement('th');
     th.innerHTML = headers[i];
     tr.appendChild(th);
   }
@@ -36,7 +41,7 @@ function generatePasswordsTable(jsonData) {
       tabCell = tr.insertCell(-1);
       tabCell.innerHTML = jsonData[i][col[j]];
     }
-    tabCell.setAttribute("id", `password ${i}`);
+    tabCell.setAttribute('id', `password ${i}`);
 
     let lastCell = tr.insertCell(-1);
     
@@ -47,30 +52,44 @@ function generatePasswordsTable(jsonData) {
     lastCell.innerHTML = editButton + decryptAndCopyButton;
   }
 
-  document.querySelector(".json-table-container").appendChild(table);
+  document.querySelector('.json-table-container').appendChild(table);
+}
+
+function saveValue() {
+  sessionStorage.setItem('secretKey', document.getElementById('secretKey').value);
+}
+
+function restoreStateOnReload() {
+  let secretKey = sessionStorage.getItem('secretKey');
+  
+  if (secretKey == '') {
+    return;
+  }
+
+  document.getElementById('secretKey').value = secretKey;
 }
 
 function copyToClipboard(id){
-  let password = document.getElementById("password " + id);
+  let password = document.getElementById('password ' + id);
   navigator.clipboard.writeText(password.textContent);
 };
   
 function openUpdateForm() {
-  document.getElementById("updatePasswordForm").style.display = "block";
+  document.getElementById('updatePasswordForm').style.display = 'block';
 };
 
 function openNewForm() {
-  document.getElementById("newPasswordForm").style.display = "block";
+  document.getElementById('newPasswordForm').style.display = 'block';
 };
 
 function closeForm(id) {
-  document.getElementById(id).style.display = "none";
+  document.getElementById(id).style.display = 'none';
 };
 
 function openUpdatePassword() {
-  document.getElementById("update-popup").style.display = "block";
+  document.getElementById('update-popup').style.display = 'block';
 };
 
 function closeUpdatePassword() {
-  document.getElementById("update-popup").style.display = "none";
+  document.getElementById('update-popup').style.display = 'none';
 };
