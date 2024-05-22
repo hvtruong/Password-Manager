@@ -1,12 +1,19 @@
+// Generate the passwords table on dashboard
 function generatePasswordsTable(jsonData) {
+  // Return if there is no data
   if(jsonData == 'null') {
     return;
   }
 
+  // Replace all characters converted when sent to html
   jsonData = jsonData.replaceAll('&quot;', '"');
   jsonData = jsonData.replaceAll('\\', '\\\\');
+
+  // Store the encrypted passwords file temporarily to update the table
+  updatePasswordsFile();
+
   jsonData = JSON.parse(jsonData);
-  
+
   let col = [];
 
   for (let i = 0; i < jsonData.length; i++) {
@@ -17,6 +24,7 @@ function generatePasswordsTable(jsonData) {
     }
   }
 
+  // Create the elements of the table
   const table = document.createElement('table');
   const thead = table.createTHead();
   const tbody = table.createTBody();
@@ -45,20 +53,26 @@ function generatePasswordsTable(jsonData) {
 
     let lastCell = tr.insertCell(-1);
     
+    // Add edit and copy buttons
     let editButton = "<input type='button' value='Edit' onclick='openUpdateForm()'/>";
-    
     let decryptAndCopyButton = `<input type='button' id=${i} onClick='copyToClipboard(id)' value='Decrypt & Copy'/>`;
     
     lastCell.innerHTML = editButton + decryptAndCopyButton;
   }
 
+  // Start rendering the table
   document.querySelector('.json-table-container').appendChild(table);
+};
+
+function updatePasswordsFile() {
+  sessionStorage.setItem('passwordsFile', jsonData);
 }
 
 function saveValue() {
   sessionStorage.setItem('secretKey', document.getElementById('secretKey').value);
-}
+};
 
+// Restore the state of the dashboard in case of reload
 function restoreStateOnReload() {
   let secretKey = sessionStorage.getItem('secretKey');
   
@@ -67,12 +81,32 @@ function restoreStateOnReload() {
   }
 
   document.getElementById('secretKey').value = secretKey;
-}
+};
+
 
 function copyToClipboard(id){
   let password = document.getElementById('password ' + id);
   navigator.clipboard.writeText(password.textContent);
 };
+
+function download(filename, text) {
+  var element = document.createElement('a');
+  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
+function downloadPasswordFile() {
+  let fileName = 'passwords.json'; // The default name the browser will use
+  let json = sessionStorage.getItem('passwordsFile');
+  download(fileName, json);
+}
   
 function openUpdateForm() {
   document.getElementById('updatePasswordForm').style.display = 'block';

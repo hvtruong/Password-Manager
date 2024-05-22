@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const fetch = require('node-fetch');
+var fs = require('fs');
 const PasswordManager = require("../utils/binding.js");
 
 var passwordManager = new PasswordManager("");
@@ -11,7 +12,6 @@ var passwordManager = new PasswordManager("");
 const getAllPasswords = asyncHandler(async (req, res) => {
 
     let json = passwordManager.exportToString();
-
     res.render('dashboard', {title: 'Dashboard', json:json});
 })
 
@@ -29,8 +29,8 @@ const createNewPassword = asyncHandler(async (req, res) => {
         passwordManager.insertSite(website);
         passwordManager.insertPassword(password);
 
-        let json = passwordManager.exportToString();
-
+        // Re render the password table
+        let json = passwordManager.exportToString()
         res.render('dashboard', {title: 'Dashboard', json:json});
     } catch (error) {
         res.status(500).json({message: "Something went wrong"});
@@ -56,9 +56,25 @@ const deletePassword = asyncHandler(async (req, res) => {
         passwordManager.insertSite(req.body.website);
         passwordManager.insertPassword(req.body.password);
 
-        // Re-render the page
-        getAllPasswords();
+        // Re render the password table
+        let json = passwordManager.exportToString();
+        res.render('dashboard', {title: 'Dashboard', json:json});
+    } catch (error) {
+        return res.status(500).json({message: "Something went wrong"});
+    }
+})
 
+// @desc Delete a password
+// @route DELETE /dashboard
+// @access Private
+const loadPasswordFromFile = asyncHandler(async (req, res) => {
+    try {
+        passwordManager.insertSite(req.body.website);
+        passwordManager.insertPassword(req.body.password);
+
+        // Re render the password table
+        let json = passwordManager.exportToString();
+        res.render('dashboard', {title: 'Dashboard', json:json});
     } catch (error) {
         return res.status(500).json({message: "Something went wrong"});
     }

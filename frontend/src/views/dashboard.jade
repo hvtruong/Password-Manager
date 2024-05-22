@@ -15,7 +15,7 @@ block content
             input(type="file") Upload File
 
         .json-table-container
-            button#add-button.button(onClick='openNewForm()') Download a copy
+            button#add-button.button(onClick='downloadPasswordFile()') Download a copy
             button#add-button.button(onClick='openNewForm()') Add new password
         
         include forms/updateForm.jade
@@ -28,3 +28,8 @@ block content
 
             let jsonData = `#{json}`;
             generatePasswordsTable(jsonData);
+
+            // Prevent redo PUSH and PUT requests when reload
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.href);
+            }

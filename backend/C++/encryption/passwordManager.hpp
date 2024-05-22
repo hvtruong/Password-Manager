@@ -31,9 +31,7 @@ class PasswordManager {
 
         string decryptPassword(string encryptedPassword);
 
-        void copyPasswordToClipboard(int index);
-
-        void loadJson(string fileLocation);
+        void loadPasswordFromFile(string fileLocation);
         string exportToString();
 };
 

@@ -1,5 +1,6 @@
 const addon = require('../build/Release/encryption.node');
 
+// The binding process contains methods from C++ addon to NodeJs
 function PasswordManager(key) {
     var _addonInstance = new addon.PasswordManager(key);
     
