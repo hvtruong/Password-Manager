@@ -103,7 +103,10 @@ function download(filename, text) {
 }
 
 function downloadPasswordFile() {
-  let fileName = 'passwords.json'; // The default name the browser will use
+  // The default name the browser will use
+  let fileName = 'passwords.json';
+
+  // Get the passwords file and download
   let json = sessionStorage.getItem('passwordsFile');
   download(fileName, json);
 }

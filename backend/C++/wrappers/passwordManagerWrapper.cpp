@@ -56,6 +56,15 @@ Napi::String PasswordManagerWrapper::decryptPasswordWrapped(const Napi::Callback
     return decryptedPassword;
 }
 
+void loadPasswordsWrapped(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    Napi::String jsonFile = info[0].As<Napi::String>();
+    this->passwordManager.loadPasswords(jsonFile);
+
+    return;
+}
+
 Napi::Value PasswordManagerWrapper::exportToStringWrapped(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
     string jsonFormattedString = this->passwordManager.exportToString();
@@ -71,6 +80,7 @@ Napi::Function PasswordManagerWrapper::GetClass(Napi::Env env) {
           PasswordManagerWrapper::InstanceMethod("generateNewPassword", &PasswordManagerWrapper::generateNewPasswordWrapped),
           PasswordManagerWrapper::InstanceMethod("insertPassword", &PasswordManagerWrapper::insertPasswordWrapped),
           PasswordManagerWrapper::InstanceMethod("insertSite", &PasswordManagerWrapper::insertSiteWrapped),
+          PasswordManagerWrapper::InstanceMethod("loadPasswords", &PasswordManagerWrapper::loadPasswordsWrapped),
           PasswordManagerWrapper::InstanceMethod("exportToString", &PasswordManagerWrapper::exportToStringWrapped),
       });
 }

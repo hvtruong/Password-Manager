@@ -11,7 +11,7 @@
 }
 
 /*Set a style for the new file upload/download fields*/
-.custom-uploader {
+.uploader {
   width: fit-content;
   margin: auto;
   background-color: #efefef;

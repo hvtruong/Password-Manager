@@ -31,7 +31,7 @@ class PasswordManager {
 
         string decryptPassword(string encryptedPassword);
 
-        void loadPasswordFromFile(string fileLocation);
+        void loadPasswords(string jsonPasswords);
         string exportToString();
 };
 

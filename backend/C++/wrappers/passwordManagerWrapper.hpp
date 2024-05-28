@@ -23,6 +23,7 @@ class PasswordManagerWrapper : public Napi::ObjectWrap<PasswordManagerWrapper> {
 
         Napi::String decryptPasswordWrapped(const Napi::CallbackInfo& info);
 
+        void loadPasswordsWrapped(const Napi::CallbackInfo& info);
         Napi::Value exportToStringWrapped(const Napi::CallbackInfo&);
 };
 

@@ -7,8 +7,8 @@ using namespace std;
 using json = nlohmann::json;
 
 PasswordManager::PasswordManager() {
-    this->encoder = Encoder("");
-    this->decoder = Decoder("");
+    this->encoder = Encoder('');
+    this->decoder = Decoder('');
     srand(time(0));
 }
 
@@ -59,11 +59,23 @@ string PasswordManager::generateNewPassword() {
     return randomPassword;
 }
 
+void PasswordManager::loadPasswords(string jsonPasswords) {
+    nlohmann::ordered_json jsonFile;
+    jsonFile.parse(jsonPasswords);
+    
+    for (json::iterator it = jsonFile.begin(); it != jsonFile.end(); it++) {
+        insertSite((*it)['Website']);
+        insertPassword((*it)['Passsword']);
+    }
+
+    return;
+}
+
 string PasswordManager::exportToString() {
     nlohmann::ordered_json jsonFile;
 
     for (int i = 0; i < hostSites.size(); i++) {
-        jsonFile.push_back({{"Website", hostSites[i]}, {"Password", passwords[i]}});
+        jsonFile.push_back({{'Website', hostSites[i]}, {'Password', passwords[i]}});
     }
 
     return to_string(jsonFile);

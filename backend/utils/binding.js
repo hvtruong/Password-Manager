@@ -16,6 +16,10 @@ function PasswordManager(key) {
         return _addonInstance.insertPassword(str);
     }
 
+    this.loadPasswords = function(str) {
+        return _addonInstance.loadPasswords(str);
+    }
+
     this.exportToString = function(str) {
         return _addonInstance.exportToString(str);
     }

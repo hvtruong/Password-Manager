@@ -1,7 +1,10 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const fetch = require('node-fetch');
-var fs = require('fs');
+const fs = require('fs');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const PasswordManager = require("../utils/binding.js");
 
 var passwordManager = new PasswordManager("");
@@ -80,9 +83,16 @@ const loadPasswordFromFile = asyncHandler(async (req, res) => {
     }
 })
 
+const something = asyncHandler(async (req, res) => {
+    let file = req.file;
+    await upload(file);
+})
+
 module.exports = {
     getAllPasswords,
     createNewPassword,
     updatePassword,
-    deletePassword
+    deletePassword,
+    loadPasswordFromFile,
+    something
 }

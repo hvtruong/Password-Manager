@@ -11,8 +11,8 @@ block content
                     input#secretKey(type='text', required='')
                     label Secret key
 
-        .custom-uploader
-            input(type="file") Upload File
+        form.uploader(name='uploader', action='/dashboard/upload', method='post', enctype='multipart/form-data')
+            input(type='file', name='file', id='file', onChange='uploader.submit()')
 
         .json-table-container
             button#add-button.button(onClick='downloadPasswordFile()') Download a copy
