@@ -3,8 +3,8 @@ const bcrypt = require('bcrypt');
 const fetch = require('node-fetch');
 const fs = require('fs');
 const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
 const PasswordManager = require("../utils/binding.js");
 
 var passwordManager = new PasswordManager("");
@@ -29,8 +29,7 @@ const createNewPassword = asyncHandler(async (req, res) => {
             res.status(500).json({message: "Unmatched password"});
         }
         
-        passwordManager.insertSite(website);
-        passwordManager.insertPassword(password);
+        passwordManager.inserNewData(website, password);
 
         // Re render the password table
         let json = passwordManager.exportToString()
@@ -56,8 +55,6 @@ const updatePassword = asyncHandler(async (req, res) => {
 // @access Private
 const deletePassword = asyncHandler(async (req, res) => {
     try {
-        passwordManager.insertSite(req.body.website);
-        passwordManager.insertPassword(req.body.password);
 
         // Re render the password table
         let json = passwordManager.exportToString();
@@ -72,10 +69,8 @@ const deletePassword = asyncHandler(async (req, res) => {
 // @access Private
 const loadPasswordFromFile = asyncHandler(async (req, res) => {
     try {
-        passwordManager.insertSite(req.body.website);
-        passwordManager.insertPassword(req.body.password);
-
-        // Re render the password table
+        let jsonPasswordsData = req.file.buffer.toString();
+        passwordManager.loadDataFromFile(jsonPasswordsData);
         let json = passwordManager.exportToString();
         res.render('dashboard', {title: 'Dashboard', json:json});
     } catch (error) {
@@ -83,16 +78,10 @@ const loadPasswordFromFile = asyncHandler(async (req, res) => {
     }
 })
 
-const something = asyncHandler(async (req, res) => {
-    let file = req.file;
-    await upload(file);
-})
-
 module.exports = {
     getAllPasswords,
     createNewPassword,
     updatePassword,
     deletePassword,
-    loadPasswordFromFile,
-    something
+    loadPasswordFromFile
 }

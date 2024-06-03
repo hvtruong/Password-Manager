@@ -11,19 +11,18 @@ class PasswordManagerWrapper : public Napi::ObjectWrap<PasswordManagerWrapper> {
         PasswordManager passwordManager;
 
     public:
-        PasswordManagerWrapper(const Napi::CallbackInfo& info);
+        PasswordManagerWrapper(const Napi::CallbackInfo&);
         
         static Napi::Object Init(Napi::Env env, Napi::Object exports);
         static Napi::Function GetClass(Napi::Env);
 
-        void insertSiteWrapped(const Napi::CallbackInfo& info);
-        void insertPasswordWrapped(const Napi::CallbackInfo& info);
+        void insertDataWrapped(const Napi::CallbackInfo&);
 
         Napi::Value generateNewPasswordWrapped(const Napi::CallbackInfo&);
 
-        Napi::String decryptPasswordWrapped(const Napi::CallbackInfo& info);
+        Napi::String decryptPasswordWrapped(const Napi::CallbackInfo&);
 
-        void loadPasswordsWrapped(const Napi::CallbackInfo& info);
+        void loadPasswordsWrapped(const Napi::CallbackInfo&);
         Napi::Value exportToStringWrapped(const Napi::CallbackInfo&);
 };
 

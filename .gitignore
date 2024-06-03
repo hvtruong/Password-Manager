@@ -1,3 +1,5 @@
 .env
 build/*
-gtest
+lib
+node_modules
+logs

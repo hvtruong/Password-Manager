@@ -8,15 +8,11 @@ function PasswordManager(key) {
         return _addonInstance.generateNewPassword(str);
     }
 
-    this.insertSite = function(str) {
-        return _addonInstance.insertSite(str);
+    this.inserNewData = function(str, str) {
+        return _addonInstance.inserNewData(str, str);
     }
 
-    this.insertPassword = function(str) {
-        return _addonInstance.insertPassword(str);
-    }
-
-    this.loadPasswords = function(str) {
+    this.loadDataFromFile = function(str) {
         return _addonInstance.loadPasswords(str);
     }
 

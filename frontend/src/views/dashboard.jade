@@ -21,7 +21,7 @@ block content
         include forms/updateForm.jade
         include forms/newPasswordForm.jade
         
-        script(src='scripts/dashboardView.js')
+        script(src='/scripts/dashboardView.js')
         script.
             document.getElementById('secretKey').addEventListener("blur", saveValue);
             restoreStateOnReload();

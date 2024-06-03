@@ -20,6 +20,7 @@ label {
 
 h1, p {
   color: white !important;
+  text-align: center;
 }
 
 h2, b {

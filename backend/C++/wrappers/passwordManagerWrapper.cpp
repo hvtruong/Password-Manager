@@ -23,20 +23,12 @@ PasswordManagerWrapper::PasswordManagerWrapper(const Napi::CallbackInfo& info)
     string key = info[0].As<Napi::String>().Utf8Value();
 }
 
-void PasswordManagerWrapper::insertSiteWrapped(const Napi::CallbackInfo& info) {
+void PasswordManagerWrapper::insertDataWrapped(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    string newSite = info[0].As<Napi::String>().Utf8Value();
-    this->passwordManager.insertSite(newSite);
-
-    return;
-}
-
-void PasswordManagerWrapper::insertPasswordWrapped(const Napi::CallbackInfo& info) {
-    Napi::Env env = info.Env();
-
-    string newPassword = info[0].As<Napi::String>().Utf8Value();
-    this->passwordManager.insertPassword(newPassword);
+    string website = info[0].As<Napi::String>().Utf8Value();
+    string password = info[1].As<Napi::String>().Utf8Value();
+    this->passwordManager.insertNewData(website, password);
 
     return;
 }
@@ -56,7 +48,7 @@ Napi::String PasswordManagerWrapper::decryptPasswordWrapped(const Napi::Callback
     return decryptedPassword;
 }
 
-void loadPasswordsWrapped(const Napi::CallbackInfo& info) {
+void PasswordManagerWrapper::loadPasswordsWrapped(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
     Napi::String jsonFile = info[0].As<Napi::String>();
@@ -78,8 +70,7 @@ Napi::Function PasswordManagerWrapper::GetClass(Napi::Env env) {
       "PasswordManagerWrapper",
       {
           PasswordManagerWrapper::InstanceMethod("generateNewPassword", &PasswordManagerWrapper::generateNewPasswordWrapped),
-          PasswordManagerWrapper::InstanceMethod("insertPassword", &PasswordManagerWrapper::insertPasswordWrapped),
-          PasswordManagerWrapper::InstanceMethod("insertSite", &PasswordManagerWrapper::insertSiteWrapped),
+          PasswordManagerWrapper::InstanceMethod("inserNewData", &PasswordManagerWrapper::insertDataWrapped),
           PasswordManagerWrapper::InstanceMethod("loadPasswords", &PasswordManagerWrapper::loadPasswordsWrapped),
           PasswordManagerWrapper::InstanceMethod("exportToString", &PasswordManagerWrapper::exportToStringWrapped),
       });

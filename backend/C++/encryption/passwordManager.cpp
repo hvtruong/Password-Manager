@@ -1,14 +1,15 @@
 #include "passwordManager.hpp"
 #include <time.h>
-#include "../../lib/json.hpp"
 #include <iostream>
+#include <regex>
+#include <string>
 
 using namespace std;
-using json = nlohmann::json;
+using json = nlohmann::ordered_json;
 
 PasswordManager::PasswordManager() {
-    this->encoder = Encoder('');
-    this->decoder = Decoder('');
+    this->encoder = Encoder("");
+    this->decoder = Decoder("");
     srand(time(0));
 }
 
@@ -22,25 +23,11 @@ string PasswordManager::decryptPassword(string encryptedPassword) {
     return decoder.decrypt(encryptedPassword);
 }
 
-void PasswordManager::insertSite(string site) {
-    hostSites.push_back(site);
-
-    return;
-}
-
-void PasswordManager::insertPassword(string password) {
+void PasswordManager::insertNewData(string website, string password) {
     string encryptedPassword = encoder.encrypt(password);
-    passwords.push_back(encryptedPassword);
+    passwordsData.push_back({{"Website", website}, {"Password", encryptedPassword}});
 
     return;
-}
-
-vector<string> PasswordManager::retrieveHostSites() {
-    return hostSites;
-}
-
-vector<string> PasswordManager::retrievePasswords() {
-    return passwords;
 }
 
 char generateRandomCharacter() {
@@ -59,24 +46,24 @@ string PasswordManager::generateNewPassword() {
     return randomPassword;
 }
 
-void PasswordManager::loadPasswords(string jsonPasswords) {
-    nlohmann::ordered_json jsonFile;
-    jsonFile.parse(jsonPasswords);
-    
-    for (json::iterator it = jsonFile.begin(); it != jsonFile.end(); it++) {
-        insertSite((*it)['Website']);
-        insertPassword((*it)['Passsword']);
-    }
+void PasswordManager::loadPasswords(string jsonString) {
+    string pattern = "&quot;";
+  
+    // regex object 
+    regex reg(pattern); 
+  
+    // replacement string 
+    string replacement = "\""; 
+  
+    // call regex_replace() and store the result 
+    string result = regex_replace(jsonString, reg, replacement);
+
+    this->passwordsData = json::parse(result);
 
     return;
 }
 
 string PasswordManager::exportToString() {
-    nlohmann::ordered_json jsonFile;
 
-    for (int i = 0; i < hostSites.size(); i++) {
-        jsonFile.push_back({{'Website', hostSites[i]}, {'Password', passwords[i]}});
-    }
-
-    return to_string(jsonFile);
+    return to_string(passwordsData);
 }

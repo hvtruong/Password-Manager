@@ -1,24 +1,59 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
 
-var homeRouter = require('../../backend/routes/home');
-var loginRouter = require('../../backend/routes/login');
-var registerRouter = require('../../backend/routes/register');
-var authenticateRouter = require('../../backend/routes/authenticate');
-var usersRouter = require('../../backend/routes/users');
-var dashBoardRouter = require('../../backend/routes/dashboard');
+const backendPath = path.join(__dirname, '..', '..', 'backend');
+
+// Setup middlewares
+// Requests logger
+const { logger } = require(path.join(backendPath, 'middleware', 'logger'));
+// Error logger
+const errorLogger = require(path.join(backendPath, 'middleware', 'errorHandler'));
+
+// Cross-origin resource sharing
+const cors = require('cors');
+const corsOptions = require(path.join(backendPath, 'config', 'corsOptions'));
+
+// Connect MongoDB
+const connectDB = require(path.join(backendPath, 'config', 'DBConnection'));
+const mongoose = require('mongoose')
+
+// Passport for authentication
+const passport = require('passport');
+const localStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+
+// Setup all routers
+const homeRouter = require(path.join(backendPath, 'routes', 'home'));
+const loginRouter = require(path.join(backendPath, 'routes', 'login'));
+const registerRouter = require(path.join(backendPath, 'routes', 'register'));
+const authenticateRouter = require(path.join(backendPath, 'routes', 'authenticate'));
+const dashBoardRouter = require(path.join(backendPath, 'routes', 'dashboard'));;
 
 const bodyParser= require('body-parser');
-var app = express();
+const app = express();
 
-// view engine setup
+// Setup view engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
+app.use(logger);
+app.use(cors(corsOptions));
+
+connectDB();
+
+// Use session middleware
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: false }));
@@ -26,19 +61,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
 
+// Link the page to associated router
 app.use('/', homeRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 app.use('/authenticate', authenticateRouter);
-app.use('/users', usersRouter);
 app.use('/dashboard', dashBoardRouter);
 
-// catch 404 and forward to error handler
+// Catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Handle errors
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -46,7 +81,9 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.render('error', {title: '404 Not Found'});
 });
+
+app.use(errorLogger);
 
 module.exports = app;

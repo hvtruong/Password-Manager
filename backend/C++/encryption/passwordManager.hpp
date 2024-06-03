@@ -1,4 +1,5 @@
 #include <vector>
+#include "../../lib/json.hpp"
 
 #include "encoder.hpp"
 #include "decoder.hpp"
@@ -8,24 +9,20 @@
 #define PWMANAGER
 
 using namespace std;
+using json = nlohmann::ordered_json;
 
 class PasswordManager {
     private:
         Encoder encoder;
         Decoder decoder;
 
-        vector<string> passwords;
-        vector<string> hostSites;
+        json passwordsData;
 
     public:
         PasswordManager();
         PasswordManager(string key);
 
-        void insertSite(string site);
-        void insertPassword(string password);
-
-        vector<string> retrieveHostSites();
-        vector<string> retrievePasswords();
+        void insertNewData(string website, string password);
 
         string generateNewPassword();
 
