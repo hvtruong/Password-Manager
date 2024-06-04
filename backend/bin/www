@@ -6,9 +6,7 @@
 
 const app = require('../../frontend/src/app');
 const debug = require('debug')('password-manager:server');
-const { logger, logEvents } = require('../middleware/logger');
 const http = require('http');
-const mongoose = require('mongoose');
 
 /**
  * Get port from environment and store in Express.
@@ -30,20 +28,6 @@ const server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
-
-/**
- * Verify database and server connection
- */
-
-mongoose.connection.once('open', () => {
-  console.log('Connected to MongoDB');
-  console.log(`Server running on port ${port}`);
-})
-
-mongoose.connection.on('error', err => {
-  console.log(err);
-  logEvents(`${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`, 'mongoErr.log');
-})
 
 /**
  * Normalize a port into a number, string, or false.
