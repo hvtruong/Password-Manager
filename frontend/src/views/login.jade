@@ -1,4 +1,22 @@
 extends layout
+block stylesheets
+  style(type="text/css").
+    .text-field-container {
+      margin: auto;
+      width: 50%;
+    }
+
+    a:link, a:visited {
+      color: yellow;
+    }
+
+    a:hover, a:active {
+      background-color: yellow;
+    }
+
+    .button {
+      margin-top: 2%;
+    }
 
 block content
  .container
@@ -7,10 +25,11 @@ block content
      | Sign in with your account. Don’t have one?
      a(href='/register')  Register Now.
      form(role='form', action='/login', method='post')
-       .form-group
-         label(for='username') Username
-         input.form-control(type='text', id='username', name='username', placeholder='Enter your username')
-       .form-group
-         label(for='password') Password
-         input.form-control(type='password', id='password', name='password', placeholder='Enter your password')
-       button.btn.btn-primary(type='submit') Submit
+       .text-field-container
+          .text-field
+            input(type='text', required='', id='username', name='username')
+            label Username
+          .text-field
+            input(type='text', required='', id='password', name='password')
+            label Password
+       button.button(type='submit') Login

@@ -1,4 +1,22 @@
 extends layout
+block stylesheets
+  style(type="text/css").
+    .text-field-container {
+      margin: auto;
+      width: 60%;
+    }
+
+    a:link, a:visited {
+      color: yellow;
+    }
+
+    a:hover, a:active {
+      background-color: yellow;
+    }
+
+    .button {
+      margin-top: 2%;
+    }
 
 block content
  .container
@@ -6,19 +24,20 @@ block content
    p Please fill in this form to create an account.
    p.lead
      form(role='form', action='/register', method='post')
-       .form-group
-         label(for='email') Email
-         input.form-control(type='text', id='emailAddress', name='emailAddress', placeholder='Enter an email address')
-       .form-group
-         label(for='username') Username
-         input.form-control(type='text', id='username', name='username', placeholder='Enter a username')
-       .form-group
-         label(for='password') Password
-         input.form-control(type='password', id='password', name='password', placeholder='Enter a password')
-       .form-group
-         label(for='repeatedPassword') Password
-         input.form-control(type='password', id='repeatedPassword', name='repeatedPassword', placeholder='Enter your password again')
-       button.btn.btn-primary(type='submit') Submit
+      .text-field-container
+        .text-field
+          input(type='text', required='', id='emailAddress', name='emailAddress')
+          label(for='email') Email
+        .text-field
+          input(type='text', required='', id='username', name='username')
+          label(for='username') Username
+        .text-field
+          input(type='password', required='', id='password', name='password')
+          label(for='password') Password
+        .text-field
+          input(type='password', required='', id='repeatedPassword', name='repeatedPassword')
+          label(for='repeatedPassword') Repeat Password
+       button.button(type='submit') Submit
 
     p.signin
     | Already have an account? 
