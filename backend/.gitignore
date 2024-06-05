@@ -1,0 +1,5 @@
+assets
+build
+logs
+node_modules
+.env

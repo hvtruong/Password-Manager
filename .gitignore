@@ -1,5 +1,2 @@
-.env
-build/*
+build
 lib
-node_modules
-logs

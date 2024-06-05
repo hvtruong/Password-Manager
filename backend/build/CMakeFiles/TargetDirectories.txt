@@ -1,5 +1,7 @@
 /home/hvtruong/Projects/test/Password-Manager/backend/build/CMakeFiles/edit_cache.dir
 /home/hvtruong/Projects/test/Password-Manager/backend/build/CMakeFiles/rebuild_cache.dir
-/home/hvtruong/Projects/test/Password-Manager/backend/build/C++/CMakeFiles/encryption.dir
-/home/hvtruong/Projects/test/Password-Manager/backend/build/C++/CMakeFiles/edit_cache.dir
-/home/hvtruong/Projects/test/Password-Manager/backend/build/C++/CMakeFiles/rebuild_cache.dir
+/home/hvtruong/Projects/test/Password-Manager/backend/build/src/CMakeFiles/edit_cache.dir
+/home/hvtruong/Projects/test/Password-Manager/backend/build/src/CMakeFiles/rebuild_cache.dir
+/home/hvtruong/Projects/test/Password-Manager/backend/build/src/C++/CMakeFiles/encryption.dir
+/home/hvtruong/Projects/test/Password-Manager/backend/build/src/C++/CMakeFiles/edit_cache.dir
+/home/hvtruong/Projects/test/Password-Manager/backend/build/src/C++/CMakeFiles/rebuild_cache.dir

@@ -126,7 +126,7 @@ encryption: cmake_check_build_system
 
 # fast build rule for target.
 encryption/fast:
-	$(MAKE) $(MAKESILENT) -f C++/CMakeFiles/encryption.dir/build.make C++/CMakeFiles/encryption.dir/build
+	$(MAKE) $(MAKESILENT) -f src/C++/CMakeFiles/encryption.dir/build.make src/C++/CMakeFiles/encryption.dir/build
 .PHONY : encryption/fast
 
 # Help Target

@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -DBUILDING_NODE_EXTENSION -O3 -DNDEBUG -shared -Wl,-soname,encryption.node -o ../Release/encryption.node CMakeFiles/encryption.dir/encryption/decoder.cpp.o CMakeFiles/encryption.dir/encryption/encoder.cpp.o CMakeFiles/encryption.dir/encryption/passwordManager.cpp.o CMakeFiles/encryption.dir/wrappers/passwordManagerWrapper.cpp.o 

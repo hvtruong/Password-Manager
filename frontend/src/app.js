@@ -19,7 +19,6 @@ const corsOptions = require(path.join(backendPath, 'config', 'corsOptions'));
 // Setup all routers
 const loginRouter = require(path.join(backendPath, 'routes', 'login'));
 const registerRouter = require(path.join(backendPath, 'routes', 'register'));
-const authenticateRouter = require(path.join(backendPath, 'routes', 'authenticate'));
 const dashBoardRouter = require(path.join(backendPath, 'routes', 'dashboard'));;
 
 const app = express();
@@ -46,7 +45,6 @@ app.use(express.static(path.join(__dirname, 'views')));
 // Link the page to associated router
 app.use('/', loginRouter);
 app.use('/register', registerRouter);
-app.use('/authenticate', authenticateRouter);
 app.use('/dashboard', dashBoardRouter);
 
 // Catch 404 and forward to error handler
