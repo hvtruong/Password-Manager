@@ -17,7 +17,6 @@ const cors = require('cors');
 const corsOptions = require(path.join(backendPath, 'config', 'corsOptions'));
 
 // Setup all routers
-const homeRouter = require(path.join(backendPath, 'routes', 'home'));
 const loginRouter = require(path.join(backendPath, 'routes', 'login'));
 const registerRouter = require(path.join(backendPath, 'routes', 'register'));
 const authenticateRouter = require(path.join(backendPath, 'routes', 'authenticate'));
@@ -45,8 +44,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views')));
 
 // Link the page to associated router
-app.use('/', homeRouter);
-app.use('/login', loginRouter);
+app.use('/', loginRouter);
 app.use('/register', registerRouter);
 app.use('/authenticate', authenticateRouter);
 app.use('/dashboard', dashBoardRouter);

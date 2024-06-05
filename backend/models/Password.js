@@ -3,11 +3,11 @@ const mongoose = require('mongoose')
 const passwordSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
-    passwords: {
-        type: Array,
+    passwordsJson: {
+        type: Object,
         default: undefined
     }
 })

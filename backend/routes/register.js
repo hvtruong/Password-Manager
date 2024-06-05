@@ -13,9 +13,9 @@ router.get('/', function(req, res, next) {
 
 router.post('/', async function(req, res, next) {
     const data = {
-      emailAddress:req.body.emailAddress,
       username:req.body.username,
-      password:req.body.password
+      password:req.body.password,
+      emailAddress:req.body.emailAddress
     }
 
     const checking = await userModel.findOne({username: req.body.username})

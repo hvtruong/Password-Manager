@@ -1,22 +1,22 @@
 extends layout
 block stylesheets
-    link(rel='stylesheet', href='/stylesheets/dashboard.css')
-    link(rel='stylesheet', href='/stylesheets/forms/forms.css')
+    link(rel = 'stylesheet', href = '/stylesheets/dashboard.css')
+    link(rel = 'stylesheet', href = '/stylesheets/forms/forms.css')
 
 block content
     .container
         #secret-field-container
             #secrect-text-field.text-field-container
                 .text-field
-                    input#secretKey(type='text', required='')
+                    input#secretKey(type = 'text', required = '', placeholder = 'Please enter your secret key')
                     label Secret key
 
-        form.uploader(name='uploader', action='/dashboard/upload', method='post', enctype='multipart/form-data')
+        form.uploader(name = 'uploader', action = '/dashboard/upload', method = 'post', enctype = 'multipart/form-data')
             input(type='file', name='file', id='file', onChange='uploader.submit()')
 
         .json-table-container
-            button#add-button.button(onClick='downloadPasswordFile()') Download a copy
-            button#add-button.button(onClick='openNewForm()') Add new password
+            button#add-button.button(onClick = 'downloadPasswordFile()') Download a copy
+            button#add-button.button(onClick = 'openNewForm()') Add new password
         
         include forms/updateForm.jade
         include forms/newPasswordForm.jade

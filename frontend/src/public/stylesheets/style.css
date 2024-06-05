@@ -18,6 +18,10 @@ label {
   color: white;
 }
 
+::placeholder {
+  text-align: center; 
+}
+
 h1, p {
   color: white !important;
   text-align: center;
@@ -93,12 +97,12 @@ h2, b {
 }
 
 /* Remove border of text field */
-input[type=text], input[type=password] {
+input[type=text], input[type=password], input[type=email]  {
   border: none;
 }
 
 /* Remove border when input get focused */
-input[type=text]:focus, input[type=password]:focus {
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
   outline: none;
 }
 
@@ -142,6 +146,7 @@ input[type=text]:focus, input[type=password]:focus {
 /* Set a transition when input get focused */
 .text-field-container .text-field input:focus ~ label,
 .text-field-container .text-field input:valid ~ label,
+.text-field-container .text-field input:not(:placeholder-shown) ~ label,
 .text-field-container .text-field input:read-only ~ label {
   top: -15px;
   left: -10px;
