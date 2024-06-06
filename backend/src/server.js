@@ -1,81 +1,64 @@
-require('dotenv').config()
-require('express-async-errors')
+const app = require('./app');
 
-const createError = require('http-errors');
-const cookieParser = require('cookie-parser');
-
-const express = require('express');
-const app = express();
-
-// Setup path to backend
-const path = require('path');
-
-// Setup middlewares
-// Requests logger
-const { logger } = require('./middleware/logger');
-app.use(logger);
-
-// Errors logger
-const errorLogger = require('./middleware/errorHandler');
-
-// Cross-origin resource sharing
-const cors = require('cors');
-const corsOptions = require('./config/corsOptions');
-app.use(cors(corsOptions));
-
-// Setup all routers
-const loginRouter = require('./routes/login');
-const registerRouter = require('./routes/register');
-const dashBoardRouter = require('./routes/dashboard');
-
-// Setup view engine
-app.set('views', '../frontend/src/views');
-app.set('view engine', 'jade');
-
-// Built-in middleware to parses incoming requests with JSON payloads
-app.use(express.json());
-
-// Parse URL-encoded bodies
-app.use(express.urlencoded({ extended: false }));
-
-app.use(cookieParser());
-
-// Static middleware
-app.use(express.static('../frontend/src/public'));
-app.use(express.static('../frontend/src/views'));
-
-// Link the page to associated router
-app.use('/login', loginRouter);
-app.use('/register', registerRouter);
-app.use('/dashboard', dashBoardRouter);
-
-// Catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
-
-// Handle errors
-app.use(function(err, req, res, next) {
-  // Set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // Render the error page
-  res.status(err.status || 500);
-  res.render('error', {title: '404 Not Found'});
-});
-
-app.use(errorLogger);
-
-// Get port from environment and store in Express.
-const {normalizePort, onError, onListening} = require('./utils/serverUtils')
+// Get port from environment and store in Express
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-// Listen on provided port, on all network interfaces.
-{}
-app.listen(port);
-app.on('error', onError);
-app.on('listening', onListening);
+// Create HTTP server
+const http = require('http');
+const server = http.createServer(app);
 
-module.exports = app;
+// Listen on provided port, on all network interfaces
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+// Normalize a port into a number, string, or false
+
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    return val;
+  }	
+
+  if (port >= 0) {
+    return port;
+  }	
+
+  return false;
+}	
+
+//Event listener for HTTP server "error" event
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }	
+
+  const bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // Handle specific listen errors with friendly messages	
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+    default:
+      throw error;
+  }	
+}	
+
+//Event listener for HTTP server "listening" event
+const debug = require('debug')('password-manager:server');
+function onListening() {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
