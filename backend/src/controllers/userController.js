@@ -2,11 +2,10 @@ const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 
 // Connect to MongoDB
-const connectDB = require('../config/DBConnection');
-connectDB();
+const db = require('../config/DBConnection');
 
 // Load schema for user data
-var userModel = require("../models/User");
+const userModel = require("../models/User");
 
 // @desc Post a new password
 // @route POST /dashboard

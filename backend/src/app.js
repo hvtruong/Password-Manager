@@ -2,17 +2,18 @@
 const express = require('express');
 const app = express();
 
-// Setup path to backend
-const path = require('path');
-
 // Setup middlewares
 // Requests logger
-const { logger } = require('./middleware/logger');
+const {logger} = require('./middleware/logger');
 app.use(logger);
 
 // Errors logger
 const errorLogger = require('./middleware/errorHandler');
 app.use(errorLogger);
+
+// CSRF
+const csrf = require('csurf');
+app.use(csrf());
 
 // Cross-origin resource sharing
 const cors = require('cors');
@@ -22,6 +23,44 @@ app.use(
       credentials: true,
     })
 );
+
+// Connect to MongoDB
+const db = require('./config/DBConnection');
+
+db.on('error', (error) => {
+  console.error('MongoDB connection error:', error);
+});
+
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+db.on('disconnected', () => {
+  console.log('Disconnected from MongoDB');
+});
+
+// Session setup for passport middleware
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+app.use(session({
+  secret: 'secret key', // Key to be changed when in production
+  resave: false, // Do not save session if unmodified
+  saveUninitialized: false, // Do not create session until something stored
+  store: new MongoStore({mongoUrl: db.client.s.url})
+}));
+
+// Passport middleware for authentication
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+userModel = require('./models/User');
+const strategy = new LocalStrategy(userModel.authenticate())
+
+passport.use(strategy);
+passport.serializeUser(userModel.serializeUser());
+passport.deserializeUser(userModel.deserializeUser());
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Setup all routers
 const loginRouter = require('./routes/login');
@@ -42,13 +81,10 @@ app.use(express.urlencoded({ extended: false }));
 const compression = require('compression');
 app.use(compression());
 
-// Middleware to parse and populate req.cookies
-const cookieParser = require('cookie-parser');
-app.use(cookieParser());
-
 // Static middleware
 app.use(express.static('../frontend/src/public'));
 app.use(express.static('../frontend/src/views'));
+
 
 
 // Setup API routes

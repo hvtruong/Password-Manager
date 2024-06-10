@@ -10,5 +10,11 @@
     "mongoose": "^8.4.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   }
 }

@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const passwordSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'user',
         required: true
     },
     passwordsJson: {
@@ -12,4 +12,4 @@ const passwordSchema = new mongoose.Schema({
     }
 })
 
-module.exports = new mongoose.model('Passwords', passwordSchema)
+module.exports = new mongoose.model('password', passwordSchema)
