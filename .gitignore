@@ -1,2 +1,18 @@
-build
+# dependencies
+node_modules
+
+# logs
+assets
+logs
+
+# testing
+coverage
+
+# libraries
 lib
+
+# production
+build
+
+# misc
+.env
