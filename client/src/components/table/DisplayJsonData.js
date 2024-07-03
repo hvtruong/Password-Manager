@@ -1,5 +1,5 @@
 import JsonData from './data.json'
-import LogIn from "../forms/LogInForm";
+import Update from "../forms/UpdateForm";
 
 function addHttps(link) {
     if (link.includes("https://") === true) {
@@ -51,10 +51,10 @@ const DisplayJsonData = JsonData.map(
                     <span className='cell-header'>
                         Actions: 
                     </span>
-                    <a class="add" title="Copy password" data-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#loginForm">
+                    <a class="add" title="Copy password" data-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#updateForm">
                         <i className="fa-solid fa-copy" style={{color: "#27C46B"}}></i>
                     </a>
-                    <LogIn />
+                    <Update />
                     <a class="edit" title="Edit" data-toggle="tooltip"><i className="fas fa-edit" style={{color: "#FFC107"}}></i></a>
                 </td>
             </tr>
