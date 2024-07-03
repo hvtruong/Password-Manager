@@ -1,7 +1,8 @@
 add_executable(runAllTests tests.cpp)
 
 target_link_libraries(runAllTests
-  gmock gtest gtest_main
+  PRIVATE
+  gmock gtest gtest_main 
   encryption
 )
 

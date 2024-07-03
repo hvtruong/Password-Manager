@@ -1,0 +1,24 @@
+{
+  "name": "password-manager",
+  "version": "1.0.0",
+  "description": "Manager passwords",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "backend": "npm run dev --prefix backend",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run backend\" \"npm run client\"",
+    "start:client": "npm start --prefix client",
+    "start:backend": "npm start --prefix backend",
+    "start": "concurrently \"npm run start:client\" \"npm run start:backend\""
+  },
+  "author": "hvtruong",
+  "license": "ISC",
+  "dependencies": {
+    "argon-design-system-free": "^1.2.0",
+    "concurrently": "^8.2.2"
+  }
+}

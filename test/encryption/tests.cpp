@@ -1,11 +1,12 @@
 #include <iostream>
 #include <string>
-#include "passwordManager.hpp"
+#include "encryption/passwordManager.hpp"
 #include "gtest/gtest.h"
 
 using namespace std;
 
-string randomKey = "randomKey123654";
+vector<string> randomKeys{"", "123456", ".abc2Xa$#!@", "^"};
+string randomKey = (randomKeys[rand() % 4]);
 PasswordManager passwordManager = PasswordManager(randomKey);
 int numberOfGenerations = 1000;
 
@@ -72,6 +73,23 @@ TEST(encryption, decrypt)
 
         ASSERT_TRUE(randomPassword == decryptedPassword);
     }
+}
+
+TEST(files, export) {
+
+    vector<string> randomPasswords;
+    string randomKey = passwordManager.generateNewPassword();
+    passwordManager = PasswordManager(randomKey);
+
+    for(int i = 0; i < numberOfGenerations; i++) {
+        string randomPassword = passwordManager.generateNewPassword();
+        passwordManager.insertSite(randomPassword);
+        passwordManager.insertPassword(randomPassword);
+
+        ASSERT_TRUE(randomPassword != passwordManager.retrievePasswords().back());
+    }
+
+    passwordManager.exportToString();
 }
 
 int main(int argc, char* argv[]) {

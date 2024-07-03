@@ -1,0 +1,155 @@
+* {
+  box-sizing: border-box
+}
+
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: linear-gradient(to left, #0b87a7, #000000);
+  color: white;
+}
+
+a {
+  color: #4285F4;
+  text-decoration: none;
+}
+
+label {
+  margin: 0.5%;
+  color: white;
+}
+
+::placeholder {
+  text-align: center; 
+}
+
+h1, p {
+  color: white !important;
+  text-align: center;
+}
+
+h2, b {
+  color: black !important;
+}
+
+.p-blue { 
+  color:#4285F4; 
+}
+.a-red { 
+  color:#DB4437; 
+}
+.s-yellow { 
+  color:#F4B400; 
+}
+.s-blue {
+  color:#4285F4; 
+}
+.w-green { 
+  color:#0F9D58; 
+}
+.d-green { 
+  display:inline-block;transform:rotate(10deg); 
+}
+.r-blue{ 
+  display:inline-block;transform:rotate(10deg); 
+}
+
+.container {
+  margin: auto;
+  margin-top: 10%;
+  text-align: center;
+  justify-content: center;
+}
+
+.option {
+  display: inline-block;
+  width: 20%;
+  margin: 10%;
+  border: 1px solid black;
+  padding: 5% 5%;
+  box-shadow: 5px 5px 5px black;
+  vertical-align: middle;
+  color: white;
+  font: 1.25em sans-serif;
+  background-color: #00B7FF;
+}
+
+.option:hover {
+  opacity: 0.7;
+  color: white;
+  text-decoration: none;
+}
+
+/* Set a style for all button used */
+.button {
+  display:inline-block;
+  padding:0.3em 1.2em;
+  margin:0 0.3em 0.3em 0;
+  border-radius:2em;
+  box-sizing: border-box;
+  background-color:#4eb5f1;
+  font-size: larger;
+  text-align:center;
+}
+
+/* Make button background darker when hovered */
+.button:hover {
+  background-color:#4095c6;
+}
+
+/* Remove border of text field */
+input[type=text], input[type=password], input[type=email]  {
+  border: none;
+}
+
+/* Remove border when input get focused */
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
+  outline: none;
+}
+
+/* The container of text field and label */
+.text-field-container {
+  width: auto;
+  background: rgba(0,0,0,.5);
+  box-sizing: border-box;
+  box-shadow: 0 15px 25px rgba(0,0,0,.6);
+  border-radius: 10px;
+}
+
+/* Set input field positon */
+.text-field-container .text-field {
+  position: relative;
+}
+
+/* Set a style the input field */
+.text-field-container .text-field input {
+  width: 95%;
+  padding: 10px 0;
+  font-size: larger;
+  margin-bottom: 5px;
+  color: #fff;
+  border-bottom: 0.5px solid #fff;
+  background: transparent;
+}
+
+/* Set a style the label */
+.text-field-container .text-field label {
+  position: absolute;
+  top:0;
+  left: 0;
+  padding: 10px 10px;
+  font-size: larger;
+  color: #fff;
+  pointer-events: none;
+  transition: .5s;
+}
+
+/* Set a transition when input get focused */
+.text-field-container .text-field input:focus ~ label,
+.text-field-container .text-field input:valid ~ label,
+.text-field-container .text-field input:not(:placeholder-shown) ~ label,
+.text-field-container .text-field input:read-only ~ label {
+  top: -15px;
+  left: -10px;
+  color: #03e9f0;
+  font-size: 12px;
+}

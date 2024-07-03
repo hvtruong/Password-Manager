@@ -1,0 +1,36 @@
+/* The popup form - hidden by default */
+.form-popup {
+    display: none;
+    position: fixed;
+    top: 40%;
+    right: 15px;
+    color: white;
+    z-index: 9;
+}
+
+/* Set a style for the submit/login button */
+.form-popup .form-button {
+    background-color: #03e9f0;
+    size: auto;
+    color: black;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom:10px;
+    opacity: 0.8;
+}
+  
+/* Add a red background color to the cancel and delete buttons */
+.form-popup .cancel {
+    background-color: red;
+}
+  
+/* Add some hover effects to buttons */
+.form-popup .btn:hover, .open-button:hover {
+    opacity: 1;
+}
+  
+#update-popup {
+    display: none;
+}

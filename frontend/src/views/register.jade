@@ -1,0 +1,62 @@
+extends layout
+block stylesheets
+  style(type="text/css").
+    .text-field-container {
+      margin: auto;
+      width: 60%;
+    }
+
+    a:link, a:visited {
+      color: yellow;
+    }
+
+    a:hover, a:active {
+      background-color: yellow;
+    }
+
+    .button {
+      margin-top: 2%;
+    }
+
+    #message {
+      display: none;
+    }
+
+block content
+ .container
+   h1 Register
+   p Please fill in this form to create an account.
+   p.lead
+     form(role='form', action='/register', method='post')
+      .text-field-container
+        .text-field
+          input(type='text', required='', id='username', name='username', placeholder='Please enter your username')
+          label(for='username') Username
+        .text-field
+          input(type='password', required='', id='password', name='password', placeholder='Please enter your password', onKeyUp ='passConfirm();')
+          label(for='password') Password
+        .text-field
+          input(type='password', required='', id='repeatedPassword', name='repeatedPassword', placeholder='Please repeat your password', onKeyUp ='passConfirm();')
+          label(for='repeatedPassword') Repeat Password
+        .text-field
+          input(type='email', required='', id='emailAddress', name='emailAddress', placeholder='Please enter your email address')
+          label(for='email') Email
+      button.button(type='submit') Sign up
+
+      span#message abc
+
+      script.
+        var passConfirm = function() {
+          if (document.getElementById("password").value != document.getElementById("repeatedPassword").value) {
+            document.getElementById("message").style.display = 'block';
+            document.getElementById("message").style.color = "Red";
+            document.getElementById("message").innerHTML = "Passwords do NOT match!"
+          }
+          else {
+            document.getElementById("message").style.display = 'none';
+          }
+        }
+
+    p.signin
+    | Already have an account?
+    a(href='/login')  Sign in.
