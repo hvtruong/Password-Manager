@@ -66,12 +66,12 @@ const Table = () => {
                         </div>
                         <table className="table table-striped table-hover">
                             <thead>
-                                <tr key = "2">
-                                    <th key="1">ID</th>
-                                    <th key="2">Website</th>
-                                    <th key="3">Username</th>
-                                    <th key="4">Password</th>
-                                    <th key="5">Actions</th>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Website</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

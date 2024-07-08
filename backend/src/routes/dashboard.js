@@ -12,7 +12,4 @@ router.route('/')
   .put(passwordController.updatePassword)
   .delete(passwordController.deletePassword)
 
-router.route('/upload')
-  .post(upload.single('file'), passwordController.loadPasswordFromFile)
-
 module.exports = router;

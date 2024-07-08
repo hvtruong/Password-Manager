@@ -1,12 +1,12 @@
 import JsonData from './data.json'
-import Update from "../forms/UpdateForm";
+import Update from '../forms/UpdateUser';
 
 function addHttps(link) {
-    if (link.includes("https://") === true) {
+    if (link.includes('https://') === true) {
         return link
     }
 
-    return "https://" + link
+    return 'https://' + link
 }
 
 function shortenPassword(password) {
@@ -14,7 +14,7 @@ function shortenPassword(password) {
         return password
     }
 
-    return password.substring(0, 14) + "..."
+    return password.substring(0, 14) + '...'
 }
 
 const DisplayJsonData = JsonData.map(
@@ -31,7 +31,7 @@ const DisplayJsonData = JsonData.map(
                     <span className='cell-header'>
                         Website: 
                     </span>
-                    <a href={addHttps(info.website)} style={{color: "#0d6efd", display: "table-cell"}} target="_blank">
+                    <a href={addHttps(info.website)} style={{color: '#0d6efd', display: 'table-cell'}} target='_blank' rel='noreferrer'>
                         {info.website}
                     </a>
                 </td>
@@ -51,11 +51,13 @@ const DisplayJsonData = JsonData.map(
                     <span className='cell-header'>
                         Actions: 
                     </span>
-                    <a class="add" title="Copy password" data-toggle="tooltip" data-bs-toggle="modal" data-bs-target="#updateForm">
-                        <i className="fa-solid fa-copy" style={{color: "#27C46B"}}></i>
+                    <a class='add' title='Copy password' data-toggle='tooltip' data-bs-toggle='modal' data-bs-target='#updateForm' href='#'>
+                        <i className='fa-solid fa-copy' style={{color: '#27C46B'}}/>
                     </a>
                     <Update />
-                    <a class="edit" title="Edit" data-toggle="tooltip"><i className="fas fa-edit" style={{color: "#FFC107"}}></i></a>
+                    <a class='edit' title='Edit' data-toggle='tooltip' href='#'>
+                        <i className='fas fa-edit' style={{color: '#FFC107'}}/>
+                    </a>
                 </td>
             </tr>
         )
