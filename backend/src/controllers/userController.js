@@ -9,7 +9,7 @@ const getAllUsers = async (req, res) => {
     const users = await User.find().select('-password').lean()
 
     // If no users 
-    if (!users?.length) {
+    if (!!users) {
         return res.status(400).json({ message: 'No users found' })
     }
 
@@ -22,16 +22,18 @@ const getAllUsers = async (req, res) => {
 const createNewUser = async (req, res) => {
     const { username, password, emailAddress } = req.body
 
-    // Confirm data
-    if (!username || !password || !emailAddress) {
-        return res.status(400).json({ message: 'All fields are required' })
+    // Check for duplicate username
+    const duplicateUsername = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+
+    if (duplicateUsername) {
+        return res.status(409).json({ message: 'Duplicate username' })
     }
 
-    // Check for duplicate username
-    const duplicate = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    // Check for duplicate email address
+    const duplicateEmailAddress = await User.findOne({ emailAddress }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
-    if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate username' })
+    if (duplicateEmailAddress) {
+        return res.status(409).json({ message: 'Duplicate email address' })
     }
 
     // Hash password 
@@ -42,9 +44,10 @@ const createNewUser = async (req, res) => {
     // Create and store new user 
     const user = await User.create(userObject)
 
-    if (user) { //created 
+    if (user) {
         res.status(201).json({ message: `New user ${username} created` })
-    } else {
+    } 
+    else {
         res.status(400).json({ message: 'Invalid user data received' })
     }
 }
@@ -53,14 +56,9 @@ const createNewUser = async (req, res) => {
 // @route PATCH /user
 // @access Private
 const updateUser = async (req, res) => {
-    const { id, username, active, password } = req.body
+    const { id, username, password } = req.body
 
-    // Confirm data 
-    if (!id || !username || typeof active !== 'boolean') {
-        return res.status(400).json({ message: 'All fields except password are required' })
-    }
-
-    // Does the user exist to update?
+    // Check if the user exist
     const user = await User.findById(id).exec()
 
     if (!user) {
@@ -68,15 +66,14 @@ const updateUser = async (req, res) => {
     }
 
     // Check for duplicate 
-    const duplicate = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    const duplicateUsername = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
     // Allow updates to the original user 
-    if (duplicate && duplicate?._id.toString() !== id) {
+    if (duplicateUsername && duplicateUsername._id.toString() !== id) {
         return res.status(409).json({ message: 'Duplicate username' })
     }
 
     user.username = username
-    user.active = active
 
     if (password) {
         // Hash password 
@@ -99,7 +96,7 @@ const deleteUser = async (req, res) => {
         return res.status(400).json({ message: 'User ID Required' })
     }
 
-    // Does the user exist to delete?
+    // Check if the user exist
     const user = await User.findById(id).exec()
 
     if (!user) {
@@ -108,9 +105,7 @@ const deleteUser = async (req, res) => {
 
     const result = await user.deleteOne()
 
-    const reply = `Username ${result.username} with ID ${result._id} deleted`
-
-    res.json(reply)
+    res.json(`Username ${result.username} deleted`)
 }
 
 module.exports = {

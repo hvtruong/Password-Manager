@@ -77,12 +77,6 @@ const dashboardRouter = require('./routes/dashboard')
 app.use('/user', userRouter)
 app.use('/dashboard', dashboardRouter)
 
-const mongoose = require('mongoose')
-const todoSchema = new mongoose.Schema({
-  task: String,
-  completed: Boolean,
-})
-
 // Catch 404 and forward to error handler
 const createError = require('http-errors')
 app.use(function(req, res, next) {
