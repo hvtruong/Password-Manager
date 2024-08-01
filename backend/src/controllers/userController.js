@@ -1,5 +1,7 @@
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
+const { validateEmailAddress } = require('../utils/email')
 
 // @desc Get all users
 // @route GET /user
@@ -22,6 +24,18 @@ const getAllUsers = async (req, res) => {
 const createNewUser = async (req, res) => {
     const { username, password, emailAddress } = req.body
 
+    // Confirm data 
+    if (!username || !password || !emailAddress) {
+        return res.status(400).json({ message: 'All fields except password are required' })
+    }
+
+    // Check for duplicate email address
+    const duplicateEmailAddress = await User.findOne({ 'emailAddress': emailAddress }).collation({ locale: 'en', strength: 2 }).lean().exec()
+
+    if (duplicateEmailAddress) {
+        return res.status(409).json({ message: 'Duplicate email address' })
+    }
+
     // Check for duplicate username
     const duplicateUsername = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
@@ -29,26 +43,29 @@ const createNewUser = async (req, res) => {
         return res.status(409).json({ message: 'Duplicate username' })
     }
 
-    // Check for duplicate email address
-    const duplicateEmailAddress = await User.findOne({ emailAddress }).collation({ locale: 'en', strength: 2 }).lean().exec()
-
-    if (duplicateEmailAddress) {
-        return res.status(409).json({ message: 'Duplicate email address' })
-    }
-
     // Hash password 
     const hashedPwd = await bcrypt.hash(password, 10) // salt rounds
 
-    const userObject = { username, "password": hashedPwd, "emailAddress": emailAddress }
+    // Generate validation token
+    // Check for duplicate validation token
+    // Registered users have this value set to 1, otherwise it is a validation token that will expire in 3 hours
+    do {
+        var validationToken = crypto.randomBytes(20).toString('hex')
+        var duplicateValidationToken = await User.findOne({ 'registered': validationToken}).collation({ locale: 'en', strength: 2 }).lean().exec()
+    } while (duplicateValidationToken)
+    console.log(validationToken)
+
+    const userObject = { username, 'password': hashedPwd, 'emailAddress': emailAddress, 'registered': validationToken }
 
     // Create and store new user 
     const user = await User.create(userObject)
 
     if (user) {
-        res.status(201).json({ message: `New user ${username} created` })
+        validateEmailAddress(emailAddress, validationToken)
+        return res.status(201).json({ message: `New user ${username} created, awaiting validation` })
     } 
     else {
-        res.status(400).json({ message: 'Invalid user data received' })
+        return res.status(400).json({ message: 'Invalid user data received' })
     }
 }
 
@@ -57,6 +74,11 @@ const createNewUser = async (req, res) => {
 // @access Private
 const updateUser = async (req, res) => {
     const { id, username, password } = req.body
+
+    // Confirm data 
+    if (!id || !username || !password) {
+        return res.status(400).json({ message: 'All fields except password are required' })
+    }
 
     // Check if the user exist
     const user = await User.findById(id).exec()

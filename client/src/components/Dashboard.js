@@ -2,7 +2,7 @@ import NavBar from './navbar/Navbar'
 import Table from './table/Table'
 import Footer from '../pages/Footer'
 
-const Passwords = () => {
+const Dashboard = () => {
     return (
         <>
             <NavBar />
@@ -13,4 +13,4 @@ const Passwords = () => {
         </>
     )
 }
-export default Passwords
+export default Dashboard

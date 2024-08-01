@@ -18,11 +18,13 @@ const userSchema = new Schema({
         unique: true
     },
     registered: {
-        type: Boolean,
-        default: false
+        type: String,
+        required: true
     }
 })
 
-userSchema.plugin(passportLocalMongoose);
+userSchema.index({ expireAt: 1 }, { expireAfterSeconds: 10800 })
+
+userSchema.plugin(passportLocalMongoose)
 
 module.exports = new mongoose.model('user', userSchema)

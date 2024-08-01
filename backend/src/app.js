@@ -57,6 +57,9 @@ app.use(passport.session())
 // Built-in middleware to parses incoming requests with JSON payloads
 app.use(express.json())
 
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
+
 // Parse URL-encoded bodies
 app.use(express.urlencoded({ extended: false }))
 
@@ -70,11 +73,15 @@ app.use(compression())
 
 
 // Setup all routers
-const userRouter = require('./routes/user')
-const dashboardRouter = require('./routes/dashboard')
+const userRouter = require('./routes/userRoutes')
+const authRouter = require('./routes/authRoutes')
+const validateRouter = require('./routes/validateRoutes')
+const dashboardRouter = require('./routes/dashboardRoutes')
 
 // Setup API routes
 app.use('/user', userRouter)
+app.use('/auth', authRouter)
+app.use('/validate', validateRouter)
 app.use('/dashboard', dashboardRouter)
 
 // Catch 404 and forward to error handler

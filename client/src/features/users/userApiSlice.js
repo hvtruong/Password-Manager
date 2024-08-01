@@ -18,7 +18,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 const loadedUsers = responseData.map(user => {
                     user.id = user._id
                     return user
-                });
+                })
                 return userAdapter.setAll(initialState, loadedUsers)
             },
             providesTags: (result, error, arg) => {
@@ -65,6 +65,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 { type: 'User', id: arg.id }
             ]
         }),
+        validateUser: builder.mutation({
+            query: ({ token }) => ({
+                url: '/validate',
+                method: 'PATCH',
+                body: { token }
+            })
+        }),
     }),
 })
 
@@ -73,6 +80,7 @@ export const {
     useAddNewUserMutation,
     useUpdateUserMutation,
     useDeleteUserMutation,
+    useValidateUserMutation
 } = userApiSlice
 
 // returns the query result object

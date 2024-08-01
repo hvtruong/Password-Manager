@@ -12,12 +12,7 @@ const SignUp = () => {
     // Import add new user module from API slice
     const [addNewUser, { isSuccess }] = useAddNewUserMutation()
 
-    // Hooks to control the signup form
-    const [emailAddress, setEmailAddress] = useState('')
-    const [validEmailAdress, setValidEmailAdress] = useState(false)
-
-    const [username, setUsername] = useState('')
-    const [validUsername, setValidUsername] = useState(false)
+    // Hooks to control the new password form
 
     const [password, setPassword] = useState('')
     const [validPassword, setValidPassword] = useState(false)
@@ -89,7 +84,7 @@ const SignUp = () => {
                     
                     <div className='modal-body'>
                         <p className='text-white'> 
-                            Please fill in the fields to register!
+                            Please fill in the fields to create new password!
                         </p>
 
                         <input type='email' name='emailAddress' placeholder='Email address' onChange={onEmailAdressChanged} value={emailAddress} required/>

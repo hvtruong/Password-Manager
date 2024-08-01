@@ -49,12 +49,12 @@ const Table = () => {
                                         <label>Secret key</label>
                                         <input type={type} className="form-control" />
                                         {" "}
-                                        <i onClick={handleToggle} class={icon} id="eye"></i>
+                                        <i onClick={handleToggle} className={icon} id="eye"></i>
                                     </div>
                                 </div>
                                 <div className="col-sm-3">		
-                                    <button type="button" class="btn btn-primary" >
-                                        <i class="fa fa-plus add-new"></i>
+                                    <button type="button" className="btn btn-primary" >
+                                        <i className="fa fa-plus add-new"></i>
                                         Add New
                                     </button>
                                     <button type="button" className="btn btn-secondary">
