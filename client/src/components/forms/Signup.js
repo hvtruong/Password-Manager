@@ -24,8 +24,7 @@ const SignUp = () => {
 
     const [repeatPassword, setRepeatPassword] = useState('')
     
-    const [errorMessage, setErrorMessage] = useState('')
-    const [isSubmitted, setSubmit] = useState(false)
+    const [errMsg, setErrMsg] = useState('')
 
     const navigate = useNavigate()
 
@@ -53,8 +52,12 @@ const SignUp = () => {
         }
     }, [isSuccess, navigate])
 
+    useEffect(() => {
+        setErrMsg('')
+    }, [emailAddress, username, password, repeatPassword])
+
     // Update the view of input fields after reset
-    const onEmailAdressChanged = e => setEmailAddress(e.target.value)
+    const onEmailAddressChanged = e => setEmailAddress(e.target.value)
     const onUsernameChanged = e => setUsername(e.target.value)
     const onPasswordChanged = e => setPassword(e.target.value)
     const onRepeatPasswordChanged = e => setRepeatPassword(e.target.value)
@@ -62,18 +65,36 @@ const SignUp = () => {
     // Call the POST API to create new user when everything is valid
     const createNewUser = async (e) => {
         e.preventDefault()
-        setSubmit(true)
-        if (validEmailAdress && validUsername && validPassword && password === repeatPassword) {
-            const response = await addNewUser({ username, password, emailAddress })
-
-            // Handle Bad request status 409
-            if (response.error) {
-                setErrorMessage(response.error.data.message)
-                console.log(errorMessage)
+        if (!validEmailAdress) {
+            setErrMsg('Invalid email address')
+        }
+        else if (!validUsername) {
+            setErrMsg('Invalid username')
+        }
+        else if (!validPassword) {
+            setErrMsg('Invalid password')
+        }
+        else if (password !== repeatPassword) {
+            setErrMsg('Passwords do not match')
+        }
+        else {
+            try {
+                const response = await addNewUser({ username, password, emailAddress })
+                if (response.error) {
+                    if (typeof response.error.status != 'number') {
+                        setErrMsg('No Server Response')
+                    }
+                    else {
+                        setErrMsg(response.error.data?.message)
+                    }
+                }
+                else {
+                    // TODO: Navigate somewhere after successfully sign up
+                    navigate('/')
+                }
             }
-            else {
-                setErrorMessage('')
-                setSubmit(false)
+            catch (error) {
+                console.log('An error occured: ', error)
             }
         }
     }
@@ -81,10 +102,17 @@ const SignUp = () => {
     return (
         <div className='modal fade' id='signupForm' tabIndex='-1' aria-labelledby='signupForm'>
             <div className='modal-dialog modal-content'>
-                <form className='box needs-validation' onSubmit={createNewUser}>
+                <form className='box needs-validation' onSubmit={createNewUser} >
                     <div className='modal-header'>
-                        <h1 className='modal-title fs-5 text-center'>Signup</h1>
-                        <button type='button' className='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'/>
+                        <h1 className='modal-title fs-5 text-center'>
+                            Signup
+                        </h1>
+                        <button 
+                            type='button' 
+                            className='btn-close btn-close-white' 
+                            data-bs-dismiss='modal' 
+                            aria-label='Close'
+                        />
                     </div>
                     
                     <div className='modal-body'>
@@ -92,30 +120,46 @@ const SignUp = () => {
                             Please fill in the fields to register!
                         </p>
 
-                        <input type='email' name='emailAddress' placeholder='Email address' onChange={onEmailAdressChanged} value={emailAddress} required/>
-                        { isSubmitted && (!validEmailAdress || errorMessage === 'Duplicate email address') &&
-                            <p style={{ color: '#ff0000' }}>
-                                { !validEmailAdress ? 'Invalid email address!' : errorMessage }
-                            </p>
-                        }
+                        <input 
+                            type='email'
+                            name='emailAddress'
+                            placeholder='Email address'
+                            value={emailAddress}
+                            onChange={onEmailAddressChanged}
+                            required
+                        />
                         
-                        <input type='text' name='username' placeholder='Username' onChange={onUsernameChanged} value={username} required/>
-                        { isSubmitted && (!validUsername || errorMessage === 'Duplicate username') &&
-                            <p style={{ color: '#ff0000' }}>
-                                { !validUsername ? 'Invalid username! Username should have at least 4 characters with no special symbols' : errorMessage }
-                            </p> 
-                        }
+                        <input
+                            type='text'
+                            name='username'
+                            placeholder='Username'
+                            value={username}
+                            onChange={onUsernameChanged}
+                            required
+                        />
                         
-                        <input type='password' name='password' placeholder='Password' onChange={onPasswordChanged} value={password} required/>
-                        { isSubmitted && !validPassword && 
-                            <p style={{ color: '#ff0000' }}>
-                                Invalid password! Your password must have at least 6 characters, one upper character, one lower character, one number and one special character
-                            </p>
-                        }
+                        <input 
+                            type='password'
+                            name='password'
+                            placeholder='Password'
+                            value={password}
+                            onChange={onPasswordChanged}
+                            required
+                        />
 
-                        <input type='password' name='repeatPassword' placeholder='Confirm password' onChange={onRepeatPasswordChanged} value={repeatPassword} required/>
-                        { isSubmitted && !(password === repeatPassword) && <p style={{ color: '#ff0000' }}>Your password does not match</p> }
+                        <input 
+                            type='password'
+                            name='repeatPassword'
+                            placeholder='Confirm password'
+                            value={repeatPassword}
+                            onChange={onRepeatPasswordChanged}
+                            required
+                        />
                     </div>
+
+                    <p style={{ color: '#ff0000' }} aria-live='assertive'>
+                        {errMsg}
+                    </p>
 
                     <div className='modal-footer'>
                         <input type='submit' name='' value='Signup'/>

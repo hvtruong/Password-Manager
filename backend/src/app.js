@@ -77,12 +77,14 @@ const userRouter = require('./routes/userRoutes')
 const authRouter = require('./routes/authRoutes')
 const validateRouter = require('./routes/validateRoutes')
 const dashboardRouter = require('./routes/dashboardRoutes')
+const passwordRouter = require('./routes/passwordRoutes.js')
 
 // Setup API routes
 app.use('/user', userRouter)
 app.use('/auth', authRouter)
 app.use('/validate', validateRouter)
 app.use('/dashboard', dashboardRouter)
+app.use('/passwords', passwordRouter)
 
 // Catch 404 and forward to error handler
 const createError = require('http-errors')

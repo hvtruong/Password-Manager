@@ -1,4 +1,4 @@
-import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
+import { createSelector, createEntityAdapter } from "@reduxjs/toolkit"
 import { apiSlice } from "../../app/api/apiSlice"
 
 const passwordsAdapter = createEntityAdapter({})
@@ -13,10 +13,10 @@ export const passwordsApiSlice = apiSlice.injectEndpoints({
                 return response.status === 200 && !result.isError
             },
             transformResponse: responseData => {
-                const loadedPasswordsData = responseData.map(password => {
-                    password.id = password._id
-                    return password
-                });
+                const loadedPasswordsData = responseData.map(passwords => {
+                    passwords.id = passwords._id
+                    return passwords
+                })
                 return passwordsAdapter.setAll(initialState, loadedPasswordsData)
             },
             providesTags: (result, error, arg) => {
@@ -28,10 +28,50 @@ export const passwordsApiSlice = apiSlice.injectEndpoints({
                 } else return [{ type: 'Password', id: 'LIST' }]
             }
         }),
-    }),
+        addNewPassword: builder.mutation({
+            query: initialUserData => ({
+                url: '/passwords',
+                method: 'POST',
+                withCredentials: true,
+                body: {
+                    ...initialUserData,
+                }
+            }),
+            invalidatesTags: [
+                { type: 'User', id: 'LIST' }
+            ]
+        }),
+        updatePassword: builder.mutation({
+            query: initialUserData => ({
+                url: '/passwords',
+                method: 'PATCH',
+                body: {
+                    ...initialUserData,
+                }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'User', id: arg.id }
+            ]
+        }),
+        deletePassword: builder.mutation({
+            query: ({ id }) => ({
+                url: `/passwords`,
+                method: 'DELETE',
+                body: { id }
+            }),
+            invalidatesTags: (result, error, arg) => [
+                { type: 'User', id: arg.id }
+            ]
+        }),
+    })
 })
 
-export const { useGetPasswordsDataQuery } = passwordsApiSlice
+export const { 
+    useGetPasswordsDataQuery,
+    useAddNewPasswordMutation,
+    useUpdatePasswordMutation,
+    useDeletePasswordMutation,
+} = passwordsApiSlice
 
 // Return the query result object
 export const selectPasswordsDataResult = passwordsApiSlice.endpoints.getPasswordsData.select()

@@ -1,10 +1,10 @@
-import Container from 'react-bootstrap/Container';
-import Navbar from 'react-bootstrap/Navbar';
-import LogIn from '../forms/Login';
-import SignUp from '../forms/Signup';
-import logo from '../../images/logo/logo.png';
-import { Button } from 'react-bootstrap';
-import './navbar.css';
+import Container from 'react-bootstrap/Container'
+import Navbar from 'react-bootstrap/Navbar'
+import LogIn from '../forms/Login'
+import SignUp from '../forms/Signup'
+import logo from '../../images/logo/logo.png'
+import { Button } from 'react-bootstrap'
+import './navbar.css'
 
 function NavBar() {
     return (
@@ -14,10 +14,10 @@ function NavBar() {
                     <img className='logo' src={logo} alt='logo' />
                 </Navbar.Brand>
                 <div className='d-flex align-items-center order mb-3'>
-                    <span className='line d-lg-inline-block d-none'></span>
+                    <span className='line'></span>
                     <Button
                         variant='primary'
-                        className='btn btn-primary d-none d-lg-inline-block'
+                        className='btn btn-primary'
                         data-bs-toggle='modal'
                         data-bs-target='#loginForm'
                     >
@@ -26,28 +26,13 @@ function NavBar() {
                     <LogIn />
                     <Button
                         variant='Secondary'
-                        className='btn btn-secondary d-none d-lg-inline-block'
+                        className='btn btn-secondary'
                         data-bs-toggle='modal'
                         data-bs-target='#signupForm'
                     >
                         Sign up
                     </Button>
                     <SignUp />
-                    <Button
-                        variant='primary'
-                        className='btn btn-primary d-none d-lg-inline-block'
-                        data-bs-toggle='modal'
-                        data-bs-target='#editForm'
-                    >
-                        Edit
-                    </Button>
-                    <LogIn />
-                    <Button
-                        variant='primary'
-                        className='btn btn-primary d-none d-lg-inline-block'
-                    >
-                        Log out
-                    </Button>
                 </div>
             </Container>
         </Navbar>

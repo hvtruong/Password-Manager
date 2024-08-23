@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const passwordSchema = new mongoose.Schema({
-    user: {
+    username: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
         required: true

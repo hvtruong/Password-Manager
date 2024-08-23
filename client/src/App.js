@@ -12,11 +12,13 @@ function App() {
                 <Route index element={<Main />} />
                 <Route path='/validate/:token' index element={<Validate />}/> 
 
-                {/* Protected Routes */}
+                {/* Protected Routes 
                 <Route element={<RequireAuth isAuthorized={true} />}>
                     <Route path='/dashboard' index element={<Dashboard />} />
-                    {/*<Route path='/user' index element={<Validate />}/>*/}
+                    {/*<Route path='/user' index element={<Validate />}/>
                 </Route>
+                */}
+                <Route path='/dashboard' index element={<Dashboard />} />
 
             </Route>
         </Routes>

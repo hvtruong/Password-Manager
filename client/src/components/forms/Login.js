@@ -1,7 +1,6 @@
 import './form.css'
-import { useRef, useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../../auth/authSlice'
 import { useLoginMutation } from '../../auth/authApiSlice'
@@ -27,18 +26,17 @@ const LogIn = () => {
         try {
             const { accessToken } = await login({ username, password }).unwrap()
             dispatch(setCredentials({ accessToken }))
+            console.log(accessToken.username)
             setUsername('')
             setPassword('')
-            navigate('/passwords')
-        } catch (err) {
+            navigate('/dashboard')
+        } 
+        catch (err) {
             console.log(err)
             if (!err.status) {
                 setErrMsg('No Server Response')
-            } else if (err.status === 400) {
-                setErrMsg('Missing Username or Password')
-            } else if (err.status === 401) {
-                setErrMsg('Invalid account! Please try again!')
-            } else {
+            }
+            else {
                 setErrMsg(err.data?.message)
             }
         }
@@ -51,7 +49,7 @@ const LogIn = () => {
     return (
         <div className='modal fade' id='loginForm' tabIndex='-1' aria-labelledby='loginForm'>
             <div className='modal-dialog modal-content'>
-                <form className='box needs-validation' onSubmit={handleSubmit} noValidate={true}>
+                <form className='box needs-validation' onSubmit={handleSubmit}>
                     <div className='modal-header'>
                         <h1 className='modal-title fs-5 text-center'>Login</h1>
                         <button type='button' className='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'/>

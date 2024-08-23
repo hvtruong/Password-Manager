@@ -1,51 +1,51 @@
-const Password = require('../models/Password')
 const User = require('../models/User')
+const Password = require('../models/Password')
 
 // @desc Get all passwords
 // @route GET /passwords
 // @access Private
 const getAllPasswords = async (req, res) => {
-    // Get all passwords from MongoDB
-    const passwords = await Password.find().lean()
+    // Get all passwords of user from MongoDB
+    const { username } = req.body
+
+    const usernameCheck = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    const savedPasswords = await Password.findOne({ 'username': username }).lean()
+
+    if (!usernameCheck) {
+        return res.status(401).json({ message: 'No valid user exist' })
+    }
 
     // If no passwords 
-    if (!passwords?.length) {
+    if (!savedPasswords?.length) {
         return res.status(400).json({ message: 'No passwords found' })
     }
 
-    // Add username to each password before sending the response 
-    // See Promise.all with map() here: https://youtu.be/4lqJBBEpjRE 
-    // You could also do this with a for...of loop
-    const passwordsWithUser = await Promise.all(passwords.map(async (password) => {
-        const user = await User.findById(password.user).lean().exec()
-        return { ...password, username: user.username }
-    }))
-
-    res.json(passwordsWithUser)
+    return res.json(savedPasswords.passwordsJson)
 }
 
 // @desc Create new password
 // @route POST /passwords
 // @access Private
 const createNewPassword = async (req, res) => {
-    const { user, title, text } = req.body
+    const { username, name, password } = req.body
 
     // Confirm data
-    if (!user || !title || !text) {
+    if (!username || !name || !password) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
-    // Check for duplicate title
-    const duplicate = await Password.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    // Check for duplicate name
+    const duplicateSite = await Password.findOne({ 'name' : name }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
-    if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate password title' })
+    if (duplicateSite) {
+        return res.status(409).json({ message: 'Site with a password already exists' })
     }
 
-    // Create and store the new user 
-    const password = await Password.create({ user, title, text })
+    // Create and store the new password
+    const passwordsAsJson = JSON.parse({ 'passwords': { 'name': name, 'password': password } })
+    const newPassword = await Password.create({ 'username': username, 'passwordsJson': passwordsAsJson })
 
-    if (password) { // Created 
+    if (newPassword) { // Created 
         return res.status(201).json({ message: 'New password created' })
     } else {
         return res.status(400).json({ message: 'Invalid password data received' })
@@ -57,36 +57,25 @@ const createNewPassword = async (req, res) => {
 // @route PATCH /passwords
 // @access Private
 const updatePassword = async (req, res) => {
-    const { id, user, title, text, completed } = req.body
+    const { username, name, newPassword } = req.body
 
     // Confirm data
-    if (!id || !user || !title || !text || typeof completed !== 'boolean') {
+    if (!username || !name || !newPassword) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
     // Confirm password exists to update
-    const password = await Password.findById(id).exec()
+    const loadedPasswords = await Password.findById(username).exec()
 
-    if (!password) {
-        return res.status(400).json({ message: 'Password not found' })
+    if (!loadedPasswords) {
+        return res.status(400).json({ message: 'Passwords not found' })
     }
 
-    // Check for duplicate title
-    const duplicate = await Password.findOne({ title }).collation({ locale: 'en', strength: 2 }).lean().exec()
+    loadedPasswords.passwordsJson[name] = newPassword
 
-    // Allow renaming of the original password 
-    if (duplicate && duplicate?._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate password title' })
-    }
+    const updatedPassword = await loadedPasswords.update()
 
-    password.user = user
-    password.title = title
-    password.text = text
-    password.completed = completed
-
-    const updatedPassword = await password.save()
-
-    res.json(`'${updatedPassword.title}' updated`)
+    res.json(`'${updatedPassword.passwordsJson[name]}' updated`)
 }
 
 // @desc Delete a password

@@ -67,9 +67,3 @@
   font-weight: 500;
   margin-left: 10px;
 }
-
-@media (max-width: 992px) {
-  .order {
-    order: -1;
-  }
-}

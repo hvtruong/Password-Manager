@@ -11,7 +11,7 @@ const getAllUsers = async (req, res) => {
     const users = await User.find().select('-password').lean()
 
     // If no users 
-    if (!!users) {
+    if (!users) {
         return res.status(400).json({ message: 'No users found' })
     }
 
@@ -26,21 +26,21 @@ const createNewUser = async (req, res) => {
 
     // Confirm data 
     if (!username || !password || !emailAddress) {
-        return res.status(400).json({ message: 'All fields except password are required' })
+        return res.status(400).json({ message: 'All fields are required' })
     }
 
     // Check for duplicate email address
     const duplicateEmailAddress = await User.findOne({ 'emailAddress': emailAddress }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
     if (duplicateEmailAddress) {
-        return res.status(409).json({ message: 'Duplicate email address' })
+        return res.status(409).json({ message: 'Duplicated email address' })
     }
 
     // Check for duplicate username
     const duplicateUsername = await User.findOne({ username }).collation({ locale: 'en', strength: 2 }).lean().exec()
 
     if (duplicateUsername) {
-        return res.status(409).json({ message: 'Duplicate username' })
+        return res.status(409).json({ message: 'Duplicated username' })
     }
 
     // Hash password 
@@ -52,13 +52,14 @@ const createNewUser = async (req, res) => {
     do {
         var validationToken = crypto.randomBytes(20).toString('hex')
         var duplicateValidationToken = await User.findOne({ 'registered': validationToken}).collation({ locale: 'en', strength: 2 }).lean().exec()
-    } while (duplicateValidationToken)
-    console.log(validationToken)
+    } 
+    while (duplicateValidationToken)
 
     const userObject = { username, 'password': hashedPwd, 'emailAddress': emailAddress, 'registered': validationToken }
 
     // Create and store new user 
     const user = await User.create(userObject)
+    console.log(validationToken)
 
     if (user) {
         validateEmailAddress(emailAddress, validationToken)
@@ -92,7 +93,7 @@ const updateUser = async (req, res) => {
 
     // Allow updates to the original user 
     if (duplicateUsername && duplicateUsername._id.toString() !== id) {
-        return res.status(409).json({ message: 'Duplicate username' })
+        return res.status(409).json({ message: 'Duplicated username' })
     }
 
     user.username = username
