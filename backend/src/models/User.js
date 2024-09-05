@@ -17,7 +17,12 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    registered: {
+    validationToken: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    status: {
         type: String,
         required: true
     }

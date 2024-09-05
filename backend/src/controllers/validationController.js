@@ -10,12 +10,12 @@ const validateUser = async (req, res) => {
         return res.status(400).json({ message: 'Invalid validation token.' })
     }
 
-    User.findOne({ 'registered': token }).exec()
+    User.findOne({ 'validationToken': token }).exec()
     .then ((loadedUser) => {
         if (!loadedUser) {
             return res.status(400).json({ message: 'Validation link has expired!'})
         }
-        loadedUser.registered = '1'
+        loadedUser.status = 'Registered'
         loadedUser.save()
         return res.status(201).json({ message: `User ${loadedUser.username} has been validated.`})
     })

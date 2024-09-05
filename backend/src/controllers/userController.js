@@ -55,7 +55,7 @@ const createNewUser = async (req, res) => {
     } 
     while (duplicateValidationToken)
 
-    const userObject = { username, 'password': hashedPwd, 'emailAddress': emailAddress, 'registered': validationToken }
+    const userObject = { username, 'password': hashedPwd, 'emailAddress': emailAddress, 'validationToken': validationToken, 'status': 'Unregistered' }
 
     // Create and store new user 
     const user = await User.create(userObject)

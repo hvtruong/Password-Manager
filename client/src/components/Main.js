@@ -7,7 +7,7 @@ import Footer from '../pages/Footer'
 const Main = () => {
     return (
         <>
-            <NavBar />
+            <NavBar location='Main'/>
             <div className="min-vh-100 d-flex flex-column justify-content-between">
                 <Loading />
                 <Properties />

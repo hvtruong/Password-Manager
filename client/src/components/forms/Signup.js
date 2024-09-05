@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAddNewUserMutation } from '../../features/users/userApiSlice'
 import { useNavigate } from 'react-router-dom'
+import $ from 'jquery'
 import './form.css'
 
 const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i
@@ -79,22 +80,19 @@ const SignUp = () => {
         }
         else {
             try {
-                const response = await addNewUser({ username, password, emailAddress })
-                if (response.error) {
-                    if (typeof response.error.status != 'number') {
-                        setErrMsg('No Server Response')
-                    }
-                    else {
-                        setErrMsg(response.error.data?.message)
-                    }
+                await addNewUser({ username, password, emailAddress })
+                // TODO: Navigate somewhere after successfully sign up
+                $('#cancelButton').trigger('click')
+                navigate('/')
+            }
+            catch (err) {
+                console.log(err)
+                if (typeof err.status != 'number') {
+                    setErrMsg('No Server Response')
                 }
                 else {
-                    // TODO: Navigate somewhere after successfully sign up
-                    navigate('/')
+                    setErrMsg(err.data?.message)
                 }
-            }
-            catch (error) {
-                console.log('An error occured: ', error)
             }
         }
     }
@@ -109,61 +107,72 @@ const SignUp = () => {
                         </h1>
                         <button 
                             type='button' 
+                            id='cancelButton'
                             className='btn-close btn-close-white' 
                             data-bs-dismiss='modal' 
                             aria-label='Close'
                         />
                     </div>
-                    
-                    <div className='modal-body'>
-                        <p className='text-white'> 
-                            Please fill in the fields to register!
-                        </p>
+                    {
+                        !isSuccess &&
+                        <div>
+                            <div className='modal-body'>
+                                <p className='text-white'> 
+                                    Please fill in the fields to register!
+                                </p>
 
-                        <input 
-                            type='email'
-                            name='emailAddress'
-                            placeholder='Email address'
-                            value={emailAddress}
-                            onChange={onEmailAddressChanged}
-                            required
-                        />
-                        
-                        <input
-                            type='text'
-                            name='username'
-                            placeholder='Username'
-                            value={username}
-                            onChange={onUsernameChanged}
-                            required
-                        />
-                        
-                        <input 
-                            type='password'
-                            name='password'
-                            placeholder='Password'
-                            value={password}
-                            onChange={onPasswordChanged}
-                            required
-                        />
+                                <input 
+                                    type='email'
+                                    name='emailAddress'
+                                    placeholder='Email address'
+                                    value={emailAddress}
+                                    onChange={onEmailAddressChanged}
+                                    required
+                                />
+                                
+                                <input
+                                    type='text'
+                                    name='username'
+                                    placeholder='Username'
+                                    value={username}
+                                    onChange={onUsernameChanged}
+                                    required
+                                />
+                                
+                                <input 
+                                    type='password'
+                                    name='password'
+                                    placeholder='Password'
+                                    value={password}
+                                    onChange={onPasswordChanged}
+                                    required
+                                />
 
-                        <input 
-                            type='password'
-                            name='repeatPassword'
-                            placeholder='Confirm password'
-                            value={repeatPassword}
-                            onChange={onRepeatPasswordChanged}
-                            required
-                        />
-                    </div>
+                                <input 
+                                    type='password'
+                                    name='repeatPassword'
+                                    placeholder='Confirm password'
+                                    value={repeatPassword}
+                                    onChange={onRepeatPasswordChanged}
+                                    required
+                                />
+                            </div>
 
-                    <p style={{ color: '#ff0000' }} aria-live='assertive'>
-                        {errMsg}
-                    </p>
+                            <p style={{ color: '#ff0000' }} aria-live='assertive'>
+                                {errMsg}
+                            </p>
 
-                    <div className='modal-footer'>
-                        <input type='submit' name='' value='Signup'/>
-                    </div>
+                            <div className='modal-footer'>
+                                <input type='submit' name='' value='Signup' data-bs-dismiss='modal'/>
+                            </div>
+                        </div>
+                    }
+                    {
+                        isSuccess &&
+                        <div>
+                            You have successfully signed up. Please check your email to validate your account!
+                        </div>
+                    }
                 </form>
             </div>
         </div>

@@ -1,9 +1,10 @@
-import './form.css'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../../auth/authSlice'
 import { useLoginMutation } from '../../auth/authApiSlice'
+import $ from 'jquery'
+import './form.css'
 
 const LogIn = () => {
     // Import login module from API slice
@@ -29,11 +30,12 @@ const LogIn = () => {
             console.log(accessToken.username)
             setUsername('')
             setPassword('')
+            $('#cancelButton').trigger('click')
             navigate('/dashboard')
         } 
         catch (err) {
             console.log(err)
-            if (!err.status) {
+            if (typeof err.status != 'number') {
                 setErrMsg('No Server Response')
             }
             else {
@@ -47,12 +49,20 @@ const LogIn = () => {
     const onPasswordChanged = e => setPassword(e.target.value)
     
     return (
-        <div className='modal fade' id='loginForm' tabIndex='-1' aria-labelledby='loginForm'>
+        <div className='modal fade' id='loginForm' tabIndex='-1' aria-labelledby='loginForm' >
             <div className='modal-dialog modal-content'>
                 <form className='box needs-validation' onSubmit={handleSubmit}>
                     <div className='modal-header'>
-                        <h1 className='modal-title fs-5 text-center'>Login</h1>
-                        <button type='button' className='btn-close btn-close-white' data-bs-dismiss='modal' aria-label='Close'/>
+                        <h1 className='modal-title fs-5 text-center'>
+                            Login
+                        </h1>
+                        <button 
+                            type='button' 
+                            id='cancelButton'
+                            className='btn-close btn-close-white' 
+                            data-bs-dismiss='modal' 
+                            aria-label='Close'
+                        />
                     </div>
                     
                     
@@ -86,7 +96,7 @@ const LogIn = () => {
                     <div className='modal-footer'>
                         <a className='forgot text-white' href='/whatisThis'>Forgot password?</a>
                         
-                        <input type='submit' name='' value='Login' href='/#' />
+                        <input type='submit' name='' value='Login'/>
                     </div>
                 </form>
             </div>
