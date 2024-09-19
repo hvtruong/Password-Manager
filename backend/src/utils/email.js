@@ -41,7 +41,7 @@ const createTransporter = async () => {
             clientSecret: process.env.CLIENT_SECRET,
             refreshToken: process.env.EMAIL_REFRESH_TOKEN
         },
-        from: proccess.env.EMAIL
+        from: process.env.EMAIL
     })
   
     return transporter

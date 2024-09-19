@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap'
 import Container from 'react-bootstrap/Container'
 import Navbar from 'react-bootstrap/Navbar'
 import PulseLoader from 'react-spinners/PulseLoader'
-import { useSendLogoutMutation } from '../../features/auth/authApiSlice'
+import { useLogoutMutation } from '../../features/auth/authApiSlice'
 import LogIn from '../forms/Login'
 import SignUp from '../forms/Signup'
 import logo from '../../images/logo/logo.png'
@@ -14,11 +14,11 @@ const NavBar = ({ location }) => {
 
     const navigate = useNavigate()
 
-    const [sendLogout, {
+    const [logout, {
         isLoading,
         isSuccess,
         error
-    }] = useSendLogoutMutation()
+    }] = useLogoutMutation()
 
     useEffect(() => {
         if (isSuccess) {
@@ -72,7 +72,7 @@ const NavBar = ({ location }) => {
         <Button
             variant='Secondary'
             className='btn btn-secondary'
-            onClick={sendLogout}
+            onClick={logout}
         >
             Log out
         </Button>

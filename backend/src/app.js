@@ -11,6 +11,19 @@ app.use(logger)
 const errorLogger = require('./middleware/errorHandler')
 app.use(errorLogger)
 
+// Built-in middleware to parses incoming requests with JSON payloads
+app.use(express.json())
+
+const cookieParser = require('cookie-parser')
+app.use(cookieParser())
+
+// Parse URL-encoded bodies
+app.use(express.urlencoded({ extended: false }))
+
+// Middleware to compress response bodies
+const compression = require('compression')
+app.use(compression())
+
 // Cross-origin resource sharing
 const cors = require('cors')
 const corsOptions = require('./config/corsOptions')
@@ -30,42 +43,6 @@ db.once('open', () => {
 db.on('disconnected', () => {
   console.log('Disconnected from MongoDB')
 })
-
-// Session setup for passport middleware
-const session = require('express-session')
-const MongoStore = require('connect-mongo')
-app.use(session({
-  secret: 'secret key', // Key to be changed when in production
-  resave: false, // Do not save session if unmodified
-  saveUninitialized: false, // Do not create session until something stored
-  store: new MongoStore({mongoUrl: db.client.s.url})
-}))
-
-// Passport middleware for authentication
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
-userModel = require('./models/User')
-const strategy = new LocalStrategy(userModel.authenticate())
-
-passport.use(strategy)
-passport.serializeUser(userModel.serializeUser())
-passport.deserializeUser(userModel.deserializeUser())
-
-app.use(passport.initialize())
-app.use(passport.session())
-
-// Built-in middleware to parses incoming requests with JSON payloads
-app.use(express.json())
-
-const cookieParser = require('cookie-parser')
-app.use(cookieParser())
-
-// Parse URL-encoded bodies
-app.use(express.urlencoded({ extended: false }))
-
-// Middleware to compress response bodies
-const compression = require('compression')
-app.use(compression())
 
 // Static middleware
 // app.use(express.static('../frontend/src/public'))

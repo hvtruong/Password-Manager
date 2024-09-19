@@ -163,7 +163,7 @@ const SignUp = () => {
                             </p>
 
                             <div className='modal-footer'>
-                                <input type='submit' name='' value='Signup' data-bs-dismiss='modal'/>
+                                <input type='submit' name='' value='Signup'/>
                             </div>
                         </div>
                     }

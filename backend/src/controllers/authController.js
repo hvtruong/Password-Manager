@@ -42,11 +42,13 @@ const login = asyncHandler(async (req, res) => {
         { expiresIn: '7d' }
     )
 
+    console.log(refreshToken)
+
     // Create secure cookie with refresh token
     res.cookie('jwt', refreshToken, {
         httpOnly: true,
         secure: true,
-        sameSite: 'None',
+        sameSite: 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
@@ -56,11 +58,13 @@ const login = asyncHandler(async (req, res) => {
 
 // @desc Refresh
 // @route GET /auth/refresh
-// @access Public - because access token has expired
+// @access Main - because access token has expired
 const refresh = (req, res) => {
     const cookies = req.cookies
 
-    if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized' })
+    if (!cookies?.jwt) {
+        return res.status(401).json({ message: 'Unauthorized' })
+    }
     
     const refreshToken = cookies.jwt
 
@@ -99,6 +103,7 @@ const refresh = (req, res) => {
 // @access Public - just to clear cookie if exists
 const logout = (req, res) => {
     const cookies = req.cookies
+    console.log(cookies)
     if (!cookies?.jwt) {
         return res.sendStatus(204)
     }

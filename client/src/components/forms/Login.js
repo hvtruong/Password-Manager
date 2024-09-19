@@ -3,17 +3,20 @@ import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../../auth/authSlice'
 import { useLoginMutation } from '../../auth/authApiSlice'
+import usePersist from "../../hooks/usePersist.js"
 import $ from 'jquery'
 import './form.css'
 
 const LogIn = () => {
     // Import login module from API slice
-    const [login] = useLoginMutation()
+    const [login, { isSuccess }] = useLoginMutation()
 
     // Hooks to control the login form
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [errMsg, setErrMsg] = useState('')
+
+    const [persist, setPersist] = usePersist()
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -22,14 +25,18 @@ const LogIn = () => {
         setErrMsg('')
     }, [username, password])
 
+    useEffect(() => {
+        setPersist(true)
+    }, [isSuccess])
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
             const { accessToken } = await login({ username, password }).unwrap()
             dispatch(setCredentials({ accessToken }))
-            console.log(accessToken.username)
             setUsername('')
             setPassword('')
+            console.log(persist)
             $('#cancelButton').trigger('click')
             navigate('/dashboard')
         } 
