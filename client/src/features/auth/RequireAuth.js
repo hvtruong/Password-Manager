@@ -3,10 +3,10 @@ import useAuth from "../../hooks/useAuth"
 
 const RequireAuth = () => {
     const location = useLocation()
-    const { status } = useAuth()
+    const { validated } = useAuth()
 
     return (
-        status === 'Registered'
+        validated
             ? <Outlet />
             : <Navigate to="/" state={{ from: location }} replace />
     )

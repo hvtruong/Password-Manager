@@ -1,14 +1,15 @@
 const mongoose = require('mongoose')
 
 const passwordSchema = new mongoose.Schema({
-    username: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'user',
         required: true
     },
-    passwordsJson: {
-        type: Object,
-        default: undefined
+    passwords: {
+        type: Map,
+        default: undefined,
+        required: true
     }
 })
 

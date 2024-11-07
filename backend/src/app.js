@@ -33,21 +33,16 @@ app.use(cors(corsOptions))
 const db = require('./config/DBConnection')
 
 db.on('error', (error) => {
-  console.error('MongoDB connection error:', error)
+    console.error('MongoDB connection error:', error)
 })
 
 db.once('open', () => {
-  console.log('Connected to MongoDB')
+    console.log('Connected to MongoDB')
 })
 
 db.on('disconnected', () => {
-  console.log('Disconnected from MongoDB')
+    console.log('Disconnected from MongoDB')
 })
-
-// Static middleware
-// app.use(express.static('../frontend/src/public'))
-// app.use(express.static('../frontend/src/views'))
-
 
 // Setup all routers
 const userRouter = require('./routes/userRoutes')
@@ -63,21 +58,15 @@ app.use('/validate', validateRouter)
 app.use('/dashboard', dashboardRouter)
 app.use('/passwords', passwordRouter)
 
-// Catch 404 and forward to error handler
-const createError = require('http-errors')
-app.use(function(req, res, next) {
-  next(createError(404))
-})
-
 // Handle errors
 app.use(function(err, req, res, next) {
-  // Set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
+    // Set locals, only providing error in development
+    res.locals.message = err.message
+    res.locals.error = req.app.get('env') === 'development' ? err : {}
 
-  // Render the error page
-  res.status(err.status || 500)
-  res.render('error', {title: '404 Not Found'})
+    // Render the error page
+    res.status(err.status || 500)
+    res.send('error')
 })
 
 module.exports = app

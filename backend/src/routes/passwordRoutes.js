@@ -4,7 +4,6 @@ const passwordController = require('../controllers/passwordController')
 const verifyJWT = require('../middleware/verifyJWT')
 
 // Allow only authenticated requests by JWT
-router.use(verifyJWT)
 
 router.route('/')
     .get(passwordController.getAllPasswords)

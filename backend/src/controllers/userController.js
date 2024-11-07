@@ -48,14 +48,13 @@ const createNewUser = async (req, res) => {
 
     // Generate validation token
     // Check for duplicate validation token
-    // Registered users have this value set to 1, otherwise it is a validation token that will expire in 3 hours
     do {
         var validationToken = crypto.randomBytes(20).toString('hex')
-        var duplicateValidationToken = await User.findOne({ 'registered': validationToken}).collation({ locale: 'en', strength: 2 }).lean().exec()
+        var duplicateValidationToken = await User.findOne({ 'validationToken': validationToken}).collation({ locale: 'en', strength: 2 }).lean().exec()
     } 
     while (duplicateValidationToken)
 
-    const userObject = { username, 'password': hashedPwd, 'emailAddress': emailAddress, 'validationToken': validationToken, 'status': 'Unregistered' }
+    const userObject = { 'username': username, 'password': hashedPwd, 'emailAddress': emailAddress, 'validationToken': validationToken}
 
     // Create and store new user 
     const user = await User.create(userObject)

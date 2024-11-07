@@ -22,9 +22,9 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    status: {
-        type: String,
-        required: true
+    validated: {
+        type: Boolean,
+        default: false
     }
 })
 
