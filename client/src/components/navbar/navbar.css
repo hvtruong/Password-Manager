@@ -1,3 +1,12 @@
+:root {
+  --nav-text: white;
+  --nav-hover: #a8a8a8;
+  --border-radius: 25px;
+  --toggle-height: 2px;
+  --toggle-width: 35px;
+  --toggle-spacing: 12px;
+}
+
 .line {
   display: inline-block;
   width: 1px;
@@ -7,12 +16,13 @@
 }
 
 .nav-link {
-  color: white;
+  color: var(--nav-text);
   letter-spacing: 0.3px;
+  transition: color 0.2s ease;
 }
 
 .nav-link:hover {
-  color: #a8a8a8;
+  color: var(--nav-hover);
 }
 
 .navbar-toggler:focus {
@@ -21,44 +31,30 @@
 
 .navbar-toggler-icon {
   background-image: none;
-  width: 35px;
-  height: 2px;
-  background-color: white;
-  border-radius: 25px;
+  width: var(--toggle-width);
+  height: var(--toggle-height);
+  background-color: var(--nav-text);
+  border-radius: var(--border-radius);
   position: relative;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  -ms-border-radius: 25px;
-  -o-border-radius: 25px;
-}
-.navbar-toggler-icon::before {
-  content: "";
-  position: absolute;
-  display: block;
-  width: 100%;
-  height: 100%;
-  top: -12px;
-  background-color: white;
-  border-radius: 25px;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  -ms-border-radius: 25px;
-  -o-border-radius: 25px;
 }
 
+.navbar-toggler-icon::before,
 .navbar-toggler-icon::after {
   content: "";
   position: absolute;
   display: block;
   width: 100%;
   height: 100%;
-  bottom: -12px;
-  background-color: white;
-  border-radius: 25px;
-  -webkit-border-radius: 25px;
-  -moz-border-radius: 25px;
-  -ms-border-radius: 25px;
-  -o-border-radius: 25px;
+  background-color: var(--nav-text);
+  border-radius: var(--border-radius);
+}
+
+.navbar-toggler-icon::before {
+  top: calc(-1 * var(--toggle-spacing));
+}
+
+.navbar-toggler-icon::after {
+  bottom: calc(-1 * var(--toggle-spacing));
 }
 
 .btn-primary,

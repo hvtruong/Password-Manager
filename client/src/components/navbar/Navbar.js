@@ -1,51 +1,38 @@
-import { useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { Button } from "react-bootstrap"
-import Container from "react-bootstrap/Container"
-import Navbar from "react-bootstrap/Navbar"
-import PulseLoader from "react-spinners/PulseLoader"
-import { useLogoutMutation } from "../../features/auth/authApiSlice"
-import LogIn from "../forms/Login"
-import SignUp from "../forms/Signup"
-import logo from "../../images/logo/logo.png"
-import "./navbar.css"
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Navbar from "react-bootstrap/Navbar";
+import PulseLoader from "react-spinners/PulseLoader";
+import { useLogoutMutation } from "../../features/auth/authApiSlice";
+import LogIn from "../forms/Login";
+import SignUp from "../forms/Signup";
+import logo from "../../images/logo/logo.png";
+import "./navbar.css";
 
-const NavBar = ({ location }) => 
-{
-    const navigate = useNavigate()
+const NavBar = ({ location }) => {
+    const navigate = useNavigate();
 
-    const [logout,
-        {
-            isLoading,
-            isSuccess,
-            error
-        }
-    ] = useLogoutMutation()
+    const [logout, { isLoading, isSuccess, error }] = useLogoutMutation();
 
     const logoutHandler = async () => {
-        try 
-        {
+        try {
             await logout().unwrap(); // Trigger mutation and await success
-      
+
             // Success, redirect to home
             navigate("/", { replace: true });
-        } 
-        catch(error) 
-        {
-            console.log(error)
+        } catch (error) {
+            console.log(error);
         }
-      };
+    };
 
-    useEffect(() => 
-    {
-        if (isSuccess)
-        {
-            navigate("/")
+    useEffect(() => {
+        if (isSuccess) {
+            navigate("/");
         }
-    }, [isSuccess, navigate])
+    }, [isSuccess, navigate]);
 
-    const loginButton = 
-    (
+    const loginButton = (
         <>
             <Button
                 variant="primary"
@@ -57,10 +44,9 @@ const NavBar = ({ location }) =>
             </Button>
             <LogIn />
         </>
-    )
+    );
 
-    const signupButton = 
-    (
+    const signupButton = (
         <>
             <Button
                 variant="Secondary"
@@ -72,10 +58,9 @@ const NavBar = ({ location }) =>
             </Button>
             <SignUp />
         </>
-    )
+    );
 
-    const editButton = 
-    (
+    const editButton = (
         <>
             <Button
                 variant="primary"
@@ -87,10 +72,9 @@ const NavBar = ({ location }) =>
             </Button>
             <LogIn />
         </>
-    )
+    );
 
-    const logoutButton = 
-    (
+    const logoutButton = (
         <Button
             variant="Secondary"
             className="btn btn-secondary"
@@ -98,34 +82,26 @@ const NavBar = ({ location }) =>
         >
             Log out
         </Button>
-    )
+    );
 
-    let buttonContent
-    if (isLoading) 
-    {
-        buttonContent = <PulseLoader color={"#FFF"} />
-    } 
-    else 
-    {
-        if (location === "Main") 
-        {
-            buttonContent = 
-            (
+    let buttonContent;
+    if (isLoading) {
+        buttonContent = <PulseLoader color={"#FFF"} />;
+    } else {
+        if (location === "Main") {
+            buttonContent = (
                 <>
                     {loginButton}
                     {signupButton}
                 </>
-            )
-        }
-        else if (location === "Dashboard")
-        {
-            buttonContent = 
-            (
+            );
+        } else if (location === "Dashboard") {
+            buttonContent = (
                 <>
                     {editButton}
                     {logoutButton}
                 </>
-            )
+            );
         }
     }
 
@@ -146,7 +122,7 @@ const NavBar = ({ location }) =>
                 </div>
             </Container>
         </Navbar>
-    )
-}
+    );
+};
 
-export default NavBar
+export default NavBar;

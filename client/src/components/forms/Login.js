@@ -1,73 +1,63 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { setCredentials } from "../../features/auth/authSlice"
-import { useLoginMutation } from "../../features/auth/authApiSlice.js"
-import usePersist from "../../hooks/usePersist.js"
-import $ from "jquery"
-import styles from "./Form.module.css"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../features/auth/authSlice";
+import { useLoginMutation } from "../../features/auth/authApiSlice.js";
+import usePersist from "../../hooks/usePersist.js";
+import $ from "jquery";
+import styles from "./Form.module.css";
 
 const LogIn = () => {
     // Import login module from API slice
-    const [login, { isSuccess }] = useLoginMutation()
+    const [login, { isSuccess }] = useLoginMutation();
 
     // Hooks to control the login form
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [errMsg, setErrMsg] = useState("")
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [errMsg, setErrMsg] = useState("");
 
-    const [, setPersist] = usePersist()
+    const [, setPersist] = usePersist();
 
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    useEffect(() => 
-    {
-        setErrMsg("")
-    }, [username, password])
+    useEffect(() => {
+        setErrMsg("");
+    }, [username, password]);
 
-    useEffect(() => 
-    {
+    useEffect(() => {
         // eslint-disable-next-line
-        setPersist(true)
-    }, [isSuccess, setPersist])
+        setPersist(true);
+    }, [isSuccess, setPersist]);
 
-    const handleSubmit = async (e) => 
-    {
-        e.preventDefault()
-        try 
-        {
-            const { accessToken } = await login
-            ({
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const { accessToken } = await login({
                 username,
                 password,
-            }).unwrap()
-            
-            dispatch(setCredentials({ accessToken }))
-            setUsername("")
-            setPassword("")
-            
-            $("#cancelButton").trigger("click")
-            
-            navigate("/dashboard")
-        } 
-        catch (err) 
-        {
-            console.log(err)
-            if (err.status === "FETCH_ERROR") 
-                {
-                setErrMsg("No Server Response")
-            } 
-            else 
-            {
-                setErrMsg(err.data?.message)
+            }).unwrap();
+
+            dispatch(setCredentials({ accessToken }));
+            setUsername("");
+            setPassword("");
+
+            $("#cancelButton").trigger("click");
+
+            navigate("/dashboard");
+        } catch (err) {
+            console.log(err);
+            if (err.status === "FETCH_ERROR") {
+                setErrMsg("No Server Response");
+            } else {
+                setErrMsg(err.data?.message);
             }
         }
-    }
+    };
 
     // Update the view of input fields after reset
-    const onUsernameChanged = (e) => setUsername(e.target.value)
-    const onPasswordChanged = (e) => setPassword(e.target.value)
+    const onUsernameChanged = (e) => setUsername(e.target.value);
+    const onPasswordChanged = (e) => setPassword(e.target.value);
 
     return (
         <div
@@ -130,7 +120,7 @@ const LogIn = () => {
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default LogIn
+export default LogIn;

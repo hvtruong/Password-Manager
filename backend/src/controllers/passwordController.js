@@ -4,19 +4,22 @@ const Password = require("../models/Password")
 // @desc Get all passwords
 // @route GET /passwords
 // @access Private
-const getAllPasswords = async (req, res) => {
+const getAllPasswords = async (req, res) => 
+{
     // Get all passwords of user from MongoDB
     const { username } = req.body
 
     const usernameCheck = await User.findOne({ username }).collation({ locale: "en", strength: 2 }).lean().exec()
     const savedPasswords = await Password.findOne({ "username": username }).lean().exec()
 
-    if (!usernameCheck) {
+    if (!usernameCheck) 
+    {
         return res.status(401).json({ message: "No valid user exist" })
     }
 
     // If no passwords found
-    if (!savedPasswords?.length) {
+    if (!savedPasswords?.length) 
+    {
         return res.status(400).json({ message: "No passwords found" })
     }
 
@@ -26,14 +29,16 @@ const getAllPasswords = async (req, res) => {
 // @desc Create new password
 // @route POST /passwords
 // @access Private
-const createNewPassword = async (req, res) => {
+const createNewPassword = async (req, res) => 
+{
     const { id, newPasswordName, password } = req.body
 
     console.log(id)
     console.log(newPasswordName)
     console.log(password)
     // Confirm data
-    if (!id || !newPasswordName || !password) {
+    if (!id || !newPasswordName || !password) 
+    {
         return res.status(400).json({ message: "All fields are required" })
     }
 
@@ -41,7 +46,8 @@ const createNewPassword = async (req, res) => {
 
     // Create and store the new password
     // Check if passwords file has been created
-    if (!passwordsFile) {
+    if (!passwordsFile) 
+    {
         const passwordFileObject = { "userId": id, "passwords": new Map() }
         passwordsFile = await Password.create(passwordFileObject)
     }
@@ -68,11 +74,13 @@ const createNewPassword = async (req, res) => {
 // @desc Update a password
 // @route PATCH /passwords
 // @access Private
-const updatePassword = async (req, res) => {
+const updatePassword = async (req, res) => 
+{
     const { username, name, newPassword } = req.body
 
     // Confirm data
-    if (!username || !name || !newPassword) {
+    if (!username || !name || !newPassword) 
+    {
         return res.status(400).json({ message: "All fields are required" })
     }
 
@@ -93,18 +101,21 @@ const updatePassword = async (req, res) => {
 // @desc Delete a password
 // @route DELETE /passwords
 // @access Private
-const deletePassword = async (req, res) => {
+const deletePassword = async (req, res) => 
+{
     const { id } = req.body
 
     // Confirm data
-    if (!id) {
+    if (!id) 
+    {
         return res.status(400).json({ message: "Password ID required" })
     }
 
     // Confirm password exists to delete 
     const password = await Password.findById(id).exec()
 
-    if (!password) {
+    if (!password) 
+    {
         return res.status(400).json({ message: "Password not found" })
     }
 
@@ -115,7 +126,8 @@ const deletePassword = async (req, res) => {
     res.json(reply)
 }
 
-module.exports = {
+module.exports = 
+{
     getAllPasswords,
     createNewPassword,
     updatePassword,
