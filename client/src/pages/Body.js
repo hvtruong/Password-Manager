@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/auth/authSlice.js";
 import { useCreateNewGuestMutation } from "../features/guests/guestApiSlice.js";
-import { useLoginMutation } from "../features/auth/authApiSlice.js";
+import { useLoginAsGuestMutation } from "../features/auth/authApiSlice.js";
 import usePersist from "../hooks/usePersist.js";
 import AnimationTitles from "../components/functions/AnimationTitles.js";
 import VideoPlayer from "../components/functions/VideoPlayer.js";
@@ -14,7 +14,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const Body = () => {
     // Import modules from API slice
     const [createGuestUser, { isSuccess }] = useCreateNewGuestMutation();
-    const [loginAsGuest] = useLoginMutation();
+    const [loginAsGuest] = useLoginAsGuestMutation();
 
     const [, setErrMsg] = useState("");
 
@@ -32,9 +32,11 @@ const Body = () => {
         e.preventDefault();
         try {
             // Call API to create temporary user
-            await createGuestUser();
+            const res = await createGuestUser().unwrap();
+            const guestId = res.guestId;
             // Login the same as a new, regular user with one-time access token
-            const { accessToken } = await loginAsGuest().unwrap();
+            const { accessToken } = await loginAsGuest({ guestId }).unwrap();
+            console.log("Access token: " + accessToken);
 
             dispatch(setCredentials({ accessToken }));
 

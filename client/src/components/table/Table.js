@@ -1,12 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import DisplayJsonData from './DisplayJsonData'
+import DisplayPasswordData from './DisplayPasswordData'
 import { Button } from 'react-bootstrap'
 import NewPasswordForm from '../forms/NewPasswordForm'
 import './table.css'
 
-const Table = () => {
+const Table = (data) => {
     
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState('fas fa-eye-slash fa-fw');
@@ -20,6 +20,8 @@ const Table = () => {
            setType('password')
         }
     }
+    console.log("Pass 2: ", data.passwords);
+    let passwordsData = DisplayPasswordData(data.passwords);
 
     return (
         <motion.div
@@ -37,9 +39,6 @@ const Table = () => {
                                         <label>Secret Key</label>
                                         <input type={type} className='form-control' />
                                         <i onClick={handleToggle} className={icon} id='eye' style={{marginLeft: '7px'}}></i>
-                                        <label>Name</label>
-                                        <input type='text' className='form-control' />
-                                        <i className='fa fa-search fa-fw' style={{marginLeft: '7px'}}></i>
                                     </div>
                                 </div>
                                 <div className='table-filter col-sm-4 d-flex justify-content-center align-items-center'>
@@ -68,15 +67,14 @@ const Table = () => {
                         <table className='table table-striped table-hover'>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
+                                    <th>URL</th>
                                     <th>Username</th>
                                     <th>Password</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {DisplayJsonData}
+                                {passwordsData}
                             </tbody>
                         </table>
                     </div>

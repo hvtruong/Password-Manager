@@ -1,98 +1,81 @@
-import { useState, useEffect } from "react"
-import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice"
-import { useNavigate } from "react-router-dom"
-import useAuth from "../../hooks/useAuth"
-import styles from "./Form.module.css"
+import { useState, useEffect } from "react";
+import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice";
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import $ from "jquery";
+import styles from "./Form.module.css";
 
-const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/
+const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
 const NewPasswordForm = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     // Import add new user module from API slice
-    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation()
+    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
 
-    const { id, validated } = useAuth()
+    const { id } = useAuth();
 
     // Hooks to control the new password form
-    const [newPasswordName, setNewPasswordName] = useState("")
-    const [newPassword, setNewPassword] = useState("")
-    const [validNewPassword, setValidNewPassword] = useState(false)
+    const [newPasswordName, setNewPasswordName] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [validNewPassword, setValidNewPassword] = useState(false);
 
-    const [repeatNewPassword, setRepeatNewPassword] = useState("")
+    const [repeatNewPassword, setRepeatNewPassword] = useState("");
 
-    const [errMsg, setErrMsg] = useState("")
+    const [errMsg, setErrMsg] = useState("");
 
     // Validate password every time it changes
     useEffect(() => {
-        setValidNewPassword(PWD_REGEX.test(newPassword))
-    }, [newPassword])
+        setValidNewPassword(PWD_REGEX.test(newPassword));
+    }, [newPassword]);
 
     // Reset input fields to empty when successfully submitted
     useEffect(() => {
         if (isSuccess) {
-            setNewPasswordName("")
-            setNewPassword("")
-            setRepeatNewPassword("")
+            setNewPasswordName("");
+            setNewPassword("");
+            setRepeatNewPassword("");
         }
-    }, [isSuccess, navigate])
+    }, [isSuccess, navigate]);
 
     useEffect(() => {
-        setErrMsg("")
-    }, [newPasswordName, newPassword, repeatNewPassword])
+        setErrMsg("");
+    }, [newPasswordName, newPassword, repeatNewPassword]);
 
     // Update the view of input fields after reset
-    const onNewPasswordNameChanged = (e) => setNewPasswordName(e.target.value)
-    const onNewPasswordChanged = (e) => setNewPassword(e.target.value)
+    const onNewPasswordNameChanged = (e) => setNewPasswordName(e.target.value);
+    const onNewPasswordChanged = (e) => setNewPassword(e.target.value);
     const onRepeatNewPasswordChanged = (e) =>
-        setRepeatNewPassword(e.target.value)
+        setRepeatNewPassword(e.target.value);
 
     // Call the POST API to create new user when everything is valid
     const createNewPassword = async (e) => {
-        e.preventDefault()
-        if (!validNewPassword) 
-        {
-            setErrMsg("Invalid new password")
-        } 
-        else if (newPassword !== repeatNewPassword) 
-        {
-            setErrMsg("Passwords do not match")
-        }
-        else
-        {
-            try
-            {
-                console.log(newPasswordName)
-                console.log(newPassword)
-                console.log(id)
-                const response = await addNewPassword
-                ({
+        e.preventDefault();
+        if (!validNewPassword) {
+            setErrMsg("Invalid new password");
+        } else if (newPassword !== repeatNewPassword) {
+            setErrMsg("Passwords do not match");
+        } else {
+            try {
+                const response = await addNewPassword({
                     id,
                     newPasswordName,
                     password: newPassword,
-                })
-                if (response.error) 
-                {
-                    if (typeof response.error.status != "number") 
-                    {
-                        setErrMsg("No Server Response")
-                    } else 
-                    {
-                        setErrMsg(response.error.data?.message)
+                });
+                if (response.error) {
+                    if (typeof response.error.status != "number") {
+                        setErrMsg("No Server Response");
+                    } else {
+                        setErrMsg(response.error.data?.message);
                     }
-                } 
-                else 
-                {
-                    // TODO: Navigate somewhere after successfully sign up
-                    navigate("/dashboard")
+                } else {
+                    $("#cancelButton").trigger("click");
                 }
-            } 
-            catch (error) 
-            {
-                console.log("An error occurred: ", error)
+            } catch (error) {
+                console.log("An error occurred: ", error);
             }
         }
-    }
+    };
 
     return (
         <div
@@ -102,19 +85,16 @@ const NewPasswordForm = () => {
             labelled="newPasswordForm"
         >
             <div className="modal-dialog modal-content">
-                <form
-                    className="needs-validation"
-                    onSubmit={createNewPassword}
-                >
+                <form className="needs-validation" onSubmit={createNewPassword}>
                     <div className={styles.box}>
                         <div className="modal-header">
-                            
                             <h1 className="modal-title fs-5 text-center">
                                 Create new password
                             </h1>
-                            
+
                             <button
                                 type="button"
+                                id="cancelButton"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
@@ -122,9 +102,9 @@ const NewPasswordForm = () => {
                         </div>
 
                         <div className="modal-body">
-                            
                             <p className="text-white">
-                                Please fill in the fields to update your password!
+                                Please fill in the fields to update your
+                                password!
                             </p>
 
                             <input
@@ -166,7 +146,7 @@ const NewPasswordForm = () => {
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default NewPasswordForm
+export default NewPasswordForm;

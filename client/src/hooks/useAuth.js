@@ -7,7 +7,7 @@ const useAuth = () => {
 
     if (token) {
         const decoded = jwtDecode(token)
-        const { id, validated } = decoded.UserInfo
+        const { id, validated } = decoded.Info
 
         return { id, validated }
     }

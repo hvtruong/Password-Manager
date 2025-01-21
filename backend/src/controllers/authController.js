@@ -48,7 +48,7 @@ const login = asyncHandler(async (req, res) => {
     // Generate jwt token
     const accessToken = jwt.sign(
         {
-            UserInfo: {
+            Info: {
                 id: foundUser._id,
                 validated: foundUser.validated,
             },
@@ -81,17 +81,19 @@ const login = asyncHandler(async (req, res) => {
 // @route POST /auth/login/guest
 // @access Public
 const loginAsGuest = asyncHandler(async (req, res) => {
-    const guestId = req.guestId;
-    const foundGuest = await Guest.findOne({ guestId }).exec();
+    console.log(req.body)
+    const { guestId } = mongoose.sanitizeFilter(req.body);
+    const foundGuest = await Guest.findOne({ 'guestId': guestId }).exec();
     if (!foundGuest) {
         return res.status(401).json({ message: "Invalid!" });
     }
+
     // Generate jwt token
     const accessToken = jwt.sign(
         {
-            GuestInfo: {
+            Info: {
                 id: foundGuest._id,
-                guest: true,
+                validated: true,
             },
         },
         process.env.AUTH_ACCESS_TOKEN,
@@ -99,7 +101,7 @@ const loginAsGuest = asyncHandler(async (req, res) => {
     );
 
     const refreshToken = jwt.sign(
-        { id: foundUser._id },
+        { id: foundGuest._id },
         process.env.AUTH_REFRESH_TOKEN,
         { expiresIn: "1d" }
     );
@@ -177,6 +179,7 @@ const logout = (req, res) => {
 
 module.exports = {
     login,
+    loginAsGuest,
     refresh,
     logout,
 };

@@ -49,15 +49,13 @@ const userRouter = require("./routes/userRoutes");
 const guestRouter = require("./routes/guestRoutes");
 const authRouter = require("./routes/authRoutes");
 const validateRouter = require("./routes/validateRoutes");
-const dashboardRouter = require("./routes/dashboardRoutes");
-const passwordRouter = require("./routes/passwordRoutes.js");
+const passwordRouter = require("./routes/passwordRoutes");
 
 // Setup API routes
 app.use("/user", userRouter);
 app.use("/guest", guestRouter);
 app.use("/auth", authRouter);
 app.use("/validate", validateRouter);
-app.use("/dashboard", dashboardRouter);
 app.use("/passwords", passwordRouter);
 
 // Handle errors

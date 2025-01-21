@@ -11,9 +11,10 @@ export const authApiSlice = apiSlice.injectEndpoints({
             }),
         }),
         loginAsGuest: builder.mutation({
-            query: () => ({
-                url: "/auth/login/guest",
+            query: (credentials) => ({
+                url: "/auth/guest",
                 method: "POST",
+                body: { ...credentials },
             }),
         }),
         logout: builder.mutation({
@@ -53,8 +54,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { 
-    useLoginMutation, 
-    useLogoutMutation, 
-    useRefreshMutation
+export const {
+    useLoginMutation,
+    useLoginAsGuestMutation,
+    useLogoutMutation,
+    useRefreshMutation,
 } = authApiSlice;

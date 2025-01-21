@@ -5,31 +5,27 @@ const crypto = require("crypto");
 // @route POST /guest
 // @access Private
 const createNewGuest = async (req, res) => {
-    // Generate guest id
+    // Generate new guest id
     // Check for duplicate id
     do {
-        var guestId = crypto.randomBytes(15).toString("hex");
-        var duplicateGuestId = await Guest.findOne({ guestId: validationToken })
+        var newGuestId = crypto.randomBytes(15).toString("hex");
+        var duplicateGuestId = await Guest.findOne({ newGuestId })
             .collation({ locale: "en", strength: 2 })
             .lean()
             .exec();
     } while (duplicateGuestId);
 
-    const guestObject = { guestId: guestId };
+    const guestObject = { guestId: newGuestId };
 
     // Create and store new user
+
     const guest = await Guest.create(guestObject);
-    console.log(validationToken);
 
     if (guest) {
-        return res.status(201).json({
-            message: `New user ${username} created, awaiting validation`,
-        });
+        return res.status(201).json({ guestId: newGuestId });
     } else {
         return res.status(400).json({ message: "An error occurred!" });
     }
 };
 
-module.exports = {
-    createNewGuest,
-};
+module.exports = { createNewGuest };
