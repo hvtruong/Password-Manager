@@ -16,7 +16,7 @@ const NewPasswordForm = () => {
     const { id } = useAuth();
 
     // Hooks to control the new password form
-    const [newPasswordName, setNewPasswordName] = useState("");
+    const [newWebsite, setNewWebsite] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [validNewPassword, setValidNewPassword] = useState(false);
 
@@ -32,7 +32,7 @@ const NewPasswordForm = () => {
     // Reset input fields to empty when successfully submitted
     useEffect(() => {
         if (isSuccess) {
-            setNewPasswordName("");
+            setNewWebsite("");
             setNewPassword("");
             setRepeatNewPassword("");
         }
@@ -40,10 +40,10 @@ const NewPasswordForm = () => {
 
     useEffect(() => {
         setErrMsg("");
-    }, [newPasswordName, newPassword, repeatNewPassword]);
+    }, [newWebsite, newPassword, repeatNewPassword]);
 
     // Update the view of input fields after reset
-    const onNewPasswordNameChanged = (e) => setNewPasswordName(e.target.value);
+    const onNewWebsiteChanged = (e) => setNewWebsite(e.target.value);
     const onNewPasswordChanged = (e) => setNewPassword(e.target.value);
     const onRepeatNewPasswordChanged = (e) =>
         setRepeatNewPassword(e.target.value);
@@ -59,7 +59,7 @@ const NewPasswordForm = () => {
             try {
                 const response = await addNewPassword({
                     id,
-                    newPasswordName,
+                    newWebsite,
                     password: newPassword,
                 });
                 if (response.error) {
@@ -69,7 +69,8 @@ const NewPasswordForm = () => {
                         setErrMsg(response.error.data?.message);
                     }
                 } else {
-                    $("#cancelButton").trigger("click");
+                    console.log("Closing");
+                    $("#closeFormButton").trigger("click");
                 }
             } catch (error) {
                 console.log("An error occurred: ", error);
@@ -94,7 +95,7 @@ const NewPasswordForm = () => {
 
                             <button
                                 type="button"
-                                id="cancelButton"
+                                id="closeFormButton"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
@@ -109,10 +110,10 @@ const NewPasswordForm = () => {
 
                             <input
                                 type="text"
-                                name="newPasswordName"
+                                name="newWebsite"
                                 placeholder="Password name"
-                                value={newPasswordName}
-                                onChange={onNewPasswordNameChanged}
+                                value={newWebsite}
+                                onChange={onNewWebsiteChanged}
                                 required
                             />
 

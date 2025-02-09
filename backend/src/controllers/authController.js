@@ -125,7 +125,6 @@ const loginAsGuest = asyncHandler(async (req, res) => {
 // @access Main - because access token has expired
 const refresh = (req, res) => {
     const cookies = req.cookies;
-
     if (!cookies?.jwt) {
         return res.status(401).json({ message: "Unauthorized" });
     }
@@ -141,16 +140,15 @@ const refresh = (req, res) => {
             }
 
             const foundUser = await User.findOne({
-                username: decoded.username,
+                _id: decoded.id,
             }).exec();
-
             if (!foundUser) {
                 return res.status(401).json({ message: "Unauthorized" });
             }
 
             const accessToken = jwt.sign(
                 {
-                    UserInfo: {
+                    Info: {
                         id: foundUser._id,
                         validated: foundUser.validated,
                     },

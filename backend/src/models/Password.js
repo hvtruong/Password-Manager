@@ -6,8 +6,7 @@ const passwordSchema = new mongoose.Schema({
         required: true
     },
     passwords: {
-        type: Map,
-        default: undefined,
+        type: Array,
         required: true
     }
 })

@@ -16,7 +16,11 @@ const Dashboard = () => {
         isSuccess,
         isError,
         error,
-    } = useGetPasswordsByIdQuery(id);
+    } = useGetPasswordsByIdQuery(id, {
+        pollingInterval: 15000,
+        refetchOnFocus: true,
+        refetchOnMountOrArgChange: true
+    });
 
     const [content, setContent] = useState(<PulseLoader color={"#FFF"} />);
     console.log("ABC: ", isSuccess, isLoading, isError, error, passwords);

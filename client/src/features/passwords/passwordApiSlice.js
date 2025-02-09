@@ -1,9 +1,8 @@
-import { createSelector, createEntityAdapter } from "@reduxjs/toolkit";
+import { createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
 
 const passwordsAdapter = createEntityAdapter({
-    sortComparer: (a, b) =>
-        a.completed === b.completed ? 0 : a.completed ? 1 : -1,
+    sortComparer: (a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1),
 });
 
 const initialState = passwordsAdapter.getInitialState();
@@ -13,27 +12,15 @@ export const passwordsApiSlice = apiSlice.injectEndpoints({
         getPasswordsById: builder.query({
             query: (userId) => ({
                 url: `/passwords/${userId}`,
-                validateStatus: (response, result) => {
-                    return response.status === 200 && !result.isError
-                },
-            }),
-            providesTags: (result, error, arg) => {
-                if (result?.ids) {
-                    return [
-                        { type: 'Note', id: 'LIST' },
-                        ...result.ids.map(id => ({ type: 'Note', id }))
-                    ]
-                } else return [{ type: 'Note', id: 'LIST' }]
-            }
+                validateStatus: (response, result) => response.status === 200 && !result.isError,
+            })
         }),
         addNewPassword: builder.mutation({
             query: (initialUserData) => ({
                 url: "/passwords",
                 method: "POST",
                 withCredentials: true,
-                body: {
-                    ...initialUserData,
-                },
+                body: initialUserData,
             }),
             invalidatesTags: [{ type: "User", id: "LIST" }],
         }),
@@ -41,13 +28,9 @@ export const passwordsApiSlice = apiSlice.injectEndpoints({
             query: (initialUserData) => ({
                 url: "/passwords",
                 method: "PATCH",
-                body: {
-                    ...initialUserData,
-                },
+                body: initialUserData,
             }),
-            invalidatesTags: (result, error, arg) => [
-                { type: "User", id: arg.id },
-            ],
+            invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
         }),
         deletePassword: builder.mutation({
             query: ({ id }) => ({
@@ -55,9 +38,7 @@ export const passwordsApiSlice = apiSlice.injectEndpoints({
                 method: "DELETE",
                 body: { id },
             }),
-            invalidatesTags: (result, error, arg) => [
-                { type: "User", id: arg.id },
-            ],
+            invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],
         }),
     }),
 });
