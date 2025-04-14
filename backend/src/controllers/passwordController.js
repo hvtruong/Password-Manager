@@ -35,6 +35,11 @@ const getPasswordsById = async (req, res) => {
 const createNewPassword = async (req, res) => {
     const { id, newWebsite, password, secretKey } = req.body; // Extract data from request body
 
+    console.log("Creating new password for user ID:", id);
+    console.log("New website:", newWebsite);
+    console.log("Password:", password)
+    console.log("Secret key:", secretKey);
+
     // Validate required fields
     if (!id || !newWebsite || !password) {
         return res.status(400).json({ message: "All fields are required" });
@@ -65,7 +70,7 @@ const createNewPassword = async (req, res) => {
 
         // Encrypt the password using the provided secret key
         const encryptedPassword = encryptPassword(password, secretKey);
-
+        console.log("Encrypted password:", encryptedPassword);
         // Add the new website and encrypted password to the list
         passwordsFile.passwords.push({ website: newWebsite, password: encryptedPassword });
 

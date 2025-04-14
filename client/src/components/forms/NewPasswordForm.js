@@ -7,9 +7,8 @@ import styles from "./Form.module.css";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
-const NewPasswordForm = () => {
+const NewPasswordForm = (secretKey) => {
     const navigate = useNavigate();
-
     // Import add new user module from API slice
     const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
 
@@ -61,6 +60,7 @@ const NewPasswordForm = () => {
                     id,
                     newWebsite,
                     password: newPassword,
+                    secretKey: secretKey
                 });
                 if (response.error) {
                     if (typeof response.error.status != "number") {

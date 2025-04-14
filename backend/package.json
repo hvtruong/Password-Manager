@@ -52,6 +52,7 @@
     "passport-google-oauth": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
+    "pkcs7": "^1.0.4",
     "preview-email": "^3.0.20",
     "pug": "^3.0.3",
     "react-router-dom": "^6.23.0",

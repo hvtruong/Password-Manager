@@ -9,9 +9,14 @@ const crypto = require("crypto");
  */
 const encryptPassword = (password, secretKey) => {
     const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(secretKey, "hex"), iv);
+    console.log("IV: ", iv);
+    const hashedKey = crypto.createHash("sha256").update(secretKey.secretKey).digest();
+    console.log("Hashed Key: ", hashedKey);
+    const cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(hashedKey, "hex"), iv);
+    console.log("HERE")
     let encrypted = cipher.update(password, "utf8", "hex");
     encrypted += cipher.final("hex");
+    console.log("Encrypted: ", encrypted);
     return iv.toString("hex") + ":" + encrypted;
 };
 
