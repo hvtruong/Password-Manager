@@ -20,6 +20,7 @@
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0",
     "csrf": "^3.1.0",
     "csurf": "^1.11.0",
     "date-fns": "^3.6.0",

@@ -29,16 +29,22 @@ const createNewPassword = async (req, res) => {
     }
 
     try {
-        let passwordsFile = await Password.findOne({ userId: id }).collation({ locale: "en", strength: 2 }).exec();
+        let passwordsFile = await Password.findOne({ userId: id })
+            .collation({ locale: "en", strength: 2 })
+            .exec();
 
         if (!passwordsFile) {
             passwordsFile = new Password({ userId: id, passwords: [] });
         }
 
-        const websiteExists = passwordsFile.passwords.some(item => item.website === newWebsite);
+        const websiteExists = passwordsFile.passwords.some(
+            (item) => item.website === newWebsite
+        );
 
         if (websiteExists) {
-            return res.status(409).json({ message: "Name with a password already exists" });
+            return res
+                .status(409)
+                .json({ message: "Website with a password already exists" });
         }
 
         passwordsFile.passwords.push({ website: newWebsite, password });
