@@ -1,23 +1,27 @@
 import React from 'react'
-import { useState } from "react"
+import { useState } from 'react'
 import { motion } from 'framer-motion'
+import DisplayPasswordData from './DisplayPasswordData'
+import { Button } from 'react-bootstrap'
+import NewPasswordForm from '../forms/NewPasswordForm'
 import './table.css'
-import DisplayJsonData from './DisplayJsonData'
 
-const Table = () => {
+const Table = (data) => {
     
     const [type, setType] = useState('password');
-    const [icon, setIcon] = useState('fas fa-eye-slash');
+    const [icon, setIcon] = useState('fas fa-eye-slash fa-fw');
 
     const handleToggle = () => {
-        if (type==='password'){
-           setIcon('fas fa-eye');
+        if (type === 'password'){
+           setIcon('fas fa-eye fa-fw');
            setType('text')
         } else {
-           setIcon('fas fa-eye-slash')
+           setIcon('fas fa-eye-slash fa-fw')
            setType('password')
         }
-     }
+    }
+    console.log("Pass 2: ", data.passwords);
+    let passwordsData = DisplayPasswordData(data.passwords);
 
     return (
         <motion.div
@@ -25,57 +29,52 @@ const Table = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
         >
-            <div className="container-xl">
-                <div className="table-responsive">
-                    <div className="table-wrapper">
-                        <div className="table-title">
-                            <div className="row">
-                                <div className="col-sm-3">
-                                    <h2>
-                                        <i className="fa-solid fa-vault" style={{color: "#0d6efd"}}></i>
-                                        {' '}
-                                        Password <b>Vault</b>
-                                    </h2>
-                                </div>
-                                <div className="table-filter col-sm-6">
-                                    <div className="filter-group">
-                                        <label>Website</label>
-                                        <input type="text" className="form-control" />
-                                        <button type="button" className="btn btn-primary">
-                                            <i className="fa fa-search"></i>
-                                        </button>
-                                    </div>
-                                    <div className="filter-group">
-                                        <label>Secret key</label>
-                                        <input type={type} className="form-control" />
-                                        {" "}
-                                        <i onClick={handleToggle} class={icon} id="eye"></i>
+            <div className='container-xl'>
+                <div className='table-responsive'>
+                    <div className='table-wrapper'>
+                        <div className='table-title'>
+                            <div className='row'>
+                                <div className='table-filter col-sm-8 d-flex justify-content-center align-items-center'>
+                                    <div className='filter-group'>
+                                        <label>Secret Key</label>
+                                        <input type={type} className='form-control' />
+                                        <i onClick={handleToggle} className={icon} id='eye' style={{marginLeft: '7px'}}></i>
                                     </div>
                                 </div>
-                                <div className="col-sm-3">		
-                                    <button type="button" class="btn btn-primary" >
-                                        <i class="fa fa-plus add-new"></i>
-                                        Add New
-                                    </button>
-                                    <button type="button" className="btn btn-secondary">
-                                        <i className="fas fa-edit" style={{color: "#0d6efd"}}></i>
-                                        <span>Export to Excel</span>
-                                    </button>
+                                <div className='table-filter col-sm-4 d-flex justify-content-center align-items-center'>
+                                    <div className='filter-group'>
+                                        <Button
+                                            variant='primary'
+                                            className='btn btn-primary'
+                                            data-bs-toggle='modal'
+                                            data-bs-target='#newPasswordForm'
+                                        >
+                                            Add New Password
+                                        </Button>
+                                        <NewPasswordForm />
+                                        <Button
+                                            variant='Secondary'
+                                            className='btn btn-secondary'
+                                            data-bs-toggle='modal'
+                                            data-bs-target='#updatePasswordForm'
+                                        >
+                                            Export File
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <table className="table table-striped table-hover">
+                        <table className='table table-striped table-hover'>
                             <thead>
-                                <tr key = "2">
-                                    <th key="1">ID</th>
-                                    <th key="2">Website</th>
-                                    <th key="3">Username</th>
-                                    <th key="4">Password</th>
-                                    <th key="5">Actions</th>
+                                <tr>
+                                    <th>URL</th>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {DisplayJsonData}
+                                {passwordsData}
                             </tbody>
                         </table>
                     </div>

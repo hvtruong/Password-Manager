@@ -17,12 +17,19 @@ const userSchema = new Schema({
         required: true,
         unique: true
     },
-    registered: {
+    validationToken: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    validated: {
         type: Boolean,
         default: false
     }
 })
 
-userSchema.plugin(passportLocalMongoose);
+userSchema.index({ expireAt: 1 }, { expireAfterSeconds: 10800 })
+
+userSchema.plugin(passportLocalMongoose)
 
 module.exports = new mongoose.model('user', userSchema)

@@ -1,87 +1,114 @@
-const asyncHandler = require('express-async-handler');
-const bcrypt = require('bcrypt');
-const fetch = require('node-fetch');
-const fs = require('fs');
-const multer = require('multer');
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
-const PasswordManager = require("../utils/binding.js");
-
-var passwordManager = new PasswordManager("");
+const Password = require("../models/Password");
 
 // @desc Get all passwords
-// @route GET /dashboard
+// @route GET /passwords
 // @access Private
-const getAllPasswords = asyncHandler(async (req, res) => {
+const getPasswordsById = async (req, res) => {
+    const userId = req.params.id;
 
-    let json = passwordManager.exportToString();
-    res.render('dashboard', {title: 'Dashboard', json:json});
-})
-
-// @desc Post a new password
-// @route POST /dashboard
-// @access Private
-const createNewPassword = asyncHandler(async (req, res) => {
     try {
-        const {website, password, retypedPassword} = req.body;
+        const savedPasswords = await Password.findOne({ userId }).lean().exec();
 
-        if (password != retypedPassword) {
-            res.status(500).json({message: "Unmatched password"});
+        if (!savedPasswords) {
+            return res.json([]);
         }
-        
-        passwordManager.inserNewData(website, password);
-
-        // Re render the password table
-        let json = passwordManager.exportToString()
-        res.render('dashboard', {title: 'Dashboard', json:json});
+        return res.json(savedPasswords.passwords);
     } catch (error) {
-        res.status(500).json({message: "Something went wrong"});
+        return res.status(500).json({ message: "Server error" });
     }
-})
+};
+
+// @desc Create new password
+// @route POST /passwords
+// @access Private
+const createNewPassword = async (req, res) => {
+    const { id, newWebsite, password } = req.body;
+
+    if (!id || !newWebsite || !password) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    try {
+        let passwordsFile = await Password.findOne({ userId: id })
+            .collation({ locale: "en", strength: 2 })
+            .exec();
+
+        if (!passwordsFile) {
+            passwordsFile = new Password({ userId: id, passwords: [] });
+        }
+
+        const websiteExists = passwordsFile.passwords.some(
+            (item) => item.website === newWebsite
+        );
+
+        if (websiteExists) {
+            return res
+                .status(409)
+                .json({ message: "Website with a password already exists" });
+        }
+
+        passwordsFile.passwords.push({ website: newWebsite, password });
+        await passwordsFile.save();
+
+        return res.status(201).json({ message: "New password created" });
+    } catch (error) {
+        return res.status(500).json({ message: "Server error" });
+    }
+};
 
 // @desc Update a password
-// @route PUT /dashboard
+// @route PATCH /passwords
 // @access Private
-const updatePassword = asyncHandler(async (req, res) => {
-    try {
+const updatePassword = async (req, res) => {
+    const { username, name, newPassword } = req.body;
 
-    } catch (error) {
-        res.status(500).json({message: "Something went wrong"});
+    if (!username || !name || !newPassword) {
+        return res.status(400).json({ message: "All fields are required" });
     }
-})
+
+    try {
+        const loadedPasswords = await Password.findById(username).exec();
+
+        if (!loadedPasswords) {
+            return res.status(400).json({ message: "Passwords not found" });
+        }
+
+        loadedPasswords.passwordsJson[name] = newPassword;
+        await loadedPasswords.save();
+
+        return res.json({ message: `Password for "${name}" updated` });
+    } catch (error) {
+        return res.status(500).json({ message: "Server error" });
+    }
+};
 
 // @desc Delete a password
-// @route DELETE /dashboard
+// @route DELETE /passwords
 // @access Private
-const deletePassword = asyncHandler(async (req, res) => {
-    try {
+const deletePassword = async (req, res) => {
+    const { id } = req.body;
 
-        // Re render the password table
-        let json = passwordManager.exportToString();
-        res.render('dashboard', {title: 'Dashboard', json:json});
-    } catch (error) {
-        return res.status(500).json({message: "Something went wrong"});
+    if (!id) {
+        return res.status(400).json({ message: "Password ID required" });
     }
-})
 
-// @desc Delete a password
-// @route DELETE /dashboard
-// @access Private
-const loadPasswordFromFile = asyncHandler(async (req, res) => {
     try {
-        let jsonPasswordsData = req.file.buffer.toString();
-        passwordManager.loadDataFromFile(jsonPasswordsData);
-        let json = passwordManager.exportToString();
-        res.render('dashboard', {title: 'Dashboard', json:json});
+        const password = await Password.findById(id).exec();
+
+        if (!password) {
+            return res.status(400).json({ message: "Password not found" });
+        }
+
+        const result = await password.deleteOne();
+        return res.json({ message: `Password with ID ${result._id} deleted` });
     } catch (error) {
-        return res.status(500).json({message: "Something went wrong"});
+        return res.status(500).json({ message: "Server error" });
     }
-})
+};
 
 module.exports = {
-    getAllPasswords,
+    getPasswordsById,
     createNewPassword,
     updatePassword,
     deletePassword,
-    loadPasswordFromFile
-}
+};

@@ -1,12 +1,16 @@
 {
+    "env": {
+        "myIncludePath": [
+            "${workspaceFolder}/include",
+            "${workspaceFolder}/src"
+        ],
+        "myDefines": ["DEBUG", "MY_FEATURE=1"]
+    },
     "configurations": [
         {
             "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/gcc",
+            "includePath": ["${workspaceFolder}/lib/**", "${workspaceFolder}/backend/src/C++/AES/**"],
             "cStandard": "c17",
             "cppStandard": "c++14",
             "intelliSenseMode": "linux-clang-x64"

@@ -1,14 +1,17 @@
 const mongoose = require('mongoose')
 
 const passwordSchema = new mongoose.Schema({
-    user: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user',
         required: true
     },
-    passwordsJson: {
-        type: Object,
-        default: undefined
+    iv: {
+        type: String,
+        required: true
+    },
+    passwords: {
+        type: Array,
+        required: true
     }
 })
 

@@ -4,6 +4,7 @@
 #include "encoder.hpp"
 #include "decoder.hpp"
 #include "constant.hpp"
+#include "AES/e"
 
 #ifndef PWMANAGER
 #define PWMANAGER
