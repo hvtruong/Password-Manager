@@ -7,7 +7,6 @@ const useAuth = () => {
 
     if (token) {
         const decoded = jwtDecode(token)
-        console.log("decoded: ", decoded);
         const { id, validated } = decoded.Info
 
         return { id, validated }

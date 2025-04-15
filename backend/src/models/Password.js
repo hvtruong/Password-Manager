@@ -5,10 +5,6 @@ const passwordSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    iv: {
-        type: String,
-        required: true
-    },
     passwords: {
         type: Array,
         required: true
