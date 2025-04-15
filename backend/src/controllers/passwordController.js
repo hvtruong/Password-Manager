@@ -5,23 +5,25 @@ const { encryptPassword, decryptPassword } = require("../encryption/encryption")
 // @route GET /passwords/:id
 // @access Private
 const getPasswordsById = async (req, res) => {
-    const {userId, secretKey} = req.body; // Extract user ID from request parameters
+    const id = req.params.id; // Extract user ID from request parameters
+    const secretKey = req.query.secretKey; // Extract secret key from query parameters
 
     try {
         // Find the passwords document for the given user ID
-        const savedPasswords = await Password.findOne({ userId }).lean().exec();
+        const savedPasswords = await Password.findOne({ userId: id }).lean().exec();
 
         // If no passwords are found, return an empty array
         if (!savedPasswords) {
+            console.log("No passwords found for user ID:", id);
             return res.json([]);
         }
 
         // Return the list of passwords
         const decryptedPasswords = savedPasswords.passwords.map((item) => ({
             website: item.website,
-            password: decryptPassword(item.password, secretKey),
+            password: decryptPassword(item.password, "1234"),
         }));
-
+        console.log("Decrypted passwords:", decryptedPasswords);
         return res.json(decryptedPasswords);
     } catch (error) {
         // Handle server errors
@@ -54,6 +56,7 @@ const createNewPassword = async (req, res) => {
         // If no document exists, create a new one
         if (!passwordsFile) {
             passwordsFile = new Password({ userId: id, passwords: [] });
+            console.log("No passwords document found, creating a new one");
         }
 
         // Check if the website already exists in the passwords list
@@ -71,12 +74,14 @@ const createNewPassword = async (req, res) => {
         // Encrypt the password using the provided secret key
         const encryptedPassword = encryptPassword(password, secretKey);
         console.log("Encrypted password:", encryptedPassword);
+        console.log("Decrypted password:", decryptPassword(encryptedPassword, secretKey));
         // Add the new website and encrypted password to the list
         passwordsFile.passwords.push({ website: newWebsite, password: encryptedPassword });
+        console.log(passwordsFile.passwords);
 
         // Save the updated passwords document
         await passwordsFile.save();
-
+        console.log("New password saved successfully");
         // Return success response
         return res.status(201).json({ message: "New password created" });
     } catch (error) {

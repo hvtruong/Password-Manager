@@ -10,8 +10,10 @@ const initialState = passwordsAdapter.getInitialState();
 export const passwordsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getPasswordsById: builder.query({
-            query: (userId) => ({
-                url: `/passwords/${userId}`,
+            query: (id, secretKey) => ({
+                url: `/passwords/${id}`,
+                method: "GET",
+                params: { secretKey },
                 validateStatus: (response, result) => response.status === 200 && !result.isError,
             })
         }),

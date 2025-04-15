@@ -3,38 +3,52 @@ const crypto = require("crypto");
 /**
  * Encrypts a password using AES-256-CBC encryption algorithm.
  *
- * @param {string} password - The plaintext password to be encrypted.
+ * @param {string} plaintextPassword - The plaintext password to be encrypted.
  * @param {string} secretKey - The secret key used for encryption, represented as a hexadecimal string.
  * @returns {string} The encrypted password in the format "iv:encryptedData", where `iv` is the initialization vector in hexadecimal format.
  */
-const encryptPassword = (password, secretKey) => {
-    const iv = crypto.randomBytes(16);
-    console.log("IV: ", iv);
-    const hashedKey = crypto.createHash("sha256").update(secretKey.secretKey).digest();
-    console.log("Hashed Key: ", hashedKey);
-    const cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(hashedKey, "hex"), iv);
-    console.log("HERE")
-    let encrypted = cipher.update(password, "utf8", "hex");
-    encrypted += cipher.final("hex");
-    console.log("Encrypted: ", encrypted);
-    return iv.toString("hex") + ":" + encrypted;
+const encryptPassword = (plaintextPassword, secretKey) => {
+    const initializationVector = crypto.randomBytes(16);
+
+    // Hash the secret key to ensure it is 32-bytes length as required by AES-256
+    const hashedKey = crypto.createHash("sha256").update(secretKey).digest();
+
+    // Create the cipher using AES-256-CBC
+    const cipher = crypto.createCipheriv("aes-256-cbc", hashedKey, initializationVector);
+
+    let encryptedData = cipher.update(plaintextPassword, "utf8", "hex");
+    encryptedData += cipher.final("hex");
+
+    // Return the IV and encrypted data as a single string
+    return `${initializationVector.toString("hex")}:${encryptedData}`;
 };
 
 /**
- * Decrypts an encrypted password using AES-256-CBC encryption algorithm.
+ * Decrypts an encrypted password using AES-256-CBC algorithm and a secret key.
+ * If no secret key is provided, the function returns the encrypted password as is.
  *
- * @param {string} encryptedPassword - The encrypted password in the format "iv:encryptedData",
- *                                      where `iv` is the initialization vector in hexadecimal format.
- * @param {string} secretKey - The secret key used for decryption, represented as a hexadecimal string.
- * @returns {string} The decrypted password in plain text
+ * @param {string} encryptedPassword - The encrypted password in the format "IV:encryptedData".
+ * @param {string} secretKey - The secret key used for decryption. Must be provided to decrypt the password.
+ * @returns {string} The decrypted password if the secret key is provided, otherwise the original encrypted password.
  */
 const decryptPassword = (encryptedPassword, secretKey) => {
-    const [ivHex, encrypted] = encryptedPassword.split(":");
-    const iv = Buffer.from(ivHex, "hex");
-    const decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(secretKey, "hex"), iv);
-    let decrypted = decipher.update(encrypted, "hex", "utf8");
-    decrypted += decipher.final("utf8");
-    return decrypted;
+    if (!secretKey) {
+        return encryptedPassword;
+    }
+    // Split the encrypted password into IV and encrypted data
+    const [ivHex, encryptedData] = encryptedPassword.split(":");
+
+    const initializationVector = Buffer.from(ivHex, "hex");
+
+    // Hash the secret key to ensure it is 32-bytes length as required by AES-256
+    const hashedKey = crypto.createHash("sha256").update(secretKey).digest();
+
+    const decipher = crypto.createDecipheriv("aes-256-cbc", hashedKey, initializationVector);
+
+    let decryptedData = decipher.update(encryptedData, "hex", "utf8");
+    decryptedData += decipher.final("utf8");
+
+    return decryptedData;
 };
 
 module.exports = {
