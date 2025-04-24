@@ -9,12 +9,17 @@ const crypto = require("crypto");
  */
 const encryptPassword = (plaintextPassword, secretKey) => {
     const initializationVector = crypto.randomBytes(16);
-
+    console.log("Encrypting")
     // Hash the secret key to ensure it is 32-bytes length as required by AES-256
     const hashedKey = crypto.createHash("sha256").update(secretKey).digest();
+    console.log("Hashed key: ", hashedKey);
 
     // Create the cipher using AES-256-CBC
-    const cipher = crypto.createCipheriv("aes-256-cbc", hashedKey, initializationVector);
+    const cipher = crypto.createCipheriv(
+        "aes-256-cbc",
+        hashedKey,
+        initializationVector
+    );
 
     let encryptedData = cipher.update(plaintextPassword, "utf8", "hex");
     encryptedData += cipher.final("hex");
@@ -41,12 +46,23 @@ const decryptPassword = (encryptedPassword, secretKey) => {
     const initializationVector = Buffer.from(ivHex, "hex");
 
     // Hash the secret key to ensure it is 32-bytes length as required by AES-256
+    console.log("Hashing key ", secretKey);
     const hashedKey = crypto.createHash("sha256").update(secretKey).digest();
+    console.log("Hashed key: ", hashedKey);
+    const decipher = crypto.createDecipheriv(
+        "aes-256-cbc",
+        hashedKey,
+        initializationVector
+    );
 
-    const decipher = crypto.createDecipheriv("aes-256-cbc", hashedKey, initializationVector);
-
-    let decryptedData = decipher.update(encryptedData, "hex", "utf8");
-    decryptedData += decipher.final("utf8");
+    let decryptedData;
+    try {
+        decryptedData = decipher.update(encryptedData, "hex", "utf8");
+        decryptedData += decipher.final("utf8");
+    } catch (error) {
+        console.error("Decryption failed: ", error);
+        return encryptedPassword; // Return the original encrypted password if decryption fails
+    }
 
     return decryptedData;
 };

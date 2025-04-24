@@ -15,6 +15,25 @@ const Table = () => {
     const [type, setType] = useState("password");
     const [icon, setIcon] = useState("fas fa-eye-slash fa-fw");
     const [secretKey, setSecretKey] = useState(""); // State to store the secret key
+    const [shouldRefetch, setShouldRefetch] = useState(false); // State to track form submission
+
+    const handleRefetch = () => {
+        setShouldRefetch(true); // Set form submission state to true
+    };
+
+    useEffect(() => {
+        if (shouldRefetch) {
+            console.log("refetching passwords...");
+            refetch(); // Refetch passwords when form is submitted
+            setShouldRefetch(false); // Reset form submission state
+        }
+    }, [shouldRefetch]);
+
+    // State to store the key used for decryption
+    // This key is used to decrypt the passwords
+    // Re-fetched from the server
+    // Triggered and copied value from secretKey only when user clicks the "Decrypt" button
+    const [decryptKey, setDecryptKey] = useState("");
 
     const handleToggle = () => {
         if (type === "password") {
@@ -30,19 +49,15 @@ const Table = () => {
         setSecretKey(e.target.value); // Update the secret key state
     };
 
-    console.log("ID: ", id);
-    console.log("Secret Key: ", secretKey);
+    // Fetch passwords using id and secret key
     const {
         data: passwords,
         isLoading,
         isSuccess,
         isError,
         error,
-    } = useGetPasswordsByIdQuery(id, secretKey, {
-        pollingInterval: 15000,
-        refetchOnFocus: true,
-        refetchOnMountOrArgChange: true,
-    });
+        refetch,
+    } = useGetPasswordsByIdQuery({ id: id, secretKey: decryptKey });
 
     const [content, setContent] = useState(<PulseLoader color={"#FFF"} />);
 
@@ -94,6 +109,9 @@ const Table = () => {
                                         <Button
                                             variant="primary"
                                             className="btn btn-primary bg-success"
+                                            onClick={() => {
+                                                setDecryptKey(secretKey);
+                                            }}
                                         >
                                             Decrypt
                                         </Button>
@@ -107,6 +125,7 @@ const Table = () => {
                                         </Button>
                                         <NewPasswordForm
                                             secretKey={secretKey}
+                                            handleRefetch={handleRefetch}
                                         />
                                         <Button
                                             variant="Secondary"
@@ -129,9 +148,7 @@ const Table = () => {
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {content}
-                            </tbody>
+                            <tbody>{content}</tbody>
                         </table>
                     </div>
                 </div>

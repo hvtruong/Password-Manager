@@ -7,11 +7,11 @@ import styles from "./Form.module.css";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
-const NewPasswordForm = ({ secretKey }) => {
+const NewPasswordForm = (props) => {
     const navigate = useNavigate();
     const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
     const { id } = useAuth();
-
+    console.log(props.secretKey);
     const [formData, setFormData] = useState({
         newWebsite: "",
         newPassword: "",
@@ -29,7 +29,11 @@ const NewPasswordForm = ({ secretKey }) => {
 
     useEffect(() => {
         if (isSuccess) {
-            setFormData({ newWebsite: "", newPassword: "", repeatNewPassword: "" });
+            setFormData({
+                newWebsite: "",
+                newPassword: "",
+                repeatNewPassword: "",
+            });
         }
     }, [isSuccess]);
 
@@ -60,7 +64,7 @@ const NewPasswordForm = ({ secretKey }) => {
                 id,
                 newWebsite,
                 password: newPassword,
-                secretKey,
+                secretKey: props.secretKey
             });
 
             if (response.error) {
@@ -71,6 +75,8 @@ const NewPasswordForm = ({ secretKey }) => {
                 setErrMsg(errorMessage);
             } else {
                 $("#closeFormButton").trigger("click");
+                props.handleRefetch();
+                navigate("/dashboard");
             }
         } catch (error) {
             console.error("An error occurred: ", error);
@@ -102,7 +108,8 @@ const NewPasswordForm = ({ secretKey }) => {
 
                         <div className="modal-body">
                             <p className="text-white">
-                                Please fill in the fields to update your password!
+                                Please fill in the fields to update your
+                                password!
                             </p>
 
                             <input

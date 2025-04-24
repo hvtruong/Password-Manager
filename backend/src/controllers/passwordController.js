@@ -7,7 +7,8 @@ const { encryptPassword, decryptPassword } = require("../encryption/encryption")
 const getPasswordsById = async (req, res) => {
     const id = req.params.id; // Extract user ID from request parameters
     const secretKey = req.query.secretKey; // Extract secret key from query parameters
-
+    console.log(req.params);
+    console.log(req.query);
     try {
         // Find the passwords document for the given user ID
         const savedPasswords = await Password.findOne({ userId: id }).lean().exec();
@@ -21,7 +22,7 @@ const getPasswordsById = async (req, res) => {
         // Return the list of passwords
         const decryptedPasswords = savedPasswords.passwords.map((item) => ({
             website: item.website,
-            password: decryptPassword(item.password, "1234"),
+            password: decryptPassword(item.password, secretKey),
         }));
         console.log("Decrypted passwords:", decryptedPasswords);
         return res.json(decryptedPasswords);
