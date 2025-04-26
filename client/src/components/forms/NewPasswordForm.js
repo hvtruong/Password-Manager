@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
-import $ from "jquery";
 import styles from "./Form.module.css";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
@@ -74,8 +73,6 @@ const NewPasswordForm = (props) => {
                         : response.error.data?.message;
                 setErrMsg(errorMessage);
             } else {
-                $("#closeFormButton").trigger("click");
-                props.handleRefetch();
                 navigate("/dashboard");
             }
         } catch (error) {

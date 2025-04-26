@@ -138,25 +138,30 @@ const refresh = (req, res) => {
             if (err) {
                 return res.status(403).json({ message: "Forbidden" });
             }
-
-            const foundUser = await User.findOne({
+            console.log("HERE")
+            let foundUser = await User.findOne({
                 _id: decoded.id,
             }).exec();
             if (!foundUser) {
-                return res.status(401).json({ message: "Unauthorized" });
+                foundUser = await Guest.findOne({
+                    _id: decoded.id,
+                }).exec();
+                if (!foundUser) {
+                    return res.status(403).json({ message: "Forbidden" });
+                }
             }
 
             const accessToken = jwt.sign(
                 {
                     Info: {
                         id: foundUser._id,
-                        validated: foundUser.validated,
+                        validated: true,
                     },
                 },
                 process.env.AUTH_ACCESS_TOKEN,
                 { expiresIn: "15m" }
             );
-
+            console.log("THERE")
             res.json({ accessToken });
         })
     );

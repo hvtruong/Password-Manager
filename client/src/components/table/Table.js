@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { Button } from "react-bootstrap";
 import PulseLoader from "react-spinners/PulseLoader";
@@ -6,28 +7,26 @@ import useAuth from "../../hooks/useAuth";
 import { useGetPasswordsByIdQuery } from "../../features/passwords/passwordApiSlice";
 import DisplayPasswordData from "./DisplayPasswordData";
 import NewPasswordForm from "../forms/NewPasswordForm";
+import $ from "jquery";
 import "./table.css";
 
 const Table = () => {
     // Import password module from API slice
     const { id } = useAuth();
 
-    const [type, setType] = useState("password");
-    const [icon, setIcon] = useState("fas fa-eye-slash fa-fw");
+    const [type, setType] = useState("text");
+    const [lock, setLock] = useState("fas fa-unlock fa-fw");
+    const [modal, setModal] = useState("collapse");
     const [secretKey, setSecretKey] = useState(""); // State to store the secret key
-    const [shouldRefetch, setShouldRefetch] = useState(false); // State to track form submission
-
-    const handleRefetch = () => {
-        setShouldRefetch(true); // Set form submission state to true
-    };
+    const [dataRefetch, setDataRefetch] = useState(false); // State to track form submission
 
     useEffect(() => {
-        if (shouldRefetch) {
+        if (dataRefetch) {
             console.log("refetching passwords...");
             refetch(); // Refetch passwords when form is submitted
-            setShouldRefetch(false); // Reset form submission state
+            setDataRefetch(false); // Reset form submission state
         }
-    }, [shouldRefetch]);
+    }, [dataRefetch]);
 
     // State to store the key used for decryption
     // This key is used to decrypt the passwords
@@ -37,11 +36,18 @@ const Table = () => {
 
     const handleToggle = () => {
         if (type === "password") {
-            setIcon("fas fa-eye fa-fw");
+            setLock("fas fa-unlock fa-fw");
             setType("text");
+            setModal("collapse");
         } else {
-            setIcon("fas fa-eye-slash fa-fw");
+            if (secretKey === "") {
+                toast("Please enter your secret key");
+                return;
+            }
+            setLock("fas fa-lock fa-fw");
             setType("password");
+            setDecryptKey(secretKey);
+            setModal("modal");
         }
     };
 
@@ -72,7 +78,7 @@ const Table = () => {
             setContent(DisplayPasswordData(passwords, secretKey));
         }
     }, [isLoading, isError, isSuccess, error, passwords]);
-
+    const test = "modal"
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
@@ -85,19 +91,28 @@ const Table = () => {
                         <div className="table-title">
                             <div className="row">
                                 <div className="table-filter col-sm-8 d-flex justify-content-center align-items-center">
+                                    <ToastContainer
+                                        position="top-center"
+                                        className="justify-content-center"
+                                    />
                                     <div className="filter-group">
                                         <label>Secret Key</label>
                                         <input
                                             type={type}
                                             className="form-control"
                                             name="secretKey"
+                                            id="secretKey"
+                                            placeholder="Enter your secret key"
+                                            autoComplete="off"
+                                            required
                                             value={secretKey} // Bind the input value to the state
                                             onChange={handleSecretKeyChange} // Update state on change
+                                            disabled={type === "password"} // Disable input when lock is clicked
                                         />
                                         <i
                                             onClick={handleToggle}
-                                            className={icon}
-                                            id="eye"
+                                            className={lock}
+                                            id="lock"
                                             style={{
                                                 marginLeft: "7px",
                                             }}
@@ -110,7 +125,12 @@ const Table = () => {
                                             variant="primary"
                                             className="btn btn-primary bg-success"
                                             onClick={() => {
-                                                setDecryptKey(secretKey);
+                                                if (type === passwords) {
+                                                    toast(
+                                                        "Secret key is required"
+                                                    );
+                                                    return;
+                                                }
                                             }}
                                         >
                                             Decrypt
@@ -118,14 +138,28 @@ const Table = () => {
                                         <Button
                                             variant="primary"
                                             className="btn btn-primary"
-                                            data-bs-toggle="modal"
                                             data-bs-target="#newPasswordForm"
+                                            data-bs-toggle={modal === "modal" ? "modal" : "collapse"}
+                                            onClick={() => {
+                                                console.log("Modal value: ", modal);
+                                                if (type === "text") {
+                                                    toast(
+                                                        "Secret key is required"
+                                                    );
+                                                    return;
+                                                }
+                                            }}
                                         >
                                             Add New Password
                                         </Button>
                                         <NewPasswordForm
                                             secretKey={secretKey}
-                                            handleRefetch={handleRefetch}
+                                            setDataRefetch={() => {
+                                                setDataRefetch(true);
+                                            }}
+                                            closeModal={() => {
+                                                setModal("collapse");
+                                            }}
                                         />
                                         <Button
                                             variant="Secondary"
