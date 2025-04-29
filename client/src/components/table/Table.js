@@ -7,65 +7,103 @@ import useAuth from "../../hooks/useAuth";
 import { useGetPasswordsByIdQuery } from "../../features/passwords/passwordApiSlice";
 import DisplayPasswordData from "./DisplayPasswordData";
 import NewPasswordForm from "../forms/NewPasswordForm";
-import $ from "jquery";
 import "./table.css";
 
+const SecretKeyInput = ({ type, secretKey, handleSecretKeyChange, handleToggle, lock }) => (
+    <div className="filter-group">
+        <label>Secret Key</label>
+        <input
+            type={type}
+            className="form-control"
+            name="secretKey"
+            id="secretKey"
+            placeholder="Enter your secret key"
+            autoComplete="off"
+            required
+            value={secretKey}
+            onChange={handleSecretKeyChange}
+            disabled={type === "password"}
+        />
+        <i
+            onClick={handleToggle}
+            className={lock}
+            id="lock"
+            style={{ marginLeft: "7px" }}
+        ></i>
+    </div>
+);
+
+const test = (modal) => {
+    console.log("This is the modal:", modal);
+    return modal;
+}
+
+const ActionButtons = ({ modal, secretKey, setDataRefetch, setModal, lock }) => (
+    <div className="filter-group">
+        <Button
+            variant="primary"
+            className="btn btn-primary bg-success"
+            onClick={() => {
+                if (lock === false) {
+                    toast("Please lock your secret key");
+                    return;
+                }
+            }}
+        >
+            Decrypt
+        </Button>
+        <Button
+            variant="primary"
+            className="btn btn-primary"s
+            data-bs-toggle={modal}
+            data-bs-target="#newPasswordForm"
+            onClick={() => {
+                if (lock === false) {
+                    toast("Please lock your secret key");
+                    return;
+                }
+                setModal("modal");
+            }}
+        >
+            Add New Password
+        </Button>
+        <NewPasswordForm
+            secretKey={secretKey}
+            setDataRefetch={() => setDataRefetch(true)}
+            closeModal={() => setModal("")}
+        />
+        <Button
+            variant="Secondary"
+            className="btn btn-secondary"
+            data-bs-toggle="modal"
+            data-bs-target="#updatePasswordForm"
+        >
+            Export File
+        </Button>
+    </div>
+);
+
 const Table = () => {
-    // Import password module from API slice
     const { id } = useAuth();
-
     const [type, setType] = useState("text");
-    const [lock, setLock] = useState("fas fa-unlock fa-fw");
-    const [modal, setModal] = useState("collapse");
-    const [secretKey, setSecretKey] = useState(""); // State to store the secret key
-    const [dataRefetch, setDataRefetch] = useState(false); // State to track form submission
-
-    useEffect(() => {
-        if (dataRefetch) {
-            console.log("refetching passwords...");
-            refetch(); // Refetch passwords when form is submitted
-            setDataRefetch(false); // Reset form submission state
-        }
-    }, [dataRefetch]);
-
-    // State to store the key used for decryption
-    // This key is used to decrypt the passwords
-    // Re-fetched from the server
-    // Triggered and copied value from secretKey only when user clicks the "Decrypt" button
+    const [lock, setLock] = useState(false);
+    const [modal, setModal] = useState("");
+    const [secretKey, setSecretKey] = useState("");
     const [decryptKey, setDecryptKey] = useState("");
+    const [dataRefetch, setDataRefetch] = useState(false);
 
-    const handleToggle = () => {
-        if (type === "password") {
-            setLock("fas fa-unlock fa-fw");
-            setType("text");
-            setModal("collapse");
-        } else {
-            if (secretKey === "") {
-                toast("Please enter your secret key");
-                return;
-            }
-            setLock("fas fa-lock fa-fw");
-            setType("password");
-            setDecryptKey(secretKey);
-            setModal("modal");
-        }
-    };
-
-    const handleSecretKeyChange = (e) => {
-        setSecretKey(e.target.value); // Update the secret key state
-    };
-
-    // Fetch passwords using id and secret key
-    const {
-        data: passwords,
-        isLoading,
-        isSuccess,
-        isError,
-        error,
-        refetch,
-    } = useGetPasswordsByIdQuery({ id: id, secretKey: decryptKey });
+    const { data: passwords, isLoading, isSuccess, isError, error, refetch } =
+        useGetPasswordsByIdQuery({ id, secretKey: decryptKey });
 
     const [content, setContent] = useState(<PulseLoader color={"#FFF"} />);
+
+    useEffect(() => {
+        console.log("Data refetch triggered ", dataRefetch);
+        if (dataRefetch) {
+            refetch();
+            setDataRefetch(false);
+        }
+    }, [dataRefetch]);
 
     useEffect(() => {
         if (isLoading) {
@@ -73,12 +111,29 @@ const Table = () => {
         } else if (isError) {
             setContent(<p className="errmsg">{error?.data?.message}</p>);
         } else if (isSuccess) {
-            console.log("Passwords: ", passwords);
-            console.log("Secret Key: ", secretKey);
             setContent(DisplayPasswordData(passwords, secretKey));
         }
-    }, [isLoading, isError, isSuccess, error, passwords]);
-    const test = "modal"
+    }, [isLoading, isError, isSuccess, error, passwords, secretKey]);
+
+    const handleToggle = () => {
+        if (type === "password") {
+            setLock(false);
+            setType("text");
+            setModal("");
+        } else {
+            if (!secretKey) {
+                toast("Please enter your secret key");
+                return;
+            }
+            setLock(true);
+            setType("password");
+            setDecryptKey(secretKey);
+            setModal("modal");
+        }
+    };
+
+    const handleSecretKeyChange = (e) => setSecretKey(e.target.value);
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
@@ -91,85 +146,23 @@ const Table = () => {
                         <div className="table-title">
                             <div className="row">
                                 <div className="table-filter col-sm-8 d-flex justify-content-center align-items-center">
-                                    <ToastContainer
-                                        position="top-center"
-                                        className="justify-content-center"
+                                    <ToastContainer position="top-center" />
+                                    <SecretKeyInput
+                                        type={type}
+                                        secretKey={secretKey}
+                                        handleSecretKeyChange={handleSecretKeyChange}
+                                        handleToggle={handleToggle}
+                                        lock={lock ? "fas fa-lock fa-fw" : "fas fa-unlock fa-fw"}
                                     />
-                                    <div className="filter-group">
-                                        <label>Secret Key</label>
-                                        <input
-                                            type={type}
-                                            className="form-control"
-                                            name="secretKey"
-                                            id="secretKey"
-                                            placeholder="Enter your secret key"
-                                            autoComplete="off"
-                                            required
-                                            value={secretKey} // Bind the input value to the state
-                                            onChange={handleSecretKeyChange} // Update state on change
-                                            disabled={type === "password"} // Disable input when lock is clicked
-                                        />
-                                        <i
-                                            onClick={handleToggle}
-                                            className={lock}
-                                            id="lock"
-                                            style={{
-                                                marginLeft: "7px",
-                                            }}
-                                        ></i>
-                                    </div>
                                 </div>
                                 <div className="table-filter col-sm-4 d-flex justify-content-center align-items-center">
-                                    <div className="filter-group">
-                                        <Button
-                                            variant="primary"
-                                            className="btn btn-primary bg-success"
-                                            onClick={() => {
-                                                if (type === passwords) {
-                                                    toast(
-                                                        "Secret key is required"
-                                                    );
-                                                    return;
-                                                }
-                                            }}
-                                        >
-                                            Decrypt
-                                        </Button>
-                                        <Button
-                                            variant="primary"
-                                            className="btn btn-primary"
-                                            data-bs-target="#newPasswordForm"
-                                            data-bs-toggle={modal === "modal" ? "modal" : "collapse"}
-                                            onClick={() => {
-                                                console.log("Modal value: ", modal);
-                                                if (type === "text") {
-                                                    toast(
-                                                        "Secret key is required"
-                                                    );
-                                                    return;
-                                                }
-                                            }}
-                                        >
-                                            Add New Password
-                                        </Button>
-                                        <NewPasswordForm
-                                            secretKey={secretKey}
-                                            setDataRefetch={() => {
-                                                setDataRefetch(true);
-                                            }}
-                                            closeModal={() => {
-                                                setModal("collapse");
-                                            }}
-                                        />
-                                        <Button
-                                            variant="Secondary"
-                                            className="btn btn-secondary"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#updatePasswordForm"
-                                        >
-                                            Export File
-                                        </Button>
-                                    </div>
+                                    <ActionButtons
+                                        modal={modal}
+                                        secretKey={secretKey}
+                                        setDataRefetch={setDataRefetch}
+                                        setModal={setModal}
+                                        lock={lock}
+                                    />
                                 </div>
                             </div>
                         </div>

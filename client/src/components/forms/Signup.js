@@ -165,7 +165,6 @@ const SignUp = () => {
                                 <div className="modal-footer">
                                     <input
                                         type="submit"
-                                        name=""
                                         value="Create"
                                     />
                                 </div>

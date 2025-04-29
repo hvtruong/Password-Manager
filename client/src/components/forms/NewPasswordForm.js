@@ -63,7 +63,7 @@ const NewPasswordForm = (props) => {
                 id,
                 newWebsite,
                 password: newPassword,
-                secretKey: props.secretKey
+                secretKey: props.secretKey,
             });
 
             if (response.error) {
@@ -73,6 +73,8 @@ const NewPasswordForm = (props) => {
                         : response.error.data?.message;
                 setErrMsg(errorMessage);
             } else {
+                props.setDataRefetch();
+                props.closeModal();
                 navigate("/dashboard");
             }
         } catch (error) {
@@ -85,7 +87,7 @@ const NewPasswordForm = (props) => {
             className="modal fade"
             id="newPasswordForm"
             tabIndex="-1"
-            aria-labelledby="newPasswordForm"
+            labelled="newPasswordForm"
         >
             <div className="modal-dialog modal-content">
                 <form className="needs-validation" onSubmit={createNewPassword}>
@@ -102,47 +104,51 @@ const NewPasswordForm = (props) => {
                                 aria-label="Close"
                             />
                         </div>
+                        <div>
+                            <div className="modal-body">
+                                <p className="text-white">
+                                    Please fill in the fields to update your
+                                    password!
+                                </p>
 
-                        <div className="modal-body">
-                            <p className="text-white">
-                                Please fill in the fields to update your
-                                password!
+                                <input
+                                    type="text"
+                                    name="newWebsite"
+                                    placeholder="Password name"
+                                    value={newWebsite}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+
+                                <input
+                                    type="password"
+                                    name="newPassword"
+                                    placeholder="New password"
+                                    value={newPassword}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+
+                                <input
+                                    type="password"
+                                    name="repeatNewPassword"
+                                    placeholder="Confirm new password"
+                                    value={repeatNewPassword}
+                                    onChange={handleInputChange}
+                                    required
+                                />
+                            </div>
+
+                            <p
+                                style={{ color: "#ff0000" }}
+                                aria-live="assertive"
+                            >
+                                {errMsg}
                             </p>
 
-                            <input
-                                type="text"
-                                name="newWebsite"
-                                placeholder="Password name"
-                                value={newWebsite}
-                                onChange={handleInputChange}
-                                required
-                            />
-
-                            <input
-                                type="password"
-                                name="newPassword"
-                                placeholder="New password"
-                                value={newPassword}
-                                onChange={handleInputChange}
-                                required
-                            />
-
-                            <input
-                                type="password"
-                                name="repeatNewPassword"
-                                placeholder="Confirm new password"
-                                value={repeatNewPassword}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        <p style={{ color: "#ff0000" }} aria-live="assertive">
-                            {errMsg}
-                        </p>
-
-                        <div className="modal-footer">
-                            <input type="submit" value="Create" />
+                            <div className="modal-footer">
+                                <input type="submit" value="Create" />
+                            </div>
                         </div>
                     </div>
                 </form>
