@@ -6,17 +6,16 @@ import styles from "./Form.module.css";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
-const NewPasswordForm = (props) => {
+const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
     const navigate = useNavigate();
-    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
     const { id } = useAuth();
-    console.log(props.secretKey);
+    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
+
     const [formData, setFormData] = useState({
         newWebsite: "",
         newPassword: "",
         repeatNewPassword: "",
     });
-
     const [validNewPassword, setValidNewPassword] = useState(false);
     const [errMsg, setErrMsg] = useState("");
 
@@ -28,17 +27,21 @@ const NewPasswordForm = (props) => {
 
     useEffect(() => {
         if (isSuccess) {
-            setFormData({
-                newWebsite: "",
-                newPassword: "",
-                repeatNewPassword: "",
-            });
+            resetForm();
         }
     }, [isSuccess]);
 
     useEffect(() => {
         setErrMsg("");
     }, [formData]);
+
+    const resetForm = () => {
+        setFormData({
+            newWebsite: "",
+            newPassword: "",
+            repeatNewPassword: "",
+        });
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -49,7 +52,7 @@ const NewPasswordForm = (props) => {
         e.preventDefault();
 
         if (!validNewPassword) {
-            setErrMsg("Invalid new password");
+            setErrMsg("Password too weak! Please use a stronger password.");
             return;
         }
 
@@ -63,7 +66,7 @@ const NewPasswordForm = (props) => {
                 id,
                 newWebsite,
                 password: newPassword,
-                secretKey: props.secretKey,
+                secretKey,
             });
 
             if (response.error) {
@@ -73,8 +76,8 @@ const NewPasswordForm = (props) => {
                         : response.error.data?.message;
                 setErrMsg(errorMessage);
             } else {
-                props.setDataRefetch();
-                props.closeModal();
+                setDataRefetch();
+                closeModal();
                 navigate("/dashboard");
             }
         } catch (error) {
@@ -87,7 +90,7 @@ const NewPasswordForm = (props) => {
             className="modal fade"
             id="newPasswordForm"
             tabIndex="-1"
-            labelled="newPasswordForm"
+            aria-labelledby="newPasswordForm"
         >
             <div className="modal-dialog modal-content">
                 <form className="needs-validation" onSubmit={createNewPassword}>
@@ -104,40 +107,53 @@ const NewPasswordForm = (props) => {
                                 aria-label="Close"
                             />
                         </div>
-                        <div>
-                            <div className="modal-body">
-                                <p className="text-white">
-                                    Please fill in the fields to update your
-                                    password!
-                                </p>
+                        <div className="modal-body">
+                            <p className="text-white">
+                                Please fill in the fields to update your
+                                password!
+                            </p>
 
-                                <input
-                                    type="text"
-                                    name="newWebsite"
-                                    placeholder="Password name"
-                                    value={newWebsite}
-                                    onChange={handleInputChange}
-                                    required
-                                />
+                            <input
+                                type="text"
+                                name="newWebsite"
+                                placeholder="Website"
+                                value={newWebsite}
+                                onChange={handleInputChange}
+                                required
+                            />
 
-                                <input
-                                    type="password"
-                                    name="newPassword"
-                                    placeholder="New password"
-                                    value={newPassword}
-                                    onChange={handleInputChange}
-                                    required
-                                />
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="Username"
+                                value={newWebsite}
+                                onChange={handleInputChange}
+                                required
+                            />
 
-                                <input
-                                    type="password"
-                                    name="repeatNewPassword"
-                                    placeholder="Confirm new password"
-                                    value={repeatNewPassword}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
+                            <input
+                                type="password"
+                                name="newPassword"
+                                placeholder="New password"
+                                value={newPassword}
+                                onChange={handleInputChange}
+                                required
+                            />
+
+                            <input
+                                type="password"
+                                name="repeatNewPassword"
+                                placeholder="Confirm new password"
+                                value={repeatNewPassword}
+                                onChange={handleInputChange}
+                                required
+                            />
+
+                            <p className="text-white">
+                                Or upload a file with your passwords here
+                            </p>
+
+                            <input type="file" id="input-file-upload" />
 
                             <p
                                 style={{ color: "#ff0000" }}
@@ -145,10 +161,9 @@ const NewPasswordForm = (props) => {
                             >
                                 {errMsg}
                             </p>
-
-                            <div className="modal-footer">
-                                <input type="submit" value="Create" />
-                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <input type="submit" value="Create" />
                         </div>
                     </div>
                 </form>

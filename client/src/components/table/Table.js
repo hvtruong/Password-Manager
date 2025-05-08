@@ -33,11 +33,6 @@ const SecretKeyInput = ({ type, secretKey, handleSecretKeyChange, handleToggle, 
     </div>
 );
 
-const test = (modal) => {
-    console.log("This is the modal:", modal);
-    return modal;
-}
-
 const ActionButtons = ({ modal, secretKey, setDataRefetch, setModal, lock }) => (
     <div className="filter-group">
         <Button
@@ -169,7 +164,7 @@ const Table = () => {
                         <table className="table table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>URL</th>
+                                    <th>Website</th>
                                     <th>Username</th>
                                     <th>Password</th>
                                     <th>Actions</th>

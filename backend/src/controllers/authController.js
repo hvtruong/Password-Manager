@@ -177,7 +177,7 @@ const logout = (req, res) => {
         return res.sendStatus(204);
     }
     res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
-    res.json({ message: "Cookie cleared" });
+    return res.status(204).json({ message: "Cookie cleared" });
 };
 
 module.exports = {

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAddNewUserMutation } from "../../features/users/userApiSlice";
 import { useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
 import $ from "jquery";
 import styles from "./Form.module.css";
 
@@ -9,7 +8,7 @@ const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
 const USER_REGEX = /^[a-zA-Z0-9._]{4,20}$/;
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
-const SignUp = () => {
+const EditUser = () => {
     // Import add new user module from API slice
     const [addNewUser, { isSuccess }] = useAddNewUserMutation();
 
@@ -116,7 +115,7 @@ const SignUp = () => {
                             <div>
                                 <div className="modal-body">
                                     <p className="text-white">
-                                        Please fill in the fields to register!
+                                        Please fill in the fields to update user!
                                     </p>
 
                                     <input
@@ -164,23 +163,17 @@ const SignUp = () => {
                                 </p>
 
                                 <div className="modal-footer">
-                                    <input type="submit" value="Create" />
+                                    <input
+                                        type="submit"
+                                        value="Create"
+                                    />
                                 </div>
                             </div>
                         )}
                         {isSuccess && (
                             <div>
-                                <p>
-                                    You have successfully signed up. Please
-                                    check your email to validate your account!
-                                </p>
-                                <Button
-                                    onClick={() => {
-                                        isSuccess = false;
-                                    }}
-                                >
-                                    Sign up again!
-                                </Button>
+                                You have successfully signed up. Please check
+                                your email to validate your account!
                             </div>
                         )}
                     </div>
@@ -190,4 +183,4 @@ const SignUp = () => {
     );
 };
 
-export default SignUp;
+export default EditUser;

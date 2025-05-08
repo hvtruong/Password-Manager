@@ -74,12 +74,12 @@ const Body = () => {
                         className="d-none d-md-flex justify-content-between align-items-center my-4"
                     >
                         <div>
-                            <h5 className="fw-bold fs-1">1K+</h5>
+                            <h5 className="fw-bold fs-1">1000K+</h5>
                             <span className="gray-100">passwords storage</span>
                         </div>
                         <div>
-                            <h5 className="fw-bold fs-1">Unique</h5>
-                            <span className="gray-100">encryption</span>
+                            <h5 className="fw-bold fs-1">AES-256</h5>
+                            <span className="gray-100">Gold-standard encryption</span>
                         </div>
                         <div>
                             <h5 className="fw-bold fs-1">Offline</h5>
