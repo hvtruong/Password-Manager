@@ -55,7 +55,7 @@ const NavBar = ({ location }) => {
         <>
             <Button
                 variant="Secondary"
-                className="btn btn-secondary"
+                className="btn btn-danger"
                 data-bs-toggle="modal"
                 data-bs-target="#logOutModal"
             >

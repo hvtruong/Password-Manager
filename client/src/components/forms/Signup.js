@@ -11,7 +11,7 @@ const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
 const SignUp = () => {
     // Import add new user module from API slice
-    const [addNewUser, { isSuccess }] = useAddNewUserMutation();
+    const [addNewUser, { isSuccess, reset }] = useAddNewUserMutation();
 
     // Hooks to control the signup form
     const [emailAddress, setEmailAddress] = useState("");
@@ -78,7 +78,6 @@ const SignUp = () => {
             try {
                 await addNewUser({ username, password, emailAddress });
                 $("#cancelButton").trigger("click");
-                navigate("/");
             } catch (err) {
                 console.log(err);
                 if (typeof err.status != "number") {
@@ -89,6 +88,75 @@ const SignUp = () => {
             }
         }
     };
+
+    let content;
+    if (isSuccess) {
+        content = (
+            <div>
+                <p>
+                    You have successfully signed up. Please check your email to
+                    validate your account!
+                </p>
+                <Button onClick={reset}>
+                    Sign up again!
+                </Button>
+            </div>
+        );
+    } else {
+        content = (
+            <div>
+                <div className="modal-body">
+                    <p className="text-white">
+                        Please fill in the fields to register!
+                    </p>
+
+                    <input
+                        type="email"
+                        name="emailAddress"
+                        placeholder="Email address"
+                        value={emailAddress}
+                        onChange={onEmailAddressChanged}
+                        required
+                    />
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        value={username}
+                        onChange={onUsernameChanged}
+                        required
+                    />
+
+                    <input
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={onPasswordChanged}
+                        required
+                    />
+
+                    <input
+                        type="password"
+                        name="repeatPassword"
+                        placeholder="Confirm password"
+                        value={repeatPassword}
+                        onChange={onRepeatPasswordChanged}
+                        required
+                    />
+                </div>
+
+                <p style={{ color: "#ff0000" }} aria-live="assertive">
+                    {errMsg}
+                </p>
+
+                <div className="modal-footer">
+                    <input type="submit" value="Create" />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div
@@ -112,77 +180,7 @@ const SignUp = () => {
                                 aria-label="Close"
                             />
                         </div>
-                        {!isSuccess && (
-                            <div>
-                                <div className="modal-body">
-                                    <p className="text-white">
-                                        Please fill in the fields to register!
-                                    </p>
-
-                                    <input
-                                        type="email"
-                                        name="emailAddress"
-                                        placeholder="Email address"
-                                        value={emailAddress}
-                                        onChange={onEmailAddressChanged}
-                                        required
-                                    />
-
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        placeholder="Username"
-                                        value={username}
-                                        onChange={onUsernameChanged}
-                                        required
-                                    />
-
-                                    <input
-                                        type="password"
-                                        name="password"
-                                        placeholder="Password"
-                                        value={password}
-                                        onChange={onPasswordChanged}
-                                        required
-                                    />
-
-                                    <input
-                                        type="password"
-                                        name="repeatPassword"
-                                        placeholder="Confirm password"
-                                        value={repeatPassword}
-                                        onChange={onRepeatPasswordChanged}
-                                        required
-                                    />
-                                </div>
-
-                                <p
-                                    style={{ color: "#ff0000" }}
-                                    aria-live="assertive"
-                                >
-                                    {errMsg}
-                                </p>
-
-                                <div className="modal-footer">
-                                    <input type="submit" value="Create" />
-                                </div>
-                            </div>
-                        )}
-                        {isSuccess && (
-                            <div>
-                                <p>
-                                    You have successfully signed up. Please
-                                    check your email to validate your account!
-                                </p>
-                                <Button
-                                    onClick={() => {
-                                        isSuccess = false;
-                                    }}
-                                >
-                                    Sign up again!
-                                </Button>
-                            </div>
-                        )}
+                        {content}
                     </div>
                 </form>
             </div>
