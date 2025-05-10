@@ -13,17 +13,28 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
 
     const [formData, setFormData] = useState({
         newWebsite: "",
+        newUsername: "",
         newPassword: "",
         repeatNewPassword: "",
     });
     const [validNewPassword, setValidNewPassword] = useState(false);
     const [errMsg, setErrMsg] = useState("");
 
-    const { newWebsite, newPassword, repeatNewPassword } = formData;
+    const { newWebsite, newUsername, newPassword, repeatNewPassword } = formData;
 
     useEffect(() => {
         setValidNewPassword(PWD_REGEX.test(newPassword));
     }, [newPassword]);
+
+    // Reset input fields to empty when successfully submitted
+    const resetForm = () => {
+        setFormData({
+            newWebsite: "",
+            newUsername: "",
+            newPassword: "",
+            repeatNewPassword: "",
+        });
+    };
 
     useEffect(() => {
         if (isSuccess) {
@@ -34,14 +45,6 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
     useEffect(() => {
         setErrMsg("");
     }, [formData]);
-
-    const resetForm = () => {
-        setFormData({
-            newWebsite: "",
-            newPassword: "",
-            repeatNewPassword: "",
-        });
-    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -65,6 +68,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
             const response = await addNewPassword({
                 id,
                 newWebsite,
+                username: newUsername,
                 password: newPassword,
                 secretKey,
             });
@@ -85,7 +89,8 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
         }
     };
 
-    return (
+    let content;
+    content = (
         <div
             className="modal fade"
             id="newPasswordForm"
@@ -124,9 +129,9 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
 
                             <input
                                 type="text"
-                                name="username"
+                                name="newUsername"
                                 placeholder="Username"
-                                value={newWebsite}
+                                value={newUsername}
                                 onChange={handleInputChange}
                                 required
                             />
@@ -170,6 +175,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
             </div>
         </div>
     );
+    return content;
 };
 
 export default NewPasswordForm;

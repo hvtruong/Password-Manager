@@ -4,6 +4,7 @@ const Guest = require("../models/Guest");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const e = require("express");
 
 // @desc Login
 // @route POST /auth/login
@@ -50,7 +51,7 @@ const login = asyncHandler(async (req, res) => {
         {
             Info: {
                 id: foundUser._id,
-                validated: foundUser.validated,
+                role: "user",
             },
         },
         process.env.AUTH_ACCESS_TOKEN,
@@ -93,7 +94,7 @@ const loginAsGuest = asyncHandler(async (req, res) => {
         {
             Info: {
                 id: foundGuest._id,
-                validated: true,
+                role: "guest",
             },
         },
         process.env.AUTH_ACCESS_TOKEN,
@@ -138,15 +139,22 @@ const refresh = (req, res) => {
             if (err) {
                 return res.status(403).json({ message: "Forbidden" });
             }
-            console.log("HERE")
+            let role;
             let foundUser = await User.findOne({
                 _id: decoded.id,
             }).exec();
-            if (!foundUser) {
+            
+            if (foundUser) {
+                role = "user";
+            }
+            else {
                 foundUser = await Guest.findOne({
                     _id: decoded.id,
                 }).exec();
-                if (!foundUser) {
+                if (foundUser) {
+                    role = "guest";
+                }
+                else {
                     return res.status(403).json({ message: "Forbidden" });
                 }
             }
@@ -155,13 +163,12 @@ const refresh = (req, res) => {
                 {
                     Info: {
                         id: foundUser._id,
-                        validated: true,
+                        role: role,
                     },
                 },
                 process.env.AUTH_ACCESS_TOKEN,
                 { expiresIn: "15m" }
             );
-            console.log("THERE")
             res.json({ accessToken });
         })
     );

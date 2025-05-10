@@ -1,5 +1,8 @@
 const Password = require("../models/Password");
-const { encryptPassword, decryptPassword } = require("../encryption/encryption");
+const {
+    encryptPassword,
+    decryptPassword,
+} = require("../encryption/encryption");
 
 // @desc Get all passwords for a specific user
 // @route GET /passwords/:id
@@ -11,7 +14,9 @@ const getPasswordsById = async (req, res) => {
     console.log(req.query);
     try {
         // Find the passwords document for the given user ID
-        const savedPasswords = await Password.findOne({ userId: id }).lean().exec();
+        const savedPasswords = await Password.findOne({ userId: id })
+            .lean()
+            .exec();
 
         // If no passwords are found, return an empty array
         if (!savedPasswords) {
@@ -22,6 +27,7 @@ const getPasswordsById = async (req, res) => {
         // Return the list of passwords
         const decryptedPasswords = savedPasswords.passwords.map((item) => ({
             website: item.website,
+            username: item.username,
             password: decryptPassword(item.password, secretKey),
         }));
         console.log("Decrypted passwords:", decryptedPasswords);
@@ -36,15 +42,10 @@ const getPasswordsById = async (req, res) => {
 // @route POST /passwords
 // @access Private
 const createNewPassword = async (req, res) => {
-    const { id, newWebsite, password, secretKey } = req.body; // Extract data from request body
-
-    console.log("Creating new password for user ID:", id);
-    console.log("New website:", newWebsite);
-    console.log("Password:", password)
-    console.log("Secret key:", secretKey);
+    const { id, newWebsite, username, password, secretKey } = req.body; // Extract data from request body
 
     // Validate required fields
-    if (!id || !newWebsite || !password) {
+    if (!id || !username || !newWebsite || !password) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -74,15 +75,16 @@ const createNewPassword = async (req, res) => {
 
         // Encrypt the password using the provided secret key
         const encryptedPassword = encryptPassword(password, secretKey);
-        console.log("Encrypted password:", encryptedPassword);
-        console.log("Decrypted password:", decryptPassword(encryptedPassword, secretKey));
         // Add the new website and encrypted password to the list
-        passwordsFile.passwords.push({ website: newWebsite, password: encryptedPassword });
+        passwordsFile.passwords.push({
+            website: newWebsite,
+            username: username,
+            password: encryptedPassword,
+        });
         console.log(passwordsFile.passwords);
 
         // Save the updated passwords document
         await passwordsFile.save();
-        console.log("New password saved successfully");
         // Return success response
         return res.status(201).json({ message: "New password created" });
     } catch (error) {
@@ -95,30 +97,38 @@ const createNewPassword = async (req, res) => {
 // @route PATCH /passwords
 // @access Private
 const updatePassword = async (req, res) => {
-    const { username, name, newPassword } = req.body; // Extract data from request body
+    const { id, newWebsite, newUsername, newPassword, index } = req.body; // Extract data from request body
 
     // Validate required fields
-    if (!username || !name || !newPassword) {
+    if (!newWebsite || !newUsername || !newPassword) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
     try {
-        // Find the passwords document by user ID
-        const loadedPasswords = await Password.findById(username).exec();
+        // Find the passwords document for the user, ignoring case sensitivity
+        let loadedPasswords = await Password.findOne({ userId: id })
+            .collation({ locale: "en", strength: 2 })
+            .exec();
 
         // If no document is found, return an error
         if (!loadedPasswords) {
             return res.status(400).json({ message: "Passwords not found" });
         }
 
+        // Encrypt the password using the provided secret key
+        const encryptedPassword = encryptPassword(password, secretKey);
         // Update the password for the specified website
-        loadedPasswords.passwordsJson[name] = newPassword;
+        loadedPasswords[index] = {
+            website: newWebsite,
+            username: newUsername,
+            password: encryptedPassword,
+        };
 
         // Save the updated document
         await loadedPasswords.save();
 
         // Return success response
-        return res.json({ message: `Password for "${name}" updated` });
+        return res.json({ message: `Password for "${newUsername}" updated` });
     } catch (error) {
         // Handle server errors
         return res.status(500).json({ message: "Server error" });
@@ -129,7 +139,7 @@ const updatePassword = async (req, res) => {
 // @route DELETE /passwords
 // @access Private
 const deletePassword = async (req, res) => {
-    const { id } = req.body; // Extract password ID from request body
+    const { id, index } = req.body; // Extract password ID from request body
 
     // Validate required fields
     if (!id) {
@@ -138,16 +148,19 @@ const deletePassword = async (req, res) => {
 
     try {
         // Find the password document by its ID
-        const password = await Password.findById(id).exec();
+        const passwordsFile = await Password.findOne({ userId: id })
+            .collation({ locale: "en", strength: 2 })
+            .exec();
 
         // If no document is found, return an error
-        if (!password) {
-            return res.status(400).json({ message: "Password not found" });
+        if (!passwordsFile) {
+            return res.status(400).json({ message: "Password file not found" });
         }
 
         // Delete the password document
-        const result = await password.deleteOne();
+        passwordsFile.splice(index, 1);
 
+        await passwordsFile.save();
         // Return success response
         return res.json({ message: `Password with ID ${result._id} deleted` });
     } catch (error) {

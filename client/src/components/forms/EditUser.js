@@ -115,7 +115,8 @@ const EditUser = () => {
                             <div>
                                 <div className="modal-body">
                                     <p className="text-white">
-                                        Please fill in the fields to update user!
+                                        Please fill in the fields to update
+                                        user!
                                     </p>
 
                                     <input
@@ -163,10 +164,7 @@ const EditUser = () => {
                                 </p>
 
                                 <div className="modal-footer">
-                                    <input
-                                        type="submit"
-                                        value="Create"
-                                    />
+                                    <input type="submit" value="Create" />
                                 </div>
                             </div>
                         )}

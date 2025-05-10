@@ -1,87 +1,87 @@
-import { useState, useEffect } from "react"
-import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice"
-import { useNavigate } from "react-router-dom"
-import styles from "./Form.module.css"
+import { useState, useEffect } from "react";
+import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice";
+import { useNavigate } from "react-router-dom";
+import styles from "./Form.module.css";
 
-const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/
+const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 const UpdatePasswordForm = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     // Import add new user module from API slice
-    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation()
+    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
 
-    // Hooks to control the new password form
-    const [passwordName, setPasswordName] = useState("")
-    const [oldPassword, setOldPassword] = useState("")
-    const [newPassword, setNewPassword] = useState("")
-    const [validNewPassword, setValidNewPassword] = useState(false)
+    // Hooks to control the update password form
+    const [formData, setFormData] = useState({
+        newUsername: "",
+        oldPassword: "",
+        newPassword: "",
+        repeatNewPassword: "",
+    });
+    const [validNewPassword, setValidNewPassword] = useState(false);
 
-    const [repeatNewPassword, setRepeatNewPassword] = useState("")
+    const { newUsername, oldPassword, newPassword, repeatNewPassword } = formData;
 
-    const [errMsg, setErrMsg] = useState("")
+    const [errMsg, setErrMsg] = useState("");
 
-    // Validate password everytime it changes
+    // Validate password every time it changes
     useEffect(() => {
-        setValidNewPassword(PWD_REGEX.test(newPassword))
-    }, [newPassword])
+        setValidNewPassword(PWD_REGEX.test(newPassword));
+    }, [newPassword]);
+
+    const resetForm = () => {
+        setFormData({
+            newUsername: "",
+            oldPassword: "",
+            newPassword: "",
+            repeatNewPassword: "",
+        });
+    };
 
     // Reset input fields to empty when successfully submitted
     useEffect(() => {
         if (isSuccess) {
-            setPasswordName("")
-            setOldPassword("")
-            setNewPassword("")
-            setRepeatNewPassword("")
+            resetForm();
         }
-    }, [isSuccess, navigate])
+    }, [isSuccess]);
 
     useEffect(() => {
-        setErrMsg("")
-    }, [passwordName, oldPassword, newPassword, repeatNewPassword])
+        setErrMsg("");
+    }, [formData]);
 
     // Update the view of input fields after reset
-    const onPasswordNameChanged = (e) => setPasswordName(e.target.value)
-    const onOldPasswordChanged = (e) => setOldPassword(e.target.value)
-    const onNewPasswordChanged = (e) => setNewPassword(e.target.value)
-    const onRepeatNewPasswordChanged = (e) =>
-        setRepeatNewPassword(e.target.value)
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
 
-    // Call the POST API to create new user when everything is valid
+    // Call the PUT API to create new user when everything is valid
     const createNewPassword = async (e) => {
-        e.preventDefault()
-        if (!validNewPassword) 
-        {
-            setErrMsg("Invalid new password")
+        e.preventDefault();
+        if (!validNewPassword) {
+            setErrMsg("Invalid new password");
         } else if (newPassword !== repeatNewPassword) {
-            setErrMsg("Passwords do not match")
+            setErrMsg("Passwords do not match");
         } else {
             try {
                 const response = await addNewPassword({
-                    passwordName,
+                    newUsername,
                     oldPassword,
                     newPassword,
-                })
-                if (response.error) 
-                {
-                    if (typeof response.error.status != "number") 
-                    {
-                        setErrMsg("No Server Response")
-                    } 
-                    else 
-                    {
-                        setErrMsg(response.error.data?.message)
+                });
+                if (response.error) {
+                    if (typeof response.error.status != "number") {
+                        setErrMsg("No Server Response");
+                    } else {
+                        setErrMsg(response.error.data?.message);
                     }
-                } 
-                else 
-                {
-                    // TODO: Navigate somewhere after successfully sign up
-                    navigate("/dashboard")
+                } else {
+                    navigate("/dashboard");
                 }
             } catch (error) {
-                console.log("An error occurred: ", error)
+                console.log("An error occurred: ", error);
             }
         }
-    }
+    };
 
     return (
         <div
@@ -91,10 +91,7 @@ const UpdatePasswordForm = () => {
             labelled="updatePasswordForm"
         >
             <div className="modal-dialog modal-content">
-                <form
-                    className="needs-validation"
-                    onSubmit={createNewPassword}
-                >
+                <form className="needs-validation" onSubmit={createNewPassword}>
                     <div className={styles.box}>
                         <div className="modal-header">
                             <h1 className="modal-title fs-5 text-center">
@@ -110,15 +107,16 @@ const UpdatePasswordForm = () => {
 
                         <div className="modal-body">
                             <p className="text-white">
-                                Please fill in the fields to update your password!
+                                Please fill in the fields to update your
+                                password!
                             </p>
 
                             <input
                                 type="text"
-                                name="passwordName"
-                                placeholder="Password name"
-                                value={passwordName}
-                                onChange={onPasswordNameChanged}
+                                name="newUsername"
+                                placeholder="Username"
+                                value={newUsername}
+                                onChange={handleInputChange}
                                 required
                             />
 
@@ -127,10 +125,8 @@ const UpdatePasswordForm = () => {
                                 name="oldPassword"
                                 placeholder="Old password"
                                 value={oldPassword}
-                                onChange={onOldPasswordChanged}
-                                required={
-                                    newPassword || repeatNewPassword ? true : false
-                                }
+                                onChange={handleInputChange}
+                                required
                             />
 
                             <input
@@ -138,10 +134,8 @@ const UpdatePasswordForm = () => {
                                 name="newPassword"
                                 placeholder="New password"
                                 value={newPassword}
-                                onChange={onNewPasswordChanged}
-                                required={
-                                    oldPassword || repeatNewPassword ? true : false
-                                }
+                                onChange={handleInputChange}
+                                required
                             />
 
                             <input
@@ -149,8 +143,8 @@ const UpdatePasswordForm = () => {
                                 name="repeatNewPassword"
                                 placeholder="Confirm new password"
                                 value={repeatNewPassword}
-                                onChange={onRepeatNewPasswordChanged}
-                                required={oldPassword || newPassword ? true : false}
+                                onChange={handleInputChange}
+                                required
                             />
                         </div>
 
@@ -165,7 +159,7 @@ const UpdatePasswordForm = () => {
                 </form>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default UpdatePasswordForm
+export default UpdatePasswordForm;

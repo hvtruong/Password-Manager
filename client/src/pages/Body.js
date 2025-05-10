@@ -32,11 +32,10 @@ const Body = () => {
         e.preventDefault();
         try {
             // Call API to create temporary user
-            const res = await createGuestUser().unwrap();
-            const guestId = res.guestId;
+            const response = await createGuestUser().unwrap();
+            const guestId = response.guestId;
             // Login the same as a new, regular user with one-time access token
             const { accessToken } = await loginAsGuest({ guestId }).unwrap();
-            console.log("Access token: " + accessToken);
 
             dispatch(setCredentials({ accessToken }));
 
@@ -51,7 +50,8 @@ const Body = () => {
         }
     };
 
-    return (
+    let content;
+    content = (
         <div className="loading position-relative">
             <Container className="d-flex justify-content-between align-items-center gap-md-5 flex-column flex-md-row mt-3 mt-xl-4 overflow-hidden">
                 <motion.div
@@ -79,7 +79,9 @@ const Body = () => {
                         </div>
                         <div>
                             <h5 className="fw-bold fs-1">AES-256</h5>
-                            <span className="gray-100">Gold-standard encryption</span>
+                            <span className="gray-100">
+                                Gold-standard encryption
+                            </span>
                         </div>
                         <div>
                             <h5 className="fw-bold fs-1">Offline</h5>
@@ -119,6 +121,8 @@ const Body = () => {
             </Container>
         </div>
     );
+
+    return content;
 };
 
 export default Body;

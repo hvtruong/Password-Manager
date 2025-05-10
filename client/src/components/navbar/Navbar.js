@@ -81,8 +81,9 @@ const NavBar = ({ location }) => {
             </>
         );
     }
-
-    return (
+    
+    let content;
+    content = (
         <Navbar expand="lg" className="py-3">
             <Container fluid="md" className="navbar-header">
                 <Navbar.Brand href="#" className="me-lg-5">
@@ -96,6 +97,8 @@ const NavBar = ({ location }) => {
             </Container>
         </Navbar>
     );
+    
+    return content;
 };
 
 export default NavBar;
