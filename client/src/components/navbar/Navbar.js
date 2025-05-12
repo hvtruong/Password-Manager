@@ -8,7 +8,7 @@ import LogoutNotification from "../forms/LogoutNotification";
 import logo from "../../images/logo/logo.png";
 import "./navbar.css";
 
-const NavBar = ({ location }) => {
+const NavBar = ({ location, role }) => {
     const loginButton = (
         <>
             <Button
@@ -76,12 +76,12 @@ const NavBar = ({ location }) => {
     } else if (location === "Dashboard") {
         buttonContent = (
             <>
-                {editButton}
+                {role === "user" && { editButton }}
                 {logoutButton}
             </>
         );
     }
-    
+
     let content;
     content = (
         <Navbar expand="lg" className="py-3">
@@ -97,7 +97,7 @@ const NavBar = ({ location }) => {
             </Container>
         </Navbar>
     );
-    
+
     return content;
 };
 

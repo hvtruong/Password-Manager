@@ -174,7 +174,7 @@ const SignUp = () => {
                             </h1>
                             <button
                                 type="button"
-                                id="cancelButton"
+                                id="closeButton"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"

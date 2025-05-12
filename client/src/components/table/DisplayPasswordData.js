@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import UpdatePasswordForm from "../forms/UpdatePasswordForm";
 
+/* eslint-disable jsx-a11y/anchor-is-valid */
 function addHttps(link) {
     if (link == null) {
         return;
@@ -12,7 +13,7 @@ function addHttps(link) {
     return "https://" + link;
 }
 
-const DisplayPasswordData = (passwords) =>
+const DisplayPasswordData = (passwords, modal, checkLock) =>
     passwords.map((info) => (
         <tr key={info.id}>
             <td>
@@ -53,13 +54,15 @@ const DisplayPasswordData = (passwords) =>
                 <a
                     className="edit"
                     title="Edit"
-                    data-bs-toggle="modal"
+                    data-bs-toggle={modal}
                     data-bs-target="#updatePasswordForm"
-                    href="/#"
+                    onClick={() => {
+                        checkLock();
+                    }}
                 >
                     <i className="fas fa-edit" style={{ color: "#FFC107" }} />
                 </a>
-                <UpdatePasswordForm />
+                <UpdatePasswordForm info={info} />
             </td>
         </tr>
     ));

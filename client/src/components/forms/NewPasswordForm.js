@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
+import closeModal from "../../utils/closeModal";
 import useAuth from "../../hooks/useAuth";
 import styles from "./Form.module.css";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
-const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
+const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
     const navigate = useNavigate();
     const { id } = useAuth();
     const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
@@ -20,7 +21,8 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
     const [validNewPassword, setValidNewPassword] = useState(false);
     const [errMsg, setErrMsg] = useState("");
 
-    const { newWebsite, newUsername, newPassword, repeatNewPassword } = formData;
+    const { newWebsite, newUsername, newPassword, repeatNewPassword } =
+        formData;
 
     useEffect(() => {
         setValidNewPassword(PWD_REGEX.test(newPassword));
@@ -39,6 +41,8 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
     useEffect(() => {
         if (isSuccess) {
             resetForm();
+            console.log("New password added successfully");
+            closeModal();
         }
     }, [isSuccess]);
 
@@ -81,7 +85,6 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
                 setErrMsg(errorMessage);
             } else {
                 setDataRefetch();
-                closeModal();
                 navigate("/dashboard");
             }
         } catch (error) {
@@ -106,7 +109,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
                             </h1>
                             <button
                                 type="button"
-                                id="closeFormButton"
+                                id="closeButton"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
@@ -137,7 +140,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
                             />
 
                             <input
-                                type="password"
+                                type="text"
                                 name="newPassword"
                                 placeholder="New password"
                                 value={newPassword}
@@ -146,7 +149,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch, closeModal }) => {
                             />
 
                             <input
-                                type="password"
+                                type="text"
                                 name="repeatNewPassword"
                                 placeholder="Confirm new password"
                                 value={repeatNewPassword}

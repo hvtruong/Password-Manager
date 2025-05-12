@@ -2,18 +2,18 @@ import { useState, useEffect } from "react";
 import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
 import styles from "./Form.module.css";
+import { useCallback } from "react";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
-const UpdatePasswordForm = () => {
+const UpdatePasswordForm = ({ info }) => {
     const navigate = useNavigate();
-
     // Import add new user module from API slice
     const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
 
     // Hooks to control the update password form
     const [formData, setFormData] = useState({
-        newUsername: "",
-        oldPassword: "",
+        newUsername: info.username,
+        oldPassword: info.password,
         newPassword: "",
         repeatNewPassword: "",
     });
@@ -23,26 +23,30 @@ const UpdatePasswordForm = () => {
 
     const [errMsg, setErrMsg] = useState("");
 
+    const resetForm = useCallback(() => {
+        setFormData({
+            newUsername: info.username,
+            oldPassword: info.password,
+            newPassword: "",
+            repeatNewPassword: "",
+        });
+    }, [info]);
+
+    useEffect(() => {
+        resetForm();
+    }, [resetForm]);
+
     // Validate password every time it changes
     useEffect(() => {
         setValidNewPassword(PWD_REGEX.test(newPassword));
     }, [newPassword]);
-
-    const resetForm = () => {
-        setFormData({
-            newUsername: "",
-            oldPassword: "",
-            newPassword: "",
-            repeatNewPassword: "",
-        });
-    };
 
     // Reset input fields to empty when successfully submitted
     useEffect(() => {
         if (isSuccess) {
             resetForm();
         }
-    }, [isSuccess]);
+    }, [isSuccess, resetForm]);
 
     useEffect(() => {
         setErrMsg("");
@@ -99,6 +103,7 @@ const UpdatePasswordForm = () => {
                             </h1>
                             <button
                                 type="button"
+                                id="closeButton"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
@@ -121,7 +126,7 @@ const UpdatePasswordForm = () => {
                             />
 
                             <input
-                                type="password"
+                                type="text"
                                 name="oldPassword"
                                 placeholder="Old password"
                                 value={oldPassword}
@@ -130,7 +135,7 @@ const UpdatePasswordForm = () => {
                             />
 
                             <input
-                                type="password"
+                                type="text"
                                 name="newPassword"
                                 placeholder="New password"
                                 value={newPassword}
@@ -139,7 +144,7 @@ const UpdatePasswordForm = () => {
                             />
 
                             <input
-                                type="password"
+                                type="text"
                                 name="repeatNewPassword"
                                 placeholder="Confirm new password"
                                 value={repeatNewPassword}

@@ -7,9 +7,10 @@ import useAuth from "../../hooks/useAuth";
 import { useGetPasswordsByIdQuery } from "../../features/passwords/passwordApiSlice";
 import DisplayPasswordData from "./DisplayPasswordData";
 import NewPasswordForm from "../forms/NewPasswordForm";
+import { csvMaker, download } from "../../utils/export";
 import "./table.css";
 
-const SecretKeyInput = ({ type, secretKey, handleSecretKeyChange, handleToggle, lock }) => (
+const SecretKeyInput = ({ type, secretKey, onChange, onToggle, lock }) => (
     <div className="filter-group">
         <label>Secret Key</label>
         <input
@@ -21,57 +22,40 @@ const SecretKeyInput = ({ type, secretKey, handleSecretKeyChange, handleToggle, 
             autoComplete="off"
             required
             value={secretKey}
-            onChange={handleSecretKeyChange}
+            onChange={onChange}
             disabled={type === "password"}
         />
         <i
-            onClick={handleToggle}
-            className={lock}
+            onClick={onToggle}
+            className={lock ? "fas fa-lock fa-fw" : "fas fa-unlock fa-fw"}
             id="lock"
             style={{ marginLeft: "7px" }}
         ></i>
     </div>
 );
 
-const ActionButtons = ({ modal, secretKey, setDataRefetch, setModal, lock }) => (
+const ActionButtons = ({
+    modal,
+    secretKey,
+    onRefetch,
+    onCheckLock,
+    passwords,
+}) => (
     <div className="filter-group">
         <Button
             variant="primary"
-            className="btn btn-primary bg-success"
-            onClick={() => {
-                if (lock === false) {
-                    toast("Please lock your secret key");
-                    return;
-                }
-            }}
-        >
-            Decrypt
-        </Button>
-        <Button
-            variant="primary"
-            className="btn btn-primary"s
+            className="btn btn-primary"
             data-bs-toggle={modal}
             data-bs-target="#newPasswordForm"
-            onClick={() => {
-                if (lock === false) {
-                    toast("Please lock your secret key");
-                    return;
-                }
-                setModal("modal");
-            }}
+            onClick={onCheckLock}
         >
             Add New Password
         </Button>
-        <NewPasswordForm
-            secretKey={secretKey}
-            setDataRefetch={() => setDataRefetch(true)}
-            closeModal={() => setModal("")}
-        />
+        <NewPasswordForm secretKey={secretKey} setDataRefetch={onRefetch} />
         <Button
-            variant="Secondary"
+            variant="secondary"
             className="btn btn-secondary"
-            data-bs-toggle="modal"
-            data-bs-target="#updatePasswordForm"
+            onClick={() => download(csvMaker(passwords))}
         >
             Export File
         </Button>
@@ -87,18 +71,23 @@ const Table = () => {
     const [decryptKey, setDecryptKey] = useState("");
     const [dataRefetch, setDataRefetch] = useState(false);
 
-    const { data: passwords, isLoading, isSuccess, isError, error, refetch } =
-        useGetPasswordsByIdQuery({ id, secretKey: decryptKey });
+    const {
+        data: passwords,
+        isLoading,
+        isSuccess,
+        isError,
+        error,
+        refetch,
+    } = useGetPasswordsByIdQuery({ id, secretKey: decryptKey });
 
     const [content, setContent] = useState(<PulseLoader color={"#FFF"} />);
 
     useEffect(() => {
-        console.log("Data refetch triggered ", dataRefetch);
         if (dataRefetch) {
             refetch();
             setDataRefetch(false);
         }
-    }, [dataRefetch]);
+    }, [dataRefetch, refetch]);
 
     useEffect(() => {
         if (isLoading) {
@@ -106,9 +95,10 @@ const Table = () => {
         } else if (isError) {
             setContent(<p className="errmsg">{error?.data?.message}</p>);
         } else if (isSuccess) {
-            setContent(DisplayPasswordData(passwords, secretKey));
+            setContent(DisplayPasswordData(passwords, modal, checkLock));
         }
-    }, [isLoading, isError, isSuccess, error, passwords, secretKey]);
+        // eslint-disable-next-line
+    }, [isLoading, isError, isSuccess, error, passwords, modal]);
 
     const handleToggle = () => {
         if (type === "password") {
@@ -123,11 +113,19 @@ const Table = () => {
             setLock(true);
             setType("password");
             setDecryptKey(secretKey);
+            setDataRefetch(true);
             setModal("modal");
         }
     };
 
     const handleSecretKeyChange = (e) => setSecretKey(e.target.value);
+
+    const checkLock = () => {
+        console.log("checkLock ", lock);
+        if (!lock) {
+            toast("Please lock your secret key");
+        }
+    };
 
     return (
         <motion.div
@@ -145,18 +143,18 @@ const Table = () => {
                                     <SecretKeyInput
                                         type={type}
                                         secretKey={secretKey}
-                                        handleSecretKeyChange={handleSecretKeyChange}
-                                        handleToggle={handleToggle}
-                                        lock={lock ? "fas fa-lock fa-fw" : "fas fa-unlock fa-fw"}
+                                        onChange={handleSecretKeyChange}
+                                        onToggle={handleToggle}
+                                        lock={lock}
                                     />
                                 </div>
                                 <div className="table-filter col-sm-4 d-flex justify-content-center align-items-center">
                                     <ActionButtons
                                         modal={modal}
                                         secretKey={secretKey}
-                                        setDataRefetch={setDataRefetch}
-                                        setModal={setModal}
-                                        lock={lock}
+                                        onRefetch={() => setDataRefetch(true)}
+                                        onCheckLock={checkLock}
+                                        passwords={passwords}
                                     />
                                 </div>
                             </div>
