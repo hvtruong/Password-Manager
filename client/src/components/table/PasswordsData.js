@@ -13,7 +13,7 @@ function addHttps(link) {
     return "https://" + link;
 }
 
-const PasswordsData = (passwords, modal, checkLock) =>
+const PasswordsData = (passwords, modal, secretKey, checkLock, setDataRefetch) =>
     passwords.map((info, index) => (
         <tr key={index}>
             <td>
@@ -43,7 +43,6 @@ const PasswordsData = (passwords, modal, checkLock) =>
                     data-toggle="tooltip"
                     onClick={() => {
                         navigator.clipboard.writeText(info.password);
-                        console.log("This is index ", index);
                         toast("Password copied to clipboard");
                     }}
                 >
@@ -63,7 +62,7 @@ const PasswordsData = (passwords, modal, checkLock) =>
                 >
                     <i className="fas fa-edit" style={{ color: "#FFC107" }} />
                 </a>
-                <UpdatePasswordForm info={info} />
+                <UpdatePasswordForm index={index} secretKey={secretKey} setDataRefetch={setDataRefetch}/>
             </td>
         </tr>
     ));

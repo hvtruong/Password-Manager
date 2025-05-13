@@ -41,8 +41,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
     useEffect(() => {
         if (isSuccess) {
             resetForm();
-            console.log("New password added successfully");
-            closeModal();
+            closeModal("#closeNewPasswordForm");
         }
     }, [isSuccess]);
 
@@ -109,7 +108,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
                             </h1>
                             <button
                                 type="button"
-                                id="closeButton"
+                                id="closeNewPasswordForm"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"

@@ -107,7 +107,7 @@ const Table = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {PasswordsData(passwords, modal, checkLock)}
+                            {PasswordsData(passwords, modal, decryptKey, checkLock, setDataRefetch)}
                         </tbody>
                     </table>
                 </>

@@ -97,10 +97,12 @@ const createNewPassword = async (req, res) => {
 // @route PATCH /passwords
 // @access Private
 const updatePassword = async (req, res) => {
-    const { id, newWebsite, newUsername, newPassword, index } = req.body; // Extract data from request body
+    const { id, newUsername, newPassword, secretKey, index } = req.body; // Extract data from request body
+
+    console.log(req.body);
 
     // Validate required fields
-    if (!newWebsite || !newUsername || !newPassword) {
+    if (!id || !newUsername || !secretKey) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -109,26 +111,31 @@ const updatePassword = async (req, res) => {
         let loadedPasswords = await Password.findOne({ userId: id })
             .collation({ locale: "en", strength: 2 })
             .exec();
-
+        
         // If no document is found, return an error
         if (!loadedPasswords) {
             return res.status(400).json({ message: "Passwords not found" });
         }
 
         // Encrypt the password using the provided secret key
-        const encryptedPassword = encryptPassword(password, secretKey);
+        const password =
+            newPassword == ""
+                ? loadedPasswords.passwords[index].password
+                : encryptPassword(newPassword, secretKey);
+        
+        const oldWebsite = loadedPasswords.passwords[index].website;
         // Update the password for the specified website
-        loadedPasswords[index] = {
-            website: newWebsite,
+        loadedPasswords.passwords[index] = {
+            website: oldWebsite,
             username: newUsername,
-            password: encryptedPassword,
+            password: password,
         };
 
         // Save the updated document
         await loadedPasswords.save();
 
         // Return success response
-        return res.json({ message: `Password for "${newUsername}" updated` });
+        return res.json({ message: `Password for "${oldWebsite}" updated` });
     } catch (error) {
         // Handle server errors
         return res.status(500).json({ message: "Server error" });
@@ -143,7 +150,7 @@ const deletePassword = async (req, res) => {
 
     // Validate required fields
     if (!id) {
-        return res.status(400).json({ message: "Password ID required" });
+        return res.status(400).json({ message: "User ID required" });
     }
 
     try {
@@ -158,7 +165,7 @@ const deletePassword = async (req, res) => {
         }
 
         // Delete the password document
-        passwordsFile.splice(index, 1);
+        result = passwordsFile.splice(index, 1);
 
         await passwordsFile.save();
         // Return success response

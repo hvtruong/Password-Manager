@@ -1,56 +1,51 @@
 import { useState, useEffect } from "react";
 import { useUpdatePasswordMutation } from "../../features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import closeModal from "../../utils/closeModal";
 import styles from "./Form.module.css";
-import { useCallback } from "react";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
-const UpdatePasswordForm = ({ info }) => {
+const UpdatePasswordForm = ({ secretKey, setDataRefetch, index }) => {
     const navigate = useNavigate();
     // Import add new user module from API slice
     const [updatePassword, { isSuccess }] = useUpdatePasswordMutation();
+    const { id } = useAuth();
 
     // Hooks to control the update password form
     const [formData, setFormData] = useState({
-        newUsername: info.username,
-        oldPassword: info.password,
+        newUsername: "",
         newPassword: "",
-        repeatNewPassword: "",
     });
     const [validNewPassword, setValidNewPassword] = useState(false);
 
-    const { newUsername, oldPassword, newPassword, repeatNewPassword } = formData;
+    const { newUsername, newPassword } = formData;
 
     const [errMsg, setErrMsg] = useState("");
 
-    const resetForm = useCallback(() => {
+    const resetForm = () => {
         setFormData({
-            newUsername: info.username,
-            oldPassword: info.password,
+            newUsername: "",
             newPassword: "",
-            repeatNewPassword: "",
         });
-    }, [info]);
-
-    useEffect(() => {
-        resetForm();
-    }, [resetForm]);
-
-    // Validate password every time it changes
-    useEffect(() => {
-        setValidNewPassword(PWD_REGEX.test(newPassword));
-    }, [newPassword]);
+    };
 
     // Reset input fields to empty when successfully submitted
     useEffect(() => {
         if (isSuccess) {
             resetForm();
+            closeModal("#closeUpdateForm")
         }
-    }, [isSuccess, resetForm]);
+    }, [isSuccess]);
 
     useEffect(() => {
         setErrMsg("");
     }, [formData]);
+
+    // Validate password every time it changes
+    useEffect(() => {
+        setValidNewPassword(PWD_REGEX.test(newPassword));
+    }, [newPassword]);
 
     // Update the view of input fields after reset
     const handleInputChange = (e) => {
@@ -61,16 +56,17 @@ const UpdatePasswordForm = ({ info }) => {
     // Call the PUT API to create new user when everything is valid
     const createNewPassword = async (e) => {
         e.preventDefault();
-        if (!validNewPassword) {
+        if (newPassword !== "" && !validNewPassword) {
             setErrMsg("Invalid new password");
-        } else if (newPassword !== repeatNewPassword) {
-            setErrMsg("Passwords do not match");
         } else {
             try {
+                console.log("Secret key ", secretKey);
                 const response = await updatePassword({
+                    id,
                     newUsername,
-                    oldPassword,
                     newPassword,
+                    secretKey,
+                    index,
                 });
                 if (response.error) {
                     if (typeof response.error.status != "number") {
@@ -79,6 +75,7 @@ const UpdatePasswordForm = ({ info }) => {
                         setErrMsg(response.error.data?.message);
                     }
                 } else {
+                    setDataRefetch(true);
                     navigate("/dashboard");
                 }
             } catch (error) {
@@ -99,11 +96,11 @@ const UpdatePasswordForm = ({ info }) => {
                     <div className={styles.box}>
                         <div className="modal-header">
                             <h1 className="modal-title fs-5 text-center">
-                                Create new password
+                                Update password
                             </h1>
                             <button
                                 type="button"
-                                id="closeButton"
+                                id="closeUpdateForm"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
@@ -127,27 +124,9 @@ const UpdatePasswordForm = ({ info }) => {
 
                             <input
                                 type="text"
-                                name="oldPassword"
-                                placeholder="Old password"
-                                value={oldPassword}
-                                onChange={handleInputChange}
-                                required
-                            />
-
-                            <input
-                                type="text"
                                 name="newPassword"
                                 placeholder="New password"
                                 value={newPassword}
-                                onChange={handleInputChange}
-                                required
-                            />
-
-                            <input
-                                type="text"
-                                name="repeatNewPassword"
-                                placeholder="Confirm new password"
-                                value={repeatNewPassword}
                                 onChange={handleInputChange}
                                 required
                             />
@@ -158,7 +137,7 @@ const UpdatePasswordForm = ({ info }) => {
                         </p>
 
                         <div className="modal-footer">
-                            <input type="submit" name="" value="Signup" />
+                            <input type="submit" name="" value="Update" />
                         </div>
                     </div>
                 </form>

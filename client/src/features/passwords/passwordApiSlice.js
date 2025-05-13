@@ -1,11 +1,11 @@
-import { createEntityAdapter } from "@reduxjs/toolkit";
+// import { createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../../app/api/apiSlice";
 
-const passwordsAdapter = createEntityAdapter({
-    sortComparer: (a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1),
-});
+// const passwordsAdapter = createEntityAdapter({
+//     sortComparer: (a, b) => (a.completed === b.completed ? 0 : a.completed ? 1 : -1),
+// });
 
-const initialState = passwordsAdapter.getInitialState();
+// const initialState = passwordsAdapter.getInitialState();
 
 export const passwordsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -28,7 +28,8 @@ export const passwordsApiSlice = apiSlice.injectEndpoints({
         updatePassword: builder.mutation({
             query: (initialUserData) => ({
                 url: "/passwords",
-                method: "PATCH",
+                method: "PUT",
+                withCredentials: true,
                 body: initialUserData,
             }),
             invalidatesTags: (result, error, arg) => [{ type: "User", id: arg.id }],

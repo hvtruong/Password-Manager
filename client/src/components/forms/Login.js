@@ -42,7 +42,7 @@ const LogIn = () => {
             setUsername("");
             setPassword("");
 
-            closeModal();
+            closeModal("#closeLoginForm");
             navigate("/dashboard");
         } catch (err) {
             console.log(err);
@@ -74,7 +74,7 @@ const LogIn = () => {
                             </h1>
                             <button
                                 type="button"
-                                id="closeButton"
+                                id="closeLoginForm"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"

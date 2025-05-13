@@ -1,7 +1,7 @@
 import $ from "jquery";
 
-const closeModal = () => {
-    const button = $("#closeButton");
+const closeModal = (id) => {
+    const button = $(id);
     button.trigger("click");
 };
 
