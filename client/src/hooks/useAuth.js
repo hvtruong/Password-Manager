@@ -7,11 +7,11 @@ const useAuth = () => {
 
     if (token) {
         const decoded = jwtDecode(token)
-        const { id, validated } = decoded.Info
+        const { id, role } = decoded.Info
 
-        return { id, validated }
+        return { id, role }
     }
 
-    return { username: 'No user found', validated: 'Not found' }
+    return { id: 'No id found', role: 'Not found' }
 }
 export default useAuth

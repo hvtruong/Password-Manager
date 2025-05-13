@@ -28,7 +28,7 @@ const userSchema = new Schema({
     }
 })
 
-userSchema.index({ expireAt: 1 }, { expireAfterSeconds: 10800 })
+userSchema.index({ expireAfterSeconds: 10800 }) // user validation token expires after 3 hours
 
 userSchema.plugin(passportLocalMongoose)
 

@@ -1,35 +1,47 @@
 import { useState, useEffect } from "react";
 import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
+import closeModal from "../../utils/closeModal";
 import useAuth from "../../hooks/useAuth";
-import $ from "jquery";
 import styles from "./Form.module.css";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
-const NewPasswordForm = ({ secretKey }) => {
+const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
     const navigate = useNavigate();
-    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
     const { id } = useAuth();
+    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
 
     const [formData, setFormData] = useState({
         newWebsite: "",
+        newUsername: "",
         newPassword: "",
         repeatNewPassword: "",
     });
-
     const [validNewPassword, setValidNewPassword] = useState(false);
     const [errMsg, setErrMsg] = useState("");
 
-    const { newWebsite, newPassword, repeatNewPassword } = formData;
+    const { newWebsite, newUsername, newPassword, repeatNewPassword } =
+        formData;
 
     useEffect(() => {
         setValidNewPassword(PWD_REGEX.test(newPassword));
     }, [newPassword]);
 
+    // Reset input fields to empty when successfully submitted
+    const resetForm = () => {
+        setFormData({
+            newWebsite: "",
+            newUsername: "",
+            newPassword: "",
+            repeatNewPassword: "",
+        });
+    };
+
     useEffect(() => {
         if (isSuccess) {
-            setFormData({ newWebsite: "", newPassword: "", repeatNewPassword: "" });
+            resetForm();
+            closeModal("#closeNewPasswordForm");
         }
     }, [isSuccess]);
 
@@ -46,7 +58,7 @@ const NewPasswordForm = ({ secretKey }) => {
         e.preventDefault();
 
         if (!validNewPassword) {
-            setErrMsg("Invalid new password");
+            setErrMsg("Password too weak! Please use a stronger password.");
             return;
         }
 
@@ -59,6 +71,7 @@ const NewPasswordForm = ({ secretKey }) => {
             const response = await addNewPassword({
                 id,
                 newWebsite,
+                username: newUsername,
                 password: newPassword,
                 secretKey,
             });
@@ -70,14 +83,16 @@ const NewPasswordForm = ({ secretKey }) => {
                         : response.error.data?.message;
                 setErrMsg(errorMessage);
             } else {
-                $("#closeFormButton").trigger("click");
+                setDataRefetch();
+                navigate("/dashboard");
             }
         } catch (error) {
             console.error("An error occurred: ", error);
         }
     };
 
-    return (
+    let content;
+    content = (
         <div
             className="modal fade"
             id="newPasswordForm"
@@ -93,29 +108,38 @@ const NewPasswordForm = ({ secretKey }) => {
                             </h1>
                             <button
                                 type="button"
-                                id="closeFormButton"
+                                id="closeNewPasswordForm"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"
                             />
                         </div>
-
                         <div className="modal-body">
                             <p className="text-white">
-                                Please fill in the fields to update your password!
+                                Please fill in the fields to update your
+                                password!
                             </p>
 
                             <input
                                 type="text"
                                 name="newWebsite"
-                                placeholder="Password name"
+                                placeholder="Website"
                                 value={newWebsite}
                                 onChange={handleInputChange}
                                 required
                             />
 
                             <input
-                                type="password"
+                                type="text"
+                                name="newUsername"
+                                placeholder="Username"
+                                value={newUsername}
+                                onChange={handleInputChange}
+                                required
+                            />
+
+                            <input
+                                type="text"
                                 name="newPassword"
                                 placeholder="New password"
                                 value={newPassword}
@@ -124,19 +148,27 @@ const NewPasswordForm = ({ secretKey }) => {
                             />
 
                             <input
-                                type="password"
+                                type="text"
                                 name="repeatNewPassword"
                                 placeholder="Confirm new password"
                                 value={repeatNewPassword}
                                 onChange={handleInputChange}
                                 required
                             />
+
+                            <p className="text-white">
+                                Or upload a file with your passwords here
+                            </p>
+
+                            <input type="file" id="input-file-upload" />
+
+                            <p
+                                style={{ color: "#ff0000" }}
+                                aria-live="assertive"
+                            >
+                                {errMsg}
+                            </p>
                         </div>
-
-                        <p style={{ color: "#ff0000" }} aria-live="assertive">
-                            {errMsg}
-                        </p>
-
                         <div className="modal-footer">
                             <input type="submit" value="Create" />
                         </div>
@@ -145,6 +177,7 @@ const NewPasswordForm = ({ secretKey }) => {
             </div>
         </div>
     );
+    return content;
 };
 
 export default NewPasswordForm;

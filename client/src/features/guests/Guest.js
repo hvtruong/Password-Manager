@@ -28,6 +28,7 @@ export const useAsAGuest = async () => {
         await createGuestUser();
         // Login the same as a new, regular user with one-time access token
         const { accessToken } = await loginAsGuest().unwrap();
+        console.log("Access Token:", accessToken);
 
         dispatch(setCredentials({ accessToken }));
 

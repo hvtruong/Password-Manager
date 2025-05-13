@@ -48,16 +48,16 @@
 	width: 60px;
 	margin: 0 5px;
 }
-.table-filter input {
+.table-filter .form-controls input {
 	height: 34px;
 	border-radius: 3px;
 	border-color: #ddd;
 	box-shadow: none;
 }
-.table-filter .btn {
+.table-filter .form-controls .btn {
 	height: 34px;
 }
-.table-filter label {
+.table-filter .form-controls label {
 	font-weight: normal;
 	margin-left: 20px;
 }
@@ -66,7 +66,7 @@
 	margin-left: 5px;
 }
 .table-filter input {
-	width: 180px;
+	width: auto;
 	display: inline-block;
 }
 table.table tr th, table.table tr td {

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../../features/auth/authSlice";
 import { useLoginMutation } from "../../features/auth/authApiSlice.js";
+import closeModal from "../../utils/closeModal.js";
 import usePersist from "../../hooks/usePersist.js";
-import $ from "jquery";
 import styles from "./Form.module.css";
 
 const LogIn = () => {
@@ -42,8 +42,7 @@ const LogIn = () => {
             setUsername("");
             setPassword("");
 
-            $("#cancelButton").trigger("click");
-
+            closeModal("#closeLoginForm");
             navigate("/dashboard");
         } catch (err) {
             console.log(err);
@@ -75,7 +74,7 @@ const LogIn = () => {
                             </h1>
                             <button
                                 type="button"
-                                id="cancelButton"
+                                id="closeLoginForm"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"

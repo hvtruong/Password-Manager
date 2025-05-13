@@ -4,6 +4,7 @@ const Guest = require("../models/Guest");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
+const e = require("express");
 
 // @desc Login
 // @route POST /auth/login
@@ -50,7 +51,7 @@ const login = asyncHandler(async (req, res) => {
         {
             Info: {
                 id: foundUser._id,
-                validated: foundUser.validated,
+                role: "user",
             },
         },
         process.env.AUTH_ACCESS_TOKEN,
@@ -93,7 +94,7 @@ const loginAsGuest = asyncHandler(async (req, res) => {
         {
             Info: {
                 id: foundGuest._id,
-                validated: true,
+                role: "guest",
             },
         },
         process.env.AUTH_ACCESS_TOKEN,
@@ -138,25 +139,36 @@ const refresh = (req, res) => {
             if (err) {
                 return res.status(403).json({ message: "Forbidden" });
             }
-
-            const foundUser = await User.findOne({
+            let role;
+            let foundUser = await User.findOne({
                 _id: decoded.id,
             }).exec();
-            if (!foundUser) {
-                return res.status(401).json({ message: "Unauthorized" });
+            
+            if (foundUser) {
+                role = "user";
+            }
+            else {
+                foundUser = await Guest.findOne({
+                    _id: decoded.id,
+                }).exec();
+                if (foundUser) {
+                    role = "guest";
+                }
+                else {
+                    return res.status(403).json({ message: "Forbidden" });
+                }
             }
 
             const accessToken = jwt.sign(
                 {
                     Info: {
                         id: foundUser._id,
-                        validated: foundUser.validated,
+                        role: role,
                     },
                 },
                 process.env.AUTH_ACCESS_TOKEN,
                 { expiresIn: "15m" }
             );
-
             res.json({ accessToken });
         })
     );
@@ -172,7 +184,7 @@ const logout = (req, res) => {
         return res.sendStatus(204);
     }
     res.clearCookie("jwt", { httpOnly: true, sameSite: "None", secure: true });
-    res.json({ message: "Cookie cleared" });
+    return res.status(204).json({ message: "Cookie cleared" });
 };
 
 module.exports = {
