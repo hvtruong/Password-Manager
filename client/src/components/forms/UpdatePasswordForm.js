@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAddNewPasswordMutation } from "../../features/passwords/passwordApiSlice";
+import { useUpdatePasswordMutation } from "../../features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
 import styles from "./Form.module.css";
 import { useCallback } from "react";
@@ -8,7 +8,7 @@ const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 const UpdatePasswordForm = ({ info }) => {
     const navigate = useNavigate();
     // Import add new user module from API slice
-    const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
+    const [updatePassword, { isSuccess }] = useUpdatePasswordMutation();
 
     // Hooks to control the update password form
     const [formData, setFormData] = useState({
@@ -67,7 +67,7 @@ const UpdatePasswordForm = ({ info }) => {
             setErrMsg("Passwords do not match");
         } else {
             try {
-                const response = await addNewPassword({
+                const response = await updatePassword({
                     newUsername,
                     oldPassword,
                     newPassword,

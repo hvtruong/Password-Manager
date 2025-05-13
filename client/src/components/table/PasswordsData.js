@@ -13,9 +13,9 @@ function addHttps(link) {
     return "https://" + link;
 }
 
-const DisplayPasswordData = (passwords, modal, checkLock) =>
-    passwords.map((info) => (
-        <tr key={info.id}>
+const PasswordsData = (passwords, modal, checkLock) =>
+    passwords.map((info, index) => (
+        <tr key={index}>
             <td>
                 <span className="cell-header">URL:</span>
                 <a
@@ -43,6 +43,7 @@ const DisplayPasswordData = (passwords, modal, checkLock) =>
                     data-toggle="tooltip"
                     onClick={() => {
                         navigator.clipboard.writeText(info.password);
+                        console.log("This is index ", index);
                         toast("Password copied to clipboard");
                     }}
                 >
@@ -67,4 +68,4 @@ const DisplayPasswordData = (passwords, modal, checkLock) =>
         </tr>
     ));
 
-export default DisplayPasswordData;
+export default PasswordsData;

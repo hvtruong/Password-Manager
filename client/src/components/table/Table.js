@@ -5,7 +5,7 @@ import { Button } from "react-bootstrap";
 import PulseLoader from "react-spinners/PulseLoader";
 import useAuth from "../../hooks/useAuth";
 import { useGetPasswordsByIdQuery } from "../../features/passwords/passwordApiSlice";
-import DisplayPasswordData from "./DisplayPasswordData";
+import PasswordsData from "./PasswordsData";
 import NewPasswordForm from "../forms/NewPasswordForm";
 import { csvMaker, download } from "../../utils/export";
 import "./table.css";
@@ -80,7 +80,7 @@ const Table = () => {
         refetch,
     } = useGetPasswordsByIdQuery({ id, secretKey: decryptKey });
 
-    const [content, setContent] = useState(<PulseLoader color={"#FFF"} />);
+    const [content, setContent] = useState();
 
     useEffect(() => {
         if (dataRefetch) {
@@ -95,7 +95,23 @@ const Table = () => {
         } else if (isError) {
             setContent(<p className="errmsg">{error?.data?.message}</p>);
         } else if (isSuccess) {
-            setContent(DisplayPasswordData(passwords, modal, checkLock));
+            setContent(
+                <>
+                    <table className="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Website</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {PasswordsData(passwords, modal, checkLock)}
+                        </tbody>
+                    </table>
+                </>
+            );
         }
         // eslint-disable-next-line
     }, [isLoading, isError, isSuccess, error, passwords, modal]);
@@ -159,17 +175,7 @@ const Table = () => {
                                 </div>
                             </div>
                         </div>
-                        <table className="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Website</th>
-                                    <th>Username</th>
-                                    <th>Password</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>{content}</tbody>
-                        </table>
+                        {content}
                     </div>
                 </div>
             </div>
