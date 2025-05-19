@@ -123,7 +123,7 @@ const loginAsGuest = asyncHandler(async (req, res) => {
 
 // @desc Refresh
 // @route GET /auth/refresh
-// @access Main - because access token has expired
+// @access Home - because access token has expired
 const refresh = (req, res) => {
     const cookies = req.cookies;
     if (!cookies?.jwt) {

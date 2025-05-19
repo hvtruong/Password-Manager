@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useRefreshMutation } from "./authApiSlice"
 import { selectCurrentToken } from "./authSlice"
-import usePersist from "../../hooks/usePersist.js"
+import usePersist from "hooks/usePersist.js"
 
 const PersistLogin = () => {
 
@@ -24,7 +24,7 @@ const PersistLogin = () => {
 
     useEffect(() => {
 
-        if (effectRan.current === true || process.env.NODE_ENV !== 'development') { // React 18 Strict Mode
+        if (effectRan.current === true || process.env.NODE_ENV !== 'development') {
 
             const verifyRefreshToken = async () => {
                 console.log('verifying refresh token')
@@ -43,8 +43,6 @@ const PersistLogin = () => {
         }
 
         return () => effectRan.current = true
-
-        // eslint-disable-next-line
     }, [])
 
 
