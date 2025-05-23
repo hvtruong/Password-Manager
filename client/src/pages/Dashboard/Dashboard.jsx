@@ -1,5 +1,5 @@
 import Layout from "components/layout/Layout";
-import Table from "./components/Table";
+import Table from "./Table";
 
 const Dashboard = () => (
     <Layout location="Dashboard">

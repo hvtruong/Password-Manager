@@ -1,3 +1,5 @@
+import $ from "jquery";
+import styles from "./Modal.module.css";
 import {
     UsernameInputField,
     PasswordInputField,
@@ -5,8 +7,6 @@ import {
     WebsiteInputField,
     NewPasswordInputField,
 } from "../input/InputField";
-import $ from "jquery";
-import styles from "./Modal.module.css";
 
 const Modal = ({
     modalId,
@@ -24,13 +24,9 @@ const Modal = ({
         aria-labelledby={`${modalId}-label`}
         aria-hidden="true"
     >
-        <div className="modal-dialog">
-            <div className={`modal-content ${styles.box}`}>
-                <form
-                    className="needs-validation"
-                    onSubmit={handleSubmit}
-                    noValidate
-                >
+        <div className="modal-dialog modal-content">
+            <form className="needs-validation" onSubmit={handleSubmit}>
+                <div className={`${styles.box}`}>
                     <ModalHeader
                         title={title}
                         closeModalButtonId={`${modalId}-close`}
@@ -42,8 +38,8 @@ const Modal = ({
                         extraComponent={extraComponent}
                     />
                     <ModalFooter />
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 );
@@ -95,9 +91,7 @@ const ModalBody = ({ formData, setFormData, errMsg, extraComponent }) => (
 
 const ModalFooter = () => (
     <div className="modal-footer">
-        <button type="submit" className="btn btn-primary w-100">
-            Submit
-        </button>
+        <input type="submit" name="" value="Submit" />
     </div>
 );
 
@@ -106,7 +100,11 @@ const inputFields = [
     { key: "password", Component: PasswordInputField, prop: "password" },
     { key: "emailAddress", Component: EmailInputField, prop: "emailAddress" },
     { key: "website", Component: WebsiteInputField, prop: "website" },
-    { key: "newPassword", Component: NewPasswordInputField, prop: "newPassword" },
+    {
+        key: "newPassword",
+        Component: NewPasswordInputField,
+        prop: "newPassword",
+    },
 ];
 
 const closeModal = (id) => {

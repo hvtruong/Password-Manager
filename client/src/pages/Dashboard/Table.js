@@ -3,9 +3,9 @@ import { ToastContainer, toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useGetPasswordsByIdQuery } from "features/passwords/passwordApiSlice.js";
 import useAuth from "hooks/useAuth.js";
-import TableButtons from "./TableButtons.jsx";
-import PasswordsData from "./PasswordsData";
-import SecretKeyInput from "./SecretKeyInput.jsx";
+import TableButtons from "./components/TableButtons.jsx";
+import PasswordsData from "./components/PasswordsData.jsx";
+import SecretKeyInput from "./components/SecretKeyInput.jsx";
 import "assets/stylesheets/table.css";
 
 const Table = () => {
@@ -16,13 +16,13 @@ const Table = () => {
     const [type, setType] = useState("text");
     const [secretKey, setSecretKey] = useState("");
     const [isSecretKeyLocked, setIsSecretKeyLocked] = useState(false);
-    
+
     // State to store the key used for decryption
     const [decryptKey, setDecryptKey] = useState("");
     const [shouldDataRefetch, setShouldDataRefetch] = useState(false);
 
     // API hook
-    const { passwords, refetch } = useGetPasswordsByIdQuery({
+    const { data: passwords, refetch } = useGetPasswordsByIdQuery({
         id,
         secretKey: decryptKey,
     });
@@ -34,13 +34,15 @@ const Table = () => {
         }
     }, [shouldDataRefetch, refetch]);
 
+    const handleSecretKeyChange = (e) => setSecretKey(e.target.value);
+
     // Change states and allow other actions once secret key is locked
     const handleToggle = () => {
         if (type === "password") {
             setIsSecretKeyLocked(false);
             setType("text");
         } else {
-            if (!secretKey) {
+            if (secretKey === "") {
                 toast("Please enter your secret key");
                 return;
             }
@@ -51,8 +53,6 @@ const Table = () => {
         }
     };
 
-    const handleSecretKeyChange = (e) => setSecretKey(e.target.value);
-
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
@@ -62,7 +62,6 @@ const Table = () => {
             <div className="container-xl">
                 <div className="table-responsive">
                     <div className="table-wrapper">
-                        
                         {/* Table header with secret key input and action buttons */}
                         <div className="table-title">
                             <div className="row">
@@ -80,31 +79,38 @@ const Table = () => {
                                     <div className="filter-group">
                                         <TableButtons
                                             secretKey={secretKey}
-                                            isSecretKeyLocked={isSecretKeyLocked}
-                                            setShouldDataRefetch={setShouldDataRefetch}
+                                            isSecretKeyLocked={
+                                                isSecretKeyLocked
+                                            }
+                                            setShouldDataRefetch={
+                                                setShouldDataRefetch
+                                            }
                                             passwords={passwords}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
+
                         {/* Passwords table */}
                         <table className="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Website</th>
-                                    <th>Username</th>
                                     <th>Password</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {PasswordsData(
-                                    passwords,
-                                    decryptKey,
-                                    isSecretKeyLocked,
-                                    setShouldDataRefetch
+                                {passwords && (
+                                    <PasswordsData
+                                        passwords={passwords}
+                                        decryptKey={decryptKey}
+                                        isSecretKeyLocked={isSecretKeyLocked}
+                                        setShouldDataRefetch={
+                                            setShouldDataRefetch
+                                        }
+                                    />
                                 )}
                             </tbody>
                         </table>

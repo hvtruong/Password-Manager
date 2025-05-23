@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { ModalButton } from "components/button/Buttons";
 import LogIn from "pages/Home/components/Login";
 import SignUp from "pages/Home/components/Signup";
 import EditUser from "pages/Dashboard/components/EditUserForm";
@@ -9,76 +9,38 @@ const NavBarButtons = ({ location, role }) => {
         case "Home":
             return (
                 <>
-                    {loginButton}
-                    {signupButton}
+                    <ModalButton buttonText="Log in" formId="loginForm" />
+                    <LogIn />
+                    <ModalButton
+                        buttonText="Sign up"
+                        variant="secondary"
+                        className="btn btn-secondary"
+                        formId="signupForm"
+                    />
+                    <SignUp />
                 </>
             );
         case "Dashboard":
             return (
                 <>
-                    {role === "user" && editButton}
-                    {logoutButton}
+                    {role === "user" && (
+                        <>
+                            <ModalButton buttonText="Edit" formId="editForm" />
+                            <EditUser />
+                        </>
+                    )}
+                    <ModalButton
+                        buttonText="Log out"
+                        formId="logOutModal"
+                        variant="danger"
+                        className="btn btn-danger"
+                    />
+                    <LogoutNotification />
                 </>
             );
         default:
             return null;
     }
 };
-
-const loginButton = (
-    <>
-        <Button
-            variant="primary"
-            className="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#loginForm"
-        >
-            Log in
-        </Button>
-        <LogIn />
-    </>
-);
-
-const signupButton = (
-    <>
-        <Button
-            variant="secondary"
-            className="btn btn-secondary"
-            data-bs-toggle="modal"
-            data-bs-target="#signupForm"
-        >
-            Sign up
-        </Button>
-        <SignUp />
-    </>
-);
-
-const editButton = (
-    <>
-        <Button
-            variant="primary"
-            className="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#signupForm"
-        >
-            Edit
-        </Button>
-        <EditUser />
-    </>
-);
-
-const logoutButton = (
-    <>
-        <Button
-            variant="danger"
-            className="btn btn-danger"
-            data-bs-toggle="modal"
-            data-bs-target="#logOutModal"
-        >
-            Log out
-        </Button>
-        <LogoutNotification />
-    </>
-);
 
 export default NavBarButtons;

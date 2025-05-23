@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useUpdatePasswordMutation } from "features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
 import useAuth from "hooks/useAuth";
+import Modal from "components/modal/Modal";
 import closeModal from "utils/closeModal";
-import styles from "assets/stylesheets/Forms.module.css";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 const UpdatePasswordForm = ({ secretKey, setDataRefetch, index }) => {
@@ -34,7 +34,7 @@ const UpdatePasswordForm = ({ secretKey, setDataRefetch, index }) => {
     useEffect(() => {
         if (isSuccess) {
             resetForm();
-            closeModal("#closeUpdateForm")
+            closeModal("#closeUpdateForm");
         }
     }, [isSuccess]);
 
@@ -54,7 +54,7 @@ const UpdatePasswordForm = ({ secretKey, setDataRefetch, index }) => {
     };
 
     // Call the PUT API to create new user when everything is valid
-    const createNewPassword = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (newPassword !== "" && !validNewPassword) {
             setErrMsg("Invalid new password");
@@ -85,64 +85,14 @@ const UpdatePasswordForm = ({ secretKey, setDataRefetch, index }) => {
     };
 
     return (
-        <div
-            className="modal fade"
-            id="updatePasswordForm"
-            tabIndex="-1"
-            labelled="updatePasswordForm"
-        >
-            <div className="modal-dialog modal-content">
-                <form className="needs-validation" onSubmit={createNewPassword}>
-                    <div className={styles.box}>
-                        <div className="modal-header">
-                            <h1 className="modal-title fs-5 text-center">
-                                Update password
-                            </h1>
-                            <button
-                                type="button"
-                                id="closeUpdateForm"
-                                className="btn-close btn-close-white"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"
-                            />
-                        </div>
-
-                        <div className="modal-body">
-                            <p className="text-white">
-                                Please fill in the fields to update your
-                                password!
-                            </p>
-
-                            <input
-                                type="text"
-                                name="newUsername"
-                                placeholder="Username"
-                                value={newUsername}
-                                onChange={handleInputChange}
-                                required
-                            />
-
-                            <input
-                                type="text"
-                                name="newPassword"
-                                placeholder="New password"
-                                value={newPassword}
-                                onChange={handleInputChange}
-                                required
-                            />
-                        </div>
-
-                        <p style={{ color: "#ff0000" }} aria-live="assertive">
-                            {errMsg}
-                        </p>
-
-                        <div className="modal-footer">
-                            <input type="submit" name="" value="Update" />
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
+        <Modal
+            modalId="updatePasswordForm"
+            title="Update Password"
+            handleSubmit={handleSubmit}
+            formData={formData}
+            setFormData={setFormData}
+            errMsg={errMsg}
+        />
     );
 };
 

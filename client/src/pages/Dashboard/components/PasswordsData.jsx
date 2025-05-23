@@ -1,12 +1,12 @@
 import { toast } from "react-toastify";
 import UpdatePasswordForm from "./UpdatePasswordForm";
 
-const PasswordsData = (
+const PasswordsData = ({
     passwords,
     secretKey,
     isSecretKeyLocked,
-    setShouldDataRefetch
-) =>
+    setShouldDataRefetch,
+}) =>
     passwords.map((info, index) => (
         <tr key={index}>
             <td>
@@ -67,9 +67,6 @@ const PasswordsData = (
                     title="Edit"
                     data-bs-toggle={isSecretKeyLocked ? "modal" : ""}
                     data-bs-target="#updatePasswordForm"
-                    onClick={() => {
-                        checkLock();
-                    }}
                     style={{
                         background: "none",
                         border: "none",

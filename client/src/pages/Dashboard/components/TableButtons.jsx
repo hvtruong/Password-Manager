@@ -1,5 +1,8 @@
-import { Button } from "react-bootstrap";
 import NewPasswordForm from "./NewPasswordForm";
+import {
+    ConditionalModalButton,
+    ActionButton,
+} from "components/button/Buttons";
 import { csvMaker, download } from "utils/export";
 import { toast } from "react-toastify";
 
@@ -15,43 +18,36 @@ const TableButtons = ({
             isSecretKeyLocked={isSecretKeyLocked}
             setDataRefetch={setDataRefetch}
         />
+        <NewPasswordForm
+            secretKey={secretKey}
+            setDataRefetch={setDataRefetch}
+        />
         <ExportButton passwords={passwords} />
     </>
 );
 
-const AddNewPasswordButton = ({ secretKey, isSecretKeyLocked, setDataRefetch }) => (
-    <>
-        <Button
-            variant="primary"
-            className="btn btn-primary"
-            data-bs-toggle={isSecretKeyLocked ? "modal" : ""}
-            data-bs-target="#newPasswordForm"
-            onClick={() => {
-                if (isSecretKeyLocked) {
-                    return;
-                }
-                toast("Please lock your secret key");
-            }}
-        >
-            Add New Password
-        </Button>
-        <NewPasswordForm secretKey={secretKey} setDataRefetch={setDataRefetch} />
-    </>
+const AddNewPasswordButton = ({ isSecretKeyLocked }) => (
+    <ConditionalModalButton
+        buttonText="Add New Password"
+        formId="newPasswordForm"
+        isSecretKeyLocked={isSecretKeyLocked}
+        handleClick={() => {
+            if (isSecretKeyLocked) {
+                return;
+            }
+            toast("Please lock your secret key");
+        }}
+    />
 );
 
 const ExportButton = ({ passwords }) => (
-    <>
-        <Button
-            variant="secondary"
-            className="btn btn-secondary"
-            onClick={() => {
-                csvMaker(passwords);
-                download("passwords.csv");
-            }}
-        >
-            Export
-        </Button>
-    </>
+    <ActionButton
+        buttonText={"Export"}
+        onClick={() => {
+            csvMaker(passwords);
+            download("passwords.csv");
+        }}
+    />
 );
 
 export default TableButtons;

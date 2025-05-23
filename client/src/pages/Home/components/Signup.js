@@ -98,7 +98,7 @@ const SignUp = () => {
                         emailAddress: formData.emailAddress,
                     });
 
-                    closeModal("#cancelButton");
+                    closeModal("#signupForm-close");
                 } catch (err) {
                     if (typeof err.status !== "number") {
                         setErrMsg("No Server Response");
