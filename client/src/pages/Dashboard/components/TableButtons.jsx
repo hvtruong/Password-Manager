@@ -1,26 +1,19 @@
 import NewPasswordForm from "./NewPasswordForm";
-import {
-    ConditionalModalButton,
-    ActionButton,
-} from "components/button/Buttons";
+import { ConditionalModalButton, ActionButton } from "components/Buttons";
 import { csvMaker, download } from "utils/export";
 import { toast } from "react-toastify";
 
 const TableButtons = ({
     secretKey,
     isSecretKeyLocked,
-    setDataRefetch,
+    setShouldDataRefetch,
     passwords,
 }) => (
     <>
-        <AddNewPasswordButton
-            secretKey={secretKey}
-            isSecretKeyLocked={isSecretKeyLocked}
-            setDataRefetch={setDataRefetch}
-        />
+        <AddNewPasswordButton isSecretKeyLocked={isSecretKeyLocked} />
         <NewPasswordForm
             secretKey={secretKey}
-            setDataRefetch={setDataRefetch}
+            triggerDataRefetch={() => setShouldDataRefetch(true)}
         />
         <ExportButton passwords={passwords} />
     </>
@@ -31,7 +24,7 @@ const AddNewPasswordButton = ({ isSecretKeyLocked }) => (
         buttonText="Add New Password"
         formId="newPasswordForm"
         isSecretKeyLocked={isSecretKeyLocked}
-        handleClick={() => {
+        onClick={() => {
             if (isSecretKeyLocked) {
                 return;
             }
@@ -44,8 +37,8 @@ const ExportButton = ({ passwords }) => (
     <ActionButton
         buttonText={"Export"}
         onClick={() => {
-            csvMaker(passwords);
-            download("passwords.csv");
+            const data = csvMaker(passwords);
+            download(data);
         }}
     />
 );

@@ -1,4 +1,4 @@
-import { ModalButton } from "components/button/Buttons";
+import { ModalButton } from "components/Buttons";
 import LogIn from "pages/Home/components/Login";
 import SignUp from "pages/Home/components/Signup";
 import EditUser from "pages/Dashboard/components/EditUserForm";

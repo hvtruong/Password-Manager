@@ -5,8 +5,8 @@ import {
     PasswordInputField,
     EmailInputField,
     WebsiteInputField,
-    NewPasswordInputField,
-} from "../input/InputField";
+    RepeatPasswordInputField,
+} from "../InputField";
 
 const Modal = ({
     modalId,
@@ -96,14 +96,14 @@ const ModalFooter = () => (
 );
 
 const inputFields = [
-    { key: "username", Component: UsernameInputField, prop: "username" },
-    { key: "password", Component: PasswordInputField, prop: "password" },
     { key: "emailAddress", Component: EmailInputField, prop: "emailAddress" },
     { key: "website", Component: WebsiteInputField, prop: "website" },
+    { key: "username", Component: UsernameInputField, prop: "username" },
+    { key: "password", Component: PasswordInputField, prop: "password" },
     {
-        key: "newPassword",
-        Component: NewPasswordInputField,
-        prop: "newPassword",
+        key: "repeatPassword",
+        Component: RepeatPasswordInputField,
+        prop: "repeatPassword",
     },
 ];
 

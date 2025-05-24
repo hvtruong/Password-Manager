@@ -26,34 +26,6 @@ const SignUp = () => {
         });
     }
 
-    // Hooks to invalidate input fields
-    const [invalid, setInvalid] = useState({
-        emailAddress: false,
-        username: false,
-        password: false,
-    });
-
-    useEffect(() => {
-        setInvalid((v) => ({
-            ...v,
-            emailAddress: EMAIL_REGEX.test(formData.emailAddress),
-        }));
-    }, [formData.emailAddress]);
-
-    useEffect(() => {
-        setInvalid((v) => ({
-            ...v,
-            username: USER_REGEX.test(formData.username),
-        }));
-    }, [formData.username]);
-
-    useEffect(() => {
-        setInvalid((v) => ({
-            ...v,
-            password: PWD_REGEX.test(formData.password),
-        }));
-    }, [formData.password]);
-
     const [errMsg, setErrMsg] = useState("");
 
     useEffect(() => {
@@ -78,13 +50,13 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         switch (true) {
-            case invalid.emailAddress:
+            case EMAIL_REGEX.test(formData.emailAddress) === false:
                 setErrMsg("Invalid email address");
                 break;
-            case invalid.username:
+            case USER_REGEX.test(formData.username) === false:
                 setErrMsg("Invalid username");
                 break;
-            case invalid.password:
+            case PWD_REGEX.test(formData.password) === false:
                 setErrMsg("Invalid password");
                 break;
             case formData.password !== formData.repeatPassword:

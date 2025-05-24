@@ -9,18 +9,17 @@ const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
 const initialFormState = {
     website: "",
-    username: "",
     password: "",
-    newPassword: "",
+    repeatPassword: "",
 };
 
-const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
+const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
     // Get current user ID from auth context
     const { id } = useAuth();
 
     // API hooks to control and validate the form
     const [formData, setFormData] = useState(initialFormState);
-    const { website, username, password, newPassword } = formData;
+    const { website, password, repeatPassword } = formData;
     const [validNewPassword, setValidNewPassword] = useState(false);
 
     const resetForm = useCallback(() => {
@@ -54,16 +53,17 @@ const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
         switch (true) {
             case validNewPassword === false:
                 setErrMsg("Password too weak! Please use a stronger password.");
-            case password !== newPassword:
+                break;
+            case password !== repeatPassword:
                 setErrMsg("Passwords do not match");
+                break;
             default:
                 try {
                     const response = await addNewPassword({
                         id,
                         website,
-                        username,
                         password,
-                        secretKey
+                        secretKey,
                     });
 
                     if (response.error) {
@@ -73,7 +73,7 @@ const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
                                 : response.error.data?.message;
                         setErrMsg(errorMessage);
                     } else {
-                        setDataRefetch();
+                        triggerDataRefetch();
                         navigate("/dashboard");
                     }
                 } catch (error) {
@@ -92,9 +92,12 @@ const NewPasswordForm = ({ secretKey, setDataRefetch }) => {
             setFormData={setFormData}
             errMsg={errMsg}
             extraComponent={
-                <p className="text-white">
-                    Or upload a file with your passwords here
-                </p>
+                <>
+                    <p className="text-white">
+                        Or upload a file with your passwords here
+                    </p>
+                    <input type="file" id="input-file-upload" />
+                </>
             }
         />
     );

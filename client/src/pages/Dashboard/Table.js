@@ -14,17 +14,17 @@ const Table = () => {
 
     // Hooks to control secret key and lock state
     const [type, setType] = useState("text");
-    const [secretKey, setSecretKey] = useState("");
+    const [secretKeyInput, setSecretKeyInput] = useState("");
     const [isSecretKeyLocked, setIsSecretKeyLocked] = useState(false);
 
     // State to store the key used for decryption
-    const [decryptKey, setDecryptKey] = useState("");
+    const [secretKey, setSecretKey] = useState("");
     const [shouldDataRefetch, setShouldDataRefetch] = useState(false);
 
     // API hook
     const { data: passwords, refetch } = useGetPasswordsByIdQuery({
         id,
-        secretKey: decryptKey,
+        secretKey: secretKey,
     });
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const Table = () => {
         }
     }, [shouldDataRefetch, refetch]);
 
-    const handleSecretKeyChange = (e) => setSecretKey(e.target.value);
+    const handleSecretKeyChange = (e) => setSecretKeyInput(e.target.value);
 
     // Change states and allow other actions once secret key is locked
     const handleToggle = () => {
@@ -42,13 +42,13 @@ const Table = () => {
             setIsSecretKeyLocked(false);
             setType("text");
         } else {
-            if (secretKey === "") {
+            if (secretKeyInput === "") {
                 toast("Please enter your secret key");
                 return;
             }
             setType("password");
             setIsSecretKeyLocked(true);
-            setDecryptKey(secretKey);
+            setSecretKey(secretKeyInput);
             setShouldDataRefetch(true);
         }
     };
@@ -69,7 +69,7 @@ const Table = () => {
                                     <ToastContainer position="top-center" />
                                     <SecretKeyInput
                                         type={type}
-                                        secretKey={secretKey}
+                                        secretKeyInput={secretKeyInput}
                                         isSecretKeyLocked={isSecretKeyLocked}
                                         onChange={handleSecretKeyChange}
                                         onToggle={handleToggle}
@@ -105,7 +105,7 @@ const Table = () => {
                                 {passwords && (
                                     <PasswordsData
                                         passwords={passwords}
-                                        decryptKey={decryptKey}
+                                        secretKey={secretKey}
                                         isSecretKeyLocked={isSecretKeyLocked}
                                         setShouldDataRefetch={
                                             setShouldDataRefetch

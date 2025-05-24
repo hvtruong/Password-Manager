@@ -13,7 +13,7 @@ const PasswordInputField = ({ password, setFormData }) => (
     <input
         type="password"
         name="password"
-        placeholder="password"
+        placeholder="Password"
         value={password}
         onChange={handleInputChange.bind(null, setFormData)}
         required
@@ -23,8 +23,8 @@ const PasswordInputField = ({ password, setFormData }) => (
 const EmailInputField = ({ emailAddress, setFormData }) => (
     <input
         type="text"
-        name="username"
-        placeholder="Username"
+        name="emailAddress"
+        placeholder="Email Address"
         value={emailAddress}
         onChange={handleInputChange.bind(null, setFormData)}
         required
@@ -35,19 +35,19 @@ const WebsiteInputField = ({ website, setFormData }) => (
     <input
         type="text"
         name="website"
-        placeholder="website"
+        placeholder="Website"
         value={website}
         onChange={handleInputChange.bind(null, setFormData)}
         required
     />
 );
 
-const NewPasswordInputField = ({ newPassword, setFormData }) => (
+const RepeatPasswordInputField = ({ repeatPassword, setFormData }) => (
     <input
-        type="text"
-        name="newPassword"
-        placeholder="New Password"
-        value={newPassword}
+        type="password"
+        name="repeatPassword"
+        placeholder="Repeat Password"
+        value={repeatPassword}
         onChange={handleInputChange.bind(null, setFormData)}
         required
     />
@@ -63,5 +63,5 @@ export {
     PasswordInputField,
     EmailInputField,
     WebsiteInputField,
-    NewPasswordInputField,
+    RepeatPasswordInputField,
 };

@@ -33,10 +33,6 @@ const PasswordsData = ({
                 </button>
             </td>
             <td>
-                <span className="cell-header">Username:</span>
-                {info.username}
-            </td>
-            <td>
                 <span className="cell-header">Password:</span>
                 {info.password}
             </td>
@@ -53,7 +49,6 @@ const PasswordsData = ({
                     style={{
                         background: "none",
                         border: "none",
-                        padding: 0,
                         cursor: "pointer",
                     }}
                 >
@@ -70,16 +65,18 @@ const PasswordsData = ({
                     style={{
                         background: "none",
                         border: "none",
-                        padding: 0,
                         cursor: "pointer",
+                    }}
+                    onClick={() => {
+                        console.log("Secret key here ", secretKey)
                     }}
                 >
                     <i className="fas fa-edit" style={{ color: "#FFC107" }} />
                 </button>
                 <UpdatePasswordForm
-                    index={index}
                     secretKey={secretKey}
-                    setShouldDataRefetch={setShouldDataRefetch}
+                    triggerDataRefetch={() => setShouldDataRefetch(true)}
+                    index={index}
                 />
             </td>
         </tr>

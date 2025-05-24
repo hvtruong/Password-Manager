@@ -1,20 +1,20 @@
 const SecretKeyInput = ({
     type = "text",
-    secretKey = "",
+    secretKeyInput = "",
     onChange,
     onToggle,
     lock = false,
 }) => (
     <div className="filter-group">
-        <label htmlFor="secretKey">Secret Key</label>
+        <label htmlFor="secretKeyInput">Secret Key</label>
         <input
             type={type}
             className="form-control"
-            name="secretKey"
-            id="secretKey"
+            name="secretKeyInput"
+            id="secretKeyInput"
             placeholder="Enter your secret key"
             required
-            value={secretKey}
+            value={secretKeyInput}
             onChange={onChange}
             disabled={type === "password"}
         />
