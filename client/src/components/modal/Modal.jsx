@@ -14,6 +14,7 @@ const Modal = ({
     handleSubmit,
     formData,
     setFormData,
+    required=true,
     errMsg,
     extraComponent,
 }) => (
@@ -34,6 +35,7 @@ const Modal = ({
                     <ModalBody
                         formData={formData}
                         setFormData={setFormData}
+                        required={required}
                         errMsg={errMsg}
                         extraComponent={extraComponent}
                     />
@@ -62,7 +64,7 @@ const ModalHeader = ({ title, closeModalButtonId }) => (
     </div>
 );
 
-const ModalBody = ({ formData, setFormData, errMsg, extraComponent }) => (
+const ModalBody = ({ formData, setFormData, required=true, errMsg, extraComponent }) => (
     <div className="modal-body">
         <p className="text-white mb-3">Please fill in the fields below!</p>
         {inputFields.map(
@@ -70,7 +72,7 @@ const ModalBody = ({ formData, setFormData, errMsg, extraComponent }) => (
                 key in formData && (
                     <Component
                         key={key}
-                        {...{ [prop]: formData[key], setFormData }}
+                        {...{ [prop]: formData[key], setFormData, required }}
                     />
                 )
         )}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAddNewPasswordMutation } from "features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
+import { readPasswordsFileCSV } from "utils/import";
 import closeModal from "utils/closeModal";
 import useAuth from "hooks/useAuth";
 import Modal from "components/modal/Modal";
@@ -36,6 +37,18 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
         setErrMsg("");
     }, [formData]);
 
+    let passwordsFile;
+    const handleFileChange = async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+            try {
+                passwordsFile = await readPasswordsFileCSV(file);
+            } catch (err) {
+                setErrMsg("Failed to read file: " + err.message);
+            }
+        }
+    };
+
     // API hook
     const [addNewPassword, { isSuccess }] = useAddNewPasswordMutation();
 
@@ -51,7 +64,7 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         switch (true) {
-            case validNewPassword === false:
+            case password !== "" && validNewPassword === false:
                 setErrMsg("Password too weak! Please use a stronger password.");
                 break;
             case password !== repeatPassword:
@@ -59,12 +72,23 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
                 break;
             default:
                 try {
-                    const response = await addNewPassword({
-                        id,
-                        website,
-                        password,
-                        secretKey,
-                    });
+                    let response;
+                    if (passwordsFile) {
+                        const [websites, passwords] = passwordsFile;
+                        response = await addNewPassword({
+                            id,
+                            websites,
+                            passwords,
+                            secretKey,
+                        });
+                    } else {
+                        response = await addNewPassword({
+                            id,
+                            websites: [website],
+                            passwords: [password],
+                            secretKey,
+                        });
+                    }
 
                     if (response.error) {
                         const errorMessage =
@@ -91,12 +115,17 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
             formData={formData}
             setFormData={setFormData}
             errMsg={errMsg}
+            required={false}
             extraComponent={
                 <>
                     <p className="text-white">
                         Or upload a file with your passwords here
                     </p>
-                    <input type="file" id="input-file-upload" />
+                    <input
+                        type="file"
+                        id="input-file-upload"
+                        onChange={handleFileChange}
+                    />
                 </>
             }
         />
