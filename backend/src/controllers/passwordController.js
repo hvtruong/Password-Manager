@@ -60,18 +60,6 @@ const createNewPassword = async (req, res) => {
             console.log("No passwords document found, creating a new one");
         }
 
-        // Check if the website already exists in the passwords list
-        const websiteExists = passwordsFile.passwords.some(
-            (item) => item.website === website
-        );
-
-        // If the website exists, return a conflict error
-        if (websiteExists) {
-            return res
-                .status(409)
-                .json({ message: "Website with a password already exists" });
-        }
-
         for (let i = 0; i < websites.length; i++) {
             const website = websites[i];
             const password = passwords[i];
@@ -98,7 +86,7 @@ const createNewPassword = async (req, res) => {
                 password: encryptedPassword,
             });
         }
-
+        
         // Save the updated passwords document
         await passwordsFile.save();
         // Return success response

@@ -27,7 +27,7 @@ const NavBarButtons = ({ location }) => {
                 <>
                     {role === "user" && (
                         <>
-                            <ModalButton buttonText="Edit" formId="editForm" />
+                            <ModalButton buttonText="Edit User" formId="editUserForm" />
                             <EditUser />
                         </>
                     )}

@@ -23,7 +23,7 @@ export const passwordsApiSlice = apiSlice.injectEndpoints({
                 withCredentials: true,
                 body: initialUserData,
             }),
-            invalidatesTags: [{ type: "User", id: "LIST" }],
+            invalidatesTags: [{ type: "User", id: "ID" }],
         }),
         updatePassword: builder.mutation({
             query: (initialUserData) => ({

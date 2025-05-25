@@ -8,7 +8,7 @@ export const guestApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 // withCredentials: true
             }),
-            invalidatesTags: [{ type: "User", id: "LIST" }],
+            invalidatesTags: [{ type: "User", id: "ID" }],
         }),
     }),
 });

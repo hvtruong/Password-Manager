@@ -11,7 +11,6 @@ const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 const initialFormState = {
     website: "",
     password: "",
-    repeatPassword: "",
 };
 
 const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
@@ -20,7 +19,7 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
 
     // API hooks to control and validate the form
     const [formData, setFormData] = useState(initialFormState);
-    const { website, password, repeatPassword } = formData;
+    const { website, password } = formData;
     const [validNewPassword, setValidNewPassword] = useState(false);
 
     const resetForm = useCallback(() => {
@@ -65,10 +64,9 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
         e.preventDefault();
         switch (true) {
             case password !== "" && validNewPassword === false:
-                setErrMsg("Password too weak! Please use a stronger password.");
-                break;
-            case password !== repeatPassword:
-                setErrMsg("Passwords do not match");
+                setErrMsg(
+                    "Password is not strong enough. Please ensure it contains at least one uppercase letter, one special character, and meets the required length."
+                );
                 break;
             default:
                 try {

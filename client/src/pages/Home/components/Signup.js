@@ -24,7 +24,7 @@ const SignUp = () => {
             password: "",
             repeatPassword: "",
         });
-    }
+    };
 
     const [errMsg, setErrMsg] = useState("");
 
@@ -39,7 +39,7 @@ const SignUp = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            resetFormData()
+            resetFormData();
             toast("Sign up successful! Please check your email to validate!");
             navigate("/");
         }
@@ -55,7 +55,9 @@ const SignUp = () => {
                 setErrMsg("Invalid username");
                 break;
             case PWD_REGEX.test(formData.password) === false:
-                setErrMsg("Invalid password");
+                setErrMsg(
+                    "Password is not strong enough. Please ensure it contains at least one uppercase letter, one special character, and meets the required length."
+                );
                 break;
             case formData.password !== formData.repeatPassword:
                 setErrMsg("Passwords do not match");
