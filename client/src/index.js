@@ -15,6 +15,8 @@ import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import { store } from "app/store";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import App from "./App";
 import "assets/stylesheets/style.css";
 
@@ -29,6 +31,7 @@ root.render(
                     <Route path="/*" element={<App />} />
                 </Routes>
             </BrowserRouter>
+            <ToastContainer position="top-center" />
         </Provider>
     </React.StrictMode>
 );

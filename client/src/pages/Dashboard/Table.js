@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useGetPasswordsByIdQuery } from "features/passwords/passwordApiSlice.js";
 import useAuth from "hooks/useAuth.js";
@@ -66,7 +66,6 @@ const Table = () => {
                         <div className="table-title">
                             <div className="row">
                                 <div className="table-filter col-sm-8 d-flex justify-content-center align-items-center">
-                                    <ToastContainer position="top-center" />
                                     <SecretKeyInput
                                         type={type}
                                         secretKeyInput={secretKeyInput}

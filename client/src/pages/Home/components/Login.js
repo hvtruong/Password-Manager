@@ -52,7 +52,7 @@ const LogIn = () => {
             resetFormData();
             dispatch(setCredentials({ accessToken }));
             
-            closeModal("#closeLoginForm");
+            closeModal("#loginForm-close");
             navigate("/dashboard");
         } catch (err) {
             handleError(err);

@@ -9,9 +9,9 @@ const UsernameInputField = ({ username, setFormData, required=true }) => (
     />
 );
 
-const PasswordInputField = ({ password, setFormData, required=true }) => (
+const PasswordInputField = ({ password, setFormData, type="password", required=true }) => (
     <input
-        type="password"
+        type={type}
         name="password"
         placeholder="Password"
         value={password}

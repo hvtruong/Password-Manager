@@ -40,9 +40,7 @@ const SignUp = () => {
     useEffect(() => {
         if (isSuccess) {
             resetFormData()
-            setTimeout(() => {
-                toast.success("Sign up successful! Please check your email to validate!");
-            }, 5000);
+            toast("Sign up successful! Please check your email to validate!");
             navigate("/");
         }
     }, [isSuccess, navigate]);

@@ -116,6 +116,7 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
             setFormData={setFormData}
             errMsg={errMsg}
             required={false}
+            type={"text"}
             extraComponent={
                 <>
                     <p className="text-white">

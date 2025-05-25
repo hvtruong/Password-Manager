@@ -4,7 +4,7 @@ import NavBarButtons from "./NavBarButtons";
 import logo from "assets/images/logo/logo.png";
 import "./NavBar.css";
 
-const NavBar = ({ location, role }) => (
+const NavBar = ({ location }) => (
     <Navbar expand="lg" className="py-3">
         <Container fluid="md" className="navbar-header">
             <Navbar.Brand href="#" className="me-lg-5">
@@ -12,7 +12,7 @@ const NavBar = ({ location, role }) => (
             </Navbar.Brand>
             <div className="d-flex align-items-center order mb-3">
                 <span className="line"></span>
-                <NavBarButtons location={location} role={role} />
+                <NavBarButtons location={location}/>
             </div>
         </Container>
     </Navbar>
