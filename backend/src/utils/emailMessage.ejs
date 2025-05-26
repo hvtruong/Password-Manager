@@ -128,7 +128,7 @@
                                         <tr>
                                             <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                                 <div style="font-family:'Helvetica Neue',Arial,sans-serif;font-size:16px;line-height:22px;text-align:center;color:#555;">
-                                                    <a href="http://localhost:3000/validate/<%= token %>" target="_blank">
+                                                    <a href="<%= process.env.BASE_URL %>:3000/validate/<%= token %>" target="_blank">
                                                         Verify your email address
                                                     </a>
                                                 </div>
@@ -141,7 +141,7 @@
                                                     Best regards,
                                                     <br>
                                                     <br>
-                                                    <a href="https://localhost:3000" style="color:#2F67F6">passVault.com</a>
+                                                    <a href="<%= process.env.BASE_URL %>:3000" style="color:#2F67F6">passVault.com</a>
                                                 </div>
                                             </td>
                                         </tr>
