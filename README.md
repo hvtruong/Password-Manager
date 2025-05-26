@@ -1,5 +1,7 @@
 
 
+## 🚀 About
+
 A simple and secure Password Manager application.
 
 ## Features
@@ -12,9 +14,10 @@ A simple and secure Password Manager application.
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/Password-Manager.git
+git clone https://github.com/hvtruong/Password-Manager.git
 cd Password-Manager
 npm install
+npm start
 ```
 
 ## Usage
@@ -30,3 +33,13 @@ Contributions are welcome! Please open an issue or submit a pull request.
 ## License
 
 This project is licensed under the MIT License.
+
+## 🗨️ Contacts
+
+For more details feel free to reach out to me:
+
+- **Email**: [hvtruong@outlook.com](mailto:hvtruong@outlook.com).
+
+Looking forward to talking with you!
+
+[Back to top](#top)
