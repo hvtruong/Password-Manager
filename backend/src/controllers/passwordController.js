@@ -27,7 +27,6 @@ const getPasswordsById = async (req, res) => {
         // Return the list of passwords
         const decryptedPasswords = savedPasswords.passwords.map((item) => ({
             website: item.website,
-            username: item.username,
             password: decryptPassword(item.password, secretKey),
         }));
         console.log("Decrypted passwords:", decryptedPasswords);
@@ -42,10 +41,10 @@ const getPasswordsById = async (req, res) => {
 // @route POST /passwords
 // @access Private
 const createNewPassword = async (req, res) => {
-    const { id, newWebsite, username, password, secretKey } = req.body; // Extract data from request body
+    const { id, websites, passwords, secretKey } = req.body; // Extract data from request body
 
     // Validate required fields
-    if (!id || !username || !newWebsite || !password) {
+    if (!id || !websites || !passwords || !secretKey) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -61,28 +60,33 @@ const createNewPassword = async (req, res) => {
             console.log("No passwords document found, creating a new one");
         }
 
-        // Check if the website already exists in the passwords list
-        const websiteExists = passwordsFile.passwords.some(
-            (item) => item.website === newWebsite
-        );
+        for (let i = 0; i < websites.length; i++) {
+            const website = websites[i];
+            const password = passwords[i];
 
-        // If the website exists, return a conflict error
-        if (websiteExists) {
-            return res
-                .status(409)
-                .json({ message: "Website with a password already exists" });
+            // Check if the website already exists in the passwords list
+            const websiteExists = passwordsFile.passwords.some(
+                (item) => item.website === website
+            );
+
+            // If the website exists, return a conflict error
+            if (websiteExists) {
+                return res
+                    .status(409)
+                    .json({
+                        message: `Website "${website}" with a password already exists`,
+                    });
+            }
+
+            // Encrypt the password using the provided secret key
+            const encryptedPassword = encryptPassword(password, secretKey);
+            // Add the new website and encrypted password to the list
+            passwordsFile.passwords.push({
+                website: website,
+                password: encryptedPassword,
+            });
         }
-
-        // Encrypt the password using the provided secret key
-        const encryptedPassword = encryptPassword(password, secretKey);
-        // Add the new website and encrypted password to the list
-        passwordsFile.passwords.push({
-            website: newWebsite,
-            username: username,
-            password: encryptedPassword,
-        });
-        console.log(passwordsFile.passwords);
-
+        
         // Save the updated passwords document
         await passwordsFile.save();
         // Return success response
@@ -97,12 +101,10 @@ const createNewPassword = async (req, res) => {
 // @route PATCH /passwords
 // @access Private
 const updatePassword = async (req, res) => {
-    const { id, newUsername, newPassword, secretKey, index } = req.body; // Extract data from request body
-
-    console.log(req.body);
-
+    const { id, password, secretKey, index } = req.body; // Extract data from request body
+    console.log("Body ", req.body);
     // Validate required fields
-    if (!id || !newUsername || !secretKey) {
+    if (!id || !password || !secretKey || index < 0) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -111,31 +113,25 @@ const updatePassword = async (req, res) => {
         let loadedPasswords = await Password.findOne({ userId: id })
             .collation({ locale: "en", strength: 2 })
             .exec();
-        
+
         // If no document is found, return an error
         if (!loadedPasswords) {
             return res.status(400).json({ message: "Passwords not found" });
         }
 
         // Encrypt the password using the provided secret key
-        const password =
-            newPassword == ""
-                ? loadedPasswords.passwords[index].password
-                : encryptPassword(newPassword, secretKey);
-        
-        const oldWebsite = loadedPasswords.passwords[index].website;
+        const newPassword = encryptPassword(password, secretKey);
+
         // Update the password for the specified website
-        loadedPasswords.passwords[index] = {
-            website: oldWebsite,
-            username: newUsername,
-            password: password,
-        };
+        loadedPasswords.passwords[index].password = newPassword;
 
         // Save the updated document
         await loadedPasswords.save();
 
         // Return success response
-        return res.json({ message: `Password for "${oldWebsite}" updated` });
+        return res.json({
+            message: `Password for "${loadedPasswords.passwords[index].website}" updated`,
+        });
     } catch (error) {
         // Handle server errors
         return res.status(500).json({ message: "Server error" });
@@ -165,10 +161,11 @@ const deletePassword = async (req, res) => {
         }
 
         // Delete the password document
-        result = passwordsFile.splice(index, 1);
+        result = passwordsFile.passwords.splice(index, 1);
 
         await passwordsFile.save();
         // Return success response
+
         return res.json({ message: `Password with ID ${result._id} deleted` });
     } catch (error) {
         // Handle server errors

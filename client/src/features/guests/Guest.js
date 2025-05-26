@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setCredentials } from "../auth/authSlice.js";
-import { useCreateNewGuestMutation } from "./guestApiSlice.js";
-import { useLoginMutation } from "../auth/authApiSlice.js";
-import usePersist from "../../hooks/usePersist.js";
+import { setCredentials } from "auth/authSlice.js";
+import { useCreateNewGuestMutation } from "guestApiSlice.js";
+import { useLoginMutation } from "auth/authApiSlice.js";
+import usePersist from "hooks/usePersist.js";
 
 export const useAsAGuest = async () => {
     // Import modules from API slice
@@ -19,7 +19,6 @@ export const useAsAGuest = async () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // eslint-disable-next-line
         setPersist(true);
     }, [isSuccess, setPersist]);
 
@@ -28,7 +27,6 @@ export const useAsAGuest = async () => {
         await createGuestUser();
         // Login the same as a new, regular user with one-time access token
         const { accessToken } = await loginAsGuest().unwrap();
-        console.log("Access Token:", accessToken);
 
         dispatch(setCredentials({ accessToken }));
 

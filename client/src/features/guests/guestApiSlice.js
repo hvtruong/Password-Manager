@@ -1,4 +1,4 @@
-import { apiSlice } from "../../app/api/apiSlice";
+import { apiSlice } from "app/api/apiSlice";
 
 export const guestApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -8,7 +8,7 @@ export const guestApiSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 // withCredentials: true
             }),
-            invalidatesTags: [{ type: "User", id: "LIST" }],
+            invalidatesTags: [{ type: "User", id: "ID" }],
         }),
     }),
 });
