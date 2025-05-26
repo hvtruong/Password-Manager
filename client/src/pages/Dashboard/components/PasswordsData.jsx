@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
-import UpdatePasswordForm from "./UpdatePasswordForm";
+import EditPasswordForm from "./EditPasswordForm";
+import DeleteNotification from "./DeleteNotification";
 
 const PasswordsData = ({
     passwords,
@@ -14,7 +15,7 @@ const PasswordsData = ({
                 <button
                     onClick={() =>
                         window.open(
-                            info.website,
+                            addHttps(info.website),
                             "_blank",
                             "noopener,noreferrer"
                         )
@@ -37,7 +38,7 @@ const PasswordsData = ({
                 {info.password}
             </td>
             <td>
-                <span className="cell-header">Actions:</span>
+                <span className="cell-header">Operations:</span>
                 <button
                     className="add"
                     title="Copy password"
@@ -67,19 +68,41 @@ const PasswordsData = ({
                         border: "none",
                         cursor: "pointer",
                     }}
-                    onClick={() => {
-                        console.log("Secret key here ", secretKey)
-                    }}
                 >
                     <i className="fas fa-edit" style={{ color: "#FFC107" }} />
                 </button>
-                <UpdatePasswordForm
+                <EditPasswordForm
                     secretKey={secretKey}
                     triggerDataRefetch={() => setShouldDataRefetch(true)}
                     index={index}
                 />
+                <button
+                    className="delete"
+                    title="Delete"
+                    data-bs-toggle={isSecretKeyLocked ? "modal" : ""}
+                    data-bs-target="#deleteNotification"
+                    style={{
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                    }}
+                >
+                    <i className="fas fa-trash-alt" style={{ color: "red" }} />
+                </button>
+                <DeleteNotification triggerDataRefetch={() => setShouldDataRefetch(true)} index={index} />
             </td>
         </tr>
     ));
+
+function addHttps(link) {
+    if (link == null) {
+        return;
+    }
+    if (link.includes("https://") === true) {
+        return link;
+    }
+
+    return "https://" + link;
+}
 
 export default PasswordsData;

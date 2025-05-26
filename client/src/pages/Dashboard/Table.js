@@ -97,7 +97,7 @@ const Table = () => {
                                 <tr>
                                     <th>Website</th>
                                     <th>Password</th>
-                                    <th>Actions</th>
+                                    <th>Operations</th>
                                 </tr>
                             </thead>
                             <tbody>

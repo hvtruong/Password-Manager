@@ -39,7 +39,7 @@ const LogoutNotification = () => {
                             </h1>
                             <button
                                 type="button"
-                                id="closeFormButton"
+                                id="logoutModal-close"
                                 className="btn-close btn-close-white"
                                 data-bs-dismiss="modal"
                                 aria-label="Close"

@@ -73,8 +73,8 @@ const Body = () => {
                         className="d-none d-md-flex justify-content-between align-items-center my-4"
                     >
                         <div>
-                            <h5 className="fw-bold fs-2">Unlimited</h5>
-                            <span className="gray-100 fs-4">Passwords</span>
+                            <h5 className="fw-bold fs-1">Guest</h5>
+                            <span className="gray-100 fs-4">Mode</span>
                         </div>
                         <div>
                             <h5 className="fw-bold fs-2">AES-256</h5>
@@ -105,16 +105,18 @@ const Body = () => {
                     className="d-md-none d-flex justify-content-between align-items-center my-4 features"
                 >
                     <div>
-                        <h5 className="fw-bold fs-1">1K+</h5>
-                        <span className="gray-100">passwords storage</span>
+                        <h5 className="fw-bold fs-1">Guest</h5>
+                        <span className="gray-100">Access</span>
                     </div>
                     <div>
-                        <h5 className="fw-bold fs-1">Unique</h5>
-                        <span className="gray-100">encryption</span>
+                        <h5 className="fw-bold fs-1">AES-256</h5>
+                        <span className="gray-100">
+                            Most advanced Encryption
+                        </span>
                     </div>
                     <div>
                         <h5 className="fw-bold fs-1">Offline</h5>
-                        <span className="gray-100">storage</span>
+                        <span className="gray-100">File Storage</span>
                     </div>
                 </motion.div>
             </Container>

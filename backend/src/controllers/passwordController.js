@@ -143,12 +143,12 @@ const updatePassword = async (req, res) => {
 // @access Private
 const deletePassword = async (req, res) => {
     const { id, index } = req.body; // Extract password ID from request body
-
+    console.log("HERE 1")
     // Validate required fields
     if (!id) {
         return res.status(400).json({ message: "User ID required" });
     }
-
+    console.log("HERE 1")
     try {
         // Find the password document by its ID
         const passwordsFile = await Password.findOne({ userId: id })
@@ -159,12 +159,13 @@ const deletePassword = async (req, res) => {
         if (!passwordsFile) {
             return res.status(400).json({ message: "Password file not found" });
         }
-
+    console.log("HERE 1")
         // Delete the password document
-        result = passwordsFile.splice(index, 1);
+        result = passwordsFile.passwords.splice(index, 1);
 
         await passwordsFile.save();
         // Return success response
+            console.log("HERE 1")
         return res.json({ message: `Password with ID ${result._id} deleted` });
     } catch (error) {
         // Handle server errors

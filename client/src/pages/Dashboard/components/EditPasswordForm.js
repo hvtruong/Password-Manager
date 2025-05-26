@@ -6,7 +6,7 @@ import Modal from "components/modal/Modal";
 import closeModal from "utils/closeModal";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
-const UpdatePasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
+const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
     const navigate = useNavigate();
     // Import add new user module from API slice
     const [updatePassword, { isSuccess }] = useUpdatePasswordMutation();
@@ -89,4 +89,4 @@ const UpdatePasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
     );
 };
 
-export default UpdatePasswordForm;
+export default EditPasswordForm;
