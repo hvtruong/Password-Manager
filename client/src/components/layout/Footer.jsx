@@ -6,19 +6,19 @@ import Partners from "./TechStack";
 function Footer() {
     return (
         <footer className="bg-dark-subtle">
-            <Container className="footer">
+            <Container fluid className="footer">
                 <Partners />
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <Container className="text-center pb-2">
+                    <Container fluid className="text-center pb-2">
                         <p>
                             Check out the source code at {"\t"}
                             <Link
                                 className="link-primary link-underline-opacity-0"
-                                to={" "}
+                                to={"https://github.com/hvtruong/Password-Manager"}
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"

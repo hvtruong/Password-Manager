@@ -143,7 +143,7 @@ const updateUser = async (req, res) => {
     }
 
     const updatedUser = await foundUser.save();
-    console.log("HERE 5")
+
     res.json({ message: `${updatedUser.username} updated` });
 };
 

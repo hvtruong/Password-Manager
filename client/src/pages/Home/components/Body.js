@@ -40,7 +40,6 @@ const Body = () => {
 
             navigate("/dashboard");
         } catch (err) {
-            console.log(err);
             if (err.status === "FETCH_ERROR") {
                 setErrMsg("No Server Response");
             } else {
@@ -52,7 +51,7 @@ const Body = () => {
     let content;
     content = (
         <div className="loading position-relative">
-            <Container className="d-flex justify-content-between align-items-center gap-md-5 flex-column flex-md-row mt-3 mt-xl-4 overflow-hidden">
+            <Container fluid="md" className="d-flex justify-content-between align-items-center gap-md-5 flex-column flex-md-row mt-3 mt-xl-4 overflow-hidden">
                 <motion.div
                     initial={{ x: -400 }}
                     animate={{ x: 0 }}
@@ -60,7 +59,7 @@ const Body = () => {
                 >
                     <AnimationTitles
                         title="Warm welcome to PassVault"
-                        text="Meet the modern passwords management. Streamline passwords with your own encryption"
+                        text="Meet the modern passwords management. Streamline passwords with the most advanced encryption algorithm"
                     />
                     <Button
                         className="m-0 my-3 px-5 py-2 fs-5 fw-bold"

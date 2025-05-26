@@ -19,9 +19,8 @@ const BREAKPOINTS = {
     1198: { slidesPerView: 5 },
 };
 
-function Partners() {
+function TechStack() {
     return (
-        // Start partner
         <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -48,8 +47,7 @@ function Partners() {
                 </Swiper>
             </Container>
         </motion.div>
-        // End partners
     );
 }
 
-export default Partners;
+export default TechStack;

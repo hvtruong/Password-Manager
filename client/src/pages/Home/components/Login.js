@@ -26,7 +26,6 @@ const LogIn = () => {
     const [errMsg, setErrMsg] = useState("");
 
     useEffect(() => {
-        console.log("Form data changed:", formData);
         setErrMsg("");
     }, [formData]);
 
@@ -60,7 +59,6 @@ const LogIn = () => {
     };
 
     const handleError = (err) => {
-        console.log(err);
         switch (err.status) {
             case "FETCH_ERROR":
                 setErrMsg("No Server Response");

@@ -6,7 +6,7 @@ const PasswordsData = ({
     passwords,
     secretKey,
     isSecretKeyLocked,
-    setShouldDataRefetch,
+    triggerDataRefetch,
 }) =>
     passwords.map((info, index) => (
         <tr key={index}>
@@ -63,6 +63,11 @@ const PasswordsData = ({
                     title="Edit"
                     data-bs-toggle={isSecretKeyLocked ? "modal" : ""}
                     data-bs-target="#updatePasswordForm"
+                    onClick={() => {
+                        if (isSecretKeyLocked === false) {
+                            toast("Please lock your secret key");
+                        }
+                    }}
                     style={{
                         background: "none",
                         border: "none",
@@ -73,7 +78,7 @@ const PasswordsData = ({
                 </button>
                 <EditPasswordForm
                     secretKey={secretKey}
-                    triggerDataRefetch={() => setShouldDataRefetch(true)}
+                    triggerDataRefetch={triggerDataRefetch}
                     index={index}
                 />
                 <button
@@ -81,6 +86,11 @@ const PasswordsData = ({
                     title="Delete"
                     data-bs-toggle={isSecretKeyLocked ? "modal" : ""}
                     data-bs-target="#deleteNotification"
+                    onClick={() => {
+                        if (isSecretKeyLocked === false) {
+                            toast("Please lock your secret key");
+                        }
+                    }}
                     style={{
                         background: "none",
                         border: "none",
@@ -89,7 +99,10 @@ const PasswordsData = ({
                 >
                     <i className="fas fa-trash-alt" style={{ color: "red" }} />
                 </button>
-                <DeleteNotification triggerDataRefetch={() => setShouldDataRefetch(true)} index={index} />
+                <DeleteNotification
+                    triggerDataRefetch={() => triggerDataRefetch()}
+                    index={index}
+                />
             </td>
         </tr>
     ));

@@ -6,14 +6,14 @@ import { toast } from "react-toastify";
 const TableButtons = ({
     secretKey,
     isSecretKeyLocked,
-    setShouldDataRefetch,
+    triggerDataRefetch,
     passwords,
 }) => (
     <>
         <AddNewPasswordButton isSecretKeyLocked={isSecretKeyLocked} />
         <NewPasswordForm
             secretKey={secretKey}
-            triggerDataRefetch={() => setShouldDataRefetch(true)}
+            triggerDataRefetch={triggerDataRefetch}
         />
         <ExportButton passwords={passwords} />
     </>

@@ -134,15 +134,6 @@
 
 /* End loading style */
 
-/* Start partners style */
-
-.partners .container {
-  gap: 93px;
-  margin-top: 7rem;
-}
-
-/* End partners style */
-
 /* Start properties style */
 .properties .container {
   margin-top: 5rem;
@@ -161,16 +152,6 @@
 
 .properties .container .tabs button.active {
   color: white;
-}
-
-.like {
-  position: absolute;
-  color: white;
-  background-color: rgb(18 20 32 / 75%);
-  padding: 10px;
-  border-radius: 50%;
-  top: 10px;
-  right: 10px;
 }
 
 .card .card-body div img {
@@ -423,6 +404,10 @@
 /* End subscribe */
 
 /* Start footer */
+
+.footer {
+  background-color: #196c8d;
+}
 
 footer .container div p {
   font-size: 18px;

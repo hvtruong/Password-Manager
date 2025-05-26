@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useUpdatePasswordMutation } from "features/passwords/passwordApiSlice";
 import { useNavigate } from "react-router-dom";
 import useAuth from "hooks/useAuth";
@@ -6,29 +6,32 @@ import Modal from "components/modal/Modal";
 import closeModal from "utils/closeModal";
 
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
+
+const initialFormState = {
+    website: "",
+    password: "",
+};
+
 const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
-    const navigate = useNavigate();
-    // Import add new user module from API slice
-    const [updatePassword, { isSuccess }] = useUpdatePasswordMutation();
     const { id } = useAuth();
 
     // Hooks to control the update password form
-    const [formData, setFormData] = useState({
-        password: "",
-        repeatPassword: "",
-    });
+    const [formData, setFormData] = useState(initialFormState);
+    const { password, repeatPassword } = formData;
     const [validNewPassword, setValidNewPassword] = useState(false);
 
-    const { password, repeatPassword } = formData;
+    const resetForm = useCallback(() => {
+        setFormData(initialFormState);
+    }, []);
 
     const [errMsg, setErrMsg] = useState("");
 
-    const resetForm = () => {
-        setFormData({
-            password: "",
-            repeatPassword: "",
-        });
-    };
+    useEffect(() => {
+        setErrMsg("");
+    }, [formData]);
+
+    // Import add new user module from API slice
+    const [updatePassword, { isSuccess }] = useUpdatePasswordMutation();
 
     // Reset input fields to empty when successfully submitted
     useEffect(() => {
@@ -38,14 +41,12 @@ const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
         }
     }, [isSuccess]);
 
-    useEffect(() => {
-        setErrMsg("");
-    }, [formData]);
-
     // Validate password every time it changes
     useEffect(() => {
         setValidNewPassword(PWD_REGEX.test(password));
     }, [password]);
+
+    const navigate = useNavigate();
 
     // Call the PUT API to create new user when everything is valid
     const handleSubmit = async (e) => {
@@ -54,7 +55,6 @@ const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
             setErrMsg("Invalid new password");
         } else {
             try {
-                console.log("Secret Key pass", password)
                 const response = await updatePassword({
                     id,
                     password,
@@ -85,6 +85,7 @@ const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
             formData={formData}
             setFormData={setFormData}
             errMsg={errMsg}
+            type={"text"}
         />
     );
 };

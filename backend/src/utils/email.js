@@ -27,7 +27,6 @@ const createTransporter = async () => {
                 reject()
             }
             resolve(token)
-            console.log(token)
         })
     })
   

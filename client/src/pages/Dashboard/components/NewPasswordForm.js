@@ -113,7 +113,6 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
             formData={formData}
             setFormData={setFormData}
             errMsg={errMsg}
-            required={false}
             type={"text"}
             extraComponent={
                 <>

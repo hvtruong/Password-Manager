@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "hooks/useAuth";
 import closeModal from "utils/closeModal";
 import styles from "assets/stylesheets/Forms.module.css";
-import { Button } from "react-bootstrap"
+import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 
 const DeleteNotification = ({ triggerDataRefetch, index }) => {
@@ -17,12 +17,10 @@ const DeleteNotification = ({ triggerDataRefetch, index }) => {
 
     useEffect(() => {
         if (isSuccess) {
-            toast("Password deleted!")
-            triggerDataRefetch()
+            toast("Password deleted!");
             closeModal("#deleteNotification-close");
-            navigate("/dashboard");
         }
-    }, [isSuccess, triggerDataRefetch, navigate]);
+    }, [isSuccess]);
 
     // Call the PUT API to create new user when everything is valid
     const handleSubmit = async (e) => {
@@ -38,6 +36,9 @@ const DeleteNotification = ({ triggerDataRefetch, index }) => {
                 } else {
                     setErrMsg(response.error.data?.message);
                 }
+            } else {
+                triggerDataRefetch();
+                navigate("/dashboard");
             }
         } catch (error) {
             console.log("An error occurred: ", error);

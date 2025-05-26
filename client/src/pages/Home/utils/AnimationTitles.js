@@ -8,7 +8,7 @@ function AnimationTitles({ title, text, className }) {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.08,
+                staggerChildren: 0.1,
             },
         },
     };

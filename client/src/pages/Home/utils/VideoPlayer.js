@@ -11,7 +11,6 @@ class VideoPlayer extends React.Component {
                 controls: 1,
             },
         };
-        console.log("run 1")
 
         return (
             <YouTube

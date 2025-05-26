@@ -30,9 +30,14 @@ const Table = () => {
     useEffect(() => {
         if (shouldDataRefetch) {
             refetch();
-            setShouldDataRefetch(false);
         }
     }, [shouldDataRefetch, refetch]);
+
+    useEffect(() => {
+        if (shouldDataRefetch) {
+            setShouldDataRefetch(false);
+        }
+    }, [shouldDataRefetch]);
 
     const handleSecretKeyChange = (e) => setSecretKeyInput(e.target.value);
 
@@ -81,8 +86,8 @@ const Table = () => {
                                             isSecretKeyLocked={
                                                 isSecretKeyLocked
                                             }
-                                            setShouldDataRefetch={
-                                                setShouldDataRefetch
+                                            triggerDataRefetch={() =>
+                                                setShouldDataRefetch(true)
                                             }
                                             passwords={passwords}
                                         />
@@ -106,8 +111,8 @@ const Table = () => {
                                         passwords={passwords}
                                         secretKey={secretKey}
                                         isSecretKeyLocked={isSecretKeyLocked}
-                                        setShouldDataRefetch={
-                                            setShouldDataRefetch
+                                        triggerDataRefetch={() =>
+                                            setShouldDataRefetch(true)
                                         }
                                     />
                                 )}
