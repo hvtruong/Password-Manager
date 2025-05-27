@@ -4,9 +4,17 @@ const app = require("./app");
 const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
-// Create HTTP server
-const http = require("http");
-const server = http.createServer(app);
+// Create HTTPS server
+const https = require("https");
+const fs = require("fs");
+
+// Load SSL certificate and key
+const options = {
+    key: fs.readFileSync(require("path").join(__dirname, "../localhost-key.pem")),
+    cert: fs.readFileSync(require("path").join(__dirname, "../localhost.pem"))
+};
+
+const server = https.createServer(options, app);
 
 // Listen on provided port, on all network interfaces
 
@@ -31,7 +39,7 @@ function normalizePort(val) {
     return false;
 }
 
-//Event listener for HTTP server "error" event
+//Event listener for HTTPS server "error" event
 function onError(error) {
     if (error.syscall !== "listen") {
         throw error;
