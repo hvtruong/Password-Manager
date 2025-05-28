@@ -5,16 +5,10 @@ const port = normalizePort(process.env.PORT || "3000");
 app.set("port", port);
 
 // Create HTTPS server
-const https = require("https");
+const http = require("http");
 const fs = require("fs");
 
-// Load SSL certificate and key
-const options = {
-    key: fs.readFileSync(require("path").join(__dirname, "../localhost-key.pem")),
-    cert: fs.readFileSync(require("path").join(__dirname, "../localhost.pem"))
-};
-
-const server = https.createServer(options, app);
+const server = http.createServer(options, app);
 
 // Listen on provided port, on all network interfaces
 
