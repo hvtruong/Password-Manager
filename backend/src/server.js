@@ -8,7 +8,7 @@ app.set("port", port);
 const http = require("http");
 const fs = require("fs");
 
-const server = http.createServer(options, app);
+const server = http.createServer(app);
 
 // Listen on provided port, on all network interfaces
 
