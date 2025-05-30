@@ -5,7 +5,7 @@ class VideoPlayer extends React.Component {
     render() {
         const options = {
             height: "200",
-            width: "300",
+            width: "350",
             playerVars: {
                 autoplay: 1,
                 controls: 1,
@@ -14,10 +14,11 @@ class VideoPlayer extends React.Component {
 
         return (
             <YouTube
-                videoId="Oflbho9ZG2U"
+                videoId="7-0wf8NVmfE"
                 options={options}
                 onReady={this._onReady}
                 id="video"
+                style={{marginRight: "1em"}}
             />
         );
     }
