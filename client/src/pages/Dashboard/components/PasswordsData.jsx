@@ -1,15 +1,18 @@
 import { toast } from "react-toastify";
 import EditPasswordForm from "./EditPasswordForm";
 import DeleteNotification from "./DeleteNotification";
+import { useState } from "react";
 
 const PasswordsData = ({
     passwords,
     secretKey,
     isSecretKeyLocked,
     triggerDataRefetch,
-}) =>
-    passwords.map((info, index) => (
-        <tr key={index}>
+}) => {
+    const [selectedIndex, setSelectedIndex] = useState(0)
+
+    return passwords.map((info, index) => (
+        <tr key={`row-${index}`}>
             <td>
                 <span className="cell-header">URL:</span>
                 <button
@@ -67,6 +70,7 @@ const PasswordsData = ({
                         if (isSecretKeyLocked === false) {
                             toast("Please lock your secret key");
                         }
+                        setSelectedIndex(index)
                     }}
                     style={{
                         background: "none",
@@ -79,7 +83,7 @@ const PasswordsData = ({
                 <EditPasswordForm
                     secretKey={secretKey}
                     triggerDataRefetch={triggerDataRefetch}
-                    index={index}
+                    index={selectedIndex}
                 />
                 <button
                     className="delete"
@@ -101,11 +105,12 @@ const PasswordsData = ({
                 </button>
                 <DeleteNotification
                     triggerDataRefetch={() => triggerDataRefetch()}
-                    index={index}
+                    index={selectedIndex}
                 />
             </td>
         </tr>
     ));
+};
 
 function addHttps(link) {
     if (link == null) {

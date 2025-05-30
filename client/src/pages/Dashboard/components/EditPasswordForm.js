@@ -8,7 +8,7 @@ import closeModal from "utils/closeModal";
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
 const initialFormState = {
-    password: ""
+    password: "",
 };
 
 const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
@@ -51,7 +51,9 @@ const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validNewPassword === false) {
-            setErrMsg("Invalid new password");
+            setErrMsg(
+                "Password is not strong enough. Please ensure it contains at least one uppercase letter, one special character, and meets the required length (6-100)."
+            );
         } else {
             try {
                 const response = await updatePassword({

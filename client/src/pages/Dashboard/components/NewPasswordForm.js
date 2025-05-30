@@ -6,7 +6,7 @@ import closeModal from "utils/closeModal";
 import useAuth from "hooks/useAuth";
 import Modal from "components/modal/Modal";
 
-const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
+const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,100}$/;
 
 const initialFormState = {
     website: "",
@@ -65,7 +65,7 @@ const NewPasswordForm = ({ secretKey, triggerDataRefetch }) => {
         switch (true) {
             case password !== "" && validNewPassword === false:
                 setErrMsg(
-                    "Password is not strong enough. Please ensure it contains at least one uppercase letter, one special character, and meets the required length."
+                    "Password is not strong enough. Please ensure it contains at least one uppercase letter, one special character, and meets the required length (6-100)."
                 );
                 break;
             default:
