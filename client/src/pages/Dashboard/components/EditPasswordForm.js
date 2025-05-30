@@ -8,8 +8,7 @@ import closeModal from "utils/closeModal";
 const PWD_REGEX = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*\W).{6,20}$/;
 
 const initialFormState = {
-    website: "",
-    password: "",
+    password: ""
 };
 
 const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
@@ -17,7 +16,7 @@ const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
 
     // Hooks to control the update password form
     const [formData, setFormData] = useState(initialFormState);
-    const { password, repeatPassword } = formData;
+    const { password } = formData;
     const [validNewPassword, setValidNewPassword] = useState(false);
 
     const resetForm = useCallback(() => {
@@ -51,7 +50,7 @@ const EditPasswordForm = ({ secretKey, triggerDataRefetch, index }) => {
     // Call the PUT API to create new user when everything is valid
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password === repeatPassword && validNewPassword === false) {
+        if (validNewPassword === false) {
             setErrMsg("Invalid new password");
         } else {
             try {

@@ -23,6 +23,7 @@ const encryptPassword = (plaintextPassword, secretKey) => {
 
     let encryptedData = cipher.update(plaintextPassword, "utf8", "hex");
     encryptedData += cipher.final("hex");
+    console.log("Encrypted")
 
     // Return the IV and encrypted data as a single string
     return `${initializationVector.toString("hex")}:${encryptedData}`;

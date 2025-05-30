@@ -40,6 +40,7 @@ const Validate = () => {
                                     color: "white",
                                     fontSize: "20px",
                                     margin: "0",
+                                    textAlign: "center"
                                 }}
                             >
                                 Please wait a moment!
@@ -55,6 +56,7 @@ const Validate = () => {
                                     width: "200px",
                                     margin: "0 auto",
                                     background: "red",
+                                    textAlign: "center"
                                 }}
                             >
                                 <i
@@ -84,7 +86,7 @@ const Validate = () => {
                                 }}
                             >
                                 The validation token has expired!
-                                <br /> We'll redirect you to the home page soon!
+                                <br /> Please sign up again
                             </p>
                         </div>
                     )}
@@ -97,6 +99,7 @@ const Validate = () => {
                                     width: "200px",
                                     margin: "0 auto",
                                     background: "#4BB543",
+                                    textAlign: "center"
                                 }}
                             >
                                 <i
@@ -129,7 +132,6 @@ const Validate = () => {
                                 }}
                             >
                                 You account has been verified!
-                                <br /> We'll redirect you to the home page soon!
                             </p>
                         </div>
                     )}

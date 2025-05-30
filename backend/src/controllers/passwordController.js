@@ -71,11 +71,9 @@ const createNewPassword = async (req, res) => {
 
             // If the website exists, return a conflict error
             if (websiteExists) {
-                return res
-                    .status(409)
-                    .json({
-                        message: `Website "${website}" with a password already exists`,
-                    });
+                return res.status(409).json({
+                    message: `Website "${website}" with a password already exists`,
+                });
             }
 
             // Encrypt the password using the provided secret key
@@ -86,9 +84,16 @@ const createNewPassword = async (req, res) => {
                 password: encryptedPassword,
             });
         }
-        
+
         // Save the updated passwords document
-        await passwordsFile.save();
+        passwordsFile.markModified("passwords");
+        try {
+            await passwordsFile.save();
+        } catch (saveError) {
+            return res
+                .status(500)
+                .json({ message: "Error saving password file" });
+        }
         // Return success response
         return res.status(201).json({ message: "New password created" });
     } catch (error) {
@@ -98,7 +103,7 @@ const createNewPassword = async (req, res) => {
 };
 
 // @desc Update an existing password
-// @route PATCH /passwords
+// @route PUT /passwords
 // @access Private
 const updatePassword = async (req, res) => {
     const { id, password, secretKey, index } = req.body; // Extract data from request body
@@ -110,27 +115,33 @@ const updatePassword = async (req, res) => {
 
     try {
         // Find the passwords document for the user, ignoring case sensitivity
-        let loadedPasswords = await Password.findOne({ userId: id })
+        let passwordsFile = await Password.findOne({ userId: id })
             .collation({ locale: "en", strength: 2 })
             .exec();
 
         // If no document is found, return an error
-        if (!loadedPasswords) {
+        if (!passwordsFile) {
             return res.status(400).json({ message: "Passwords not found" });
         }
 
         // Encrypt the password using the provided secret key
         const newPassword = encryptPassword(password, secretKey);
-
         // Update the password for the specified website
-        loadedPasswords.passwords[index].password = newPassword;
+        passwordsFile.passwords[index].password = newPassword;
 
         // Save the updated document
-        await loadedPasswords.save();
+        passwordsFile.markModified("passwords");
+        try {
+            await passwordsFile.save();
+        } catch (saveError) {
+            return res
+                .status(500)
+                .json({ message: "Error saving password file" });
+        }
 
         // Return success response
         return res.json({
-            message: `Password for "${loadedPasswords.passwords[index].website}" updated`,
+            message: `Password for "${passwordsFile.passwords[index].website}" updated`,
         });
     } catch (error) {
         // Handle server errors
@@ -163,7 +174,15 @@ const deletePassword = async (req, res) => {
         // Delete the password document
         result = passwordsFile.passwords.splice(index, 1);
 
-        await passwordsFile.save();
+        // Save the updated document
+        passwordsFile.markModified("passwords");
+        try {
+            await passwordsFile.save();
+        } catch (saveError) {
+            return res
+                .status(500)
+                .json({ message: "Error saving password file" });
+        }
         // Return success response
 
         return res.json({ message: `Password with ID ${result._id} deleted` });
